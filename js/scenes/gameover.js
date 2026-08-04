@@ -18,7 +18,7 @@ import { GREEN, RED } from '../games.js';
  * @returns {Promise<'continue'|'restart'|'title'>}
  */
 export async function gameOverScene(ctx, reached, record) {
-  const torus = createTorus({ size: 180, mood: 'sad' });
+  const torus = createTorus({ size: 250, mood: 'sad' });
   torus.say(STR.GAME_OVER_SAD);
 
   const countdown = el('div.gameover-countdown');

@@ -35,7 +35,7 @@ function introIcon(game) {
  * @param {{game: number, level: number, lives: number}} state
  */
 export async function introScene(ctx, state) {
-  const torus = createTorus({ size: 190, mood: 'talk' });
+  const torus = createTorus({ size: 250, mood: 'talk' });
   torus.say(STR.GAME_RULE[state.game]);
 
   // 최소 시간이 지나기 전에는 숨겨 둔다 — 누르라고 해놓고 안 받으면 더 헷갈린다.

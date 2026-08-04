@@ -4,13 +4,9 @@
  */
 import { el, multiline, mount, waitButton } from '../util.js';
 import { STR } from '../strings.js';
-import { CONFIG, COLORS } from '../config.js';
+import { CONFIG } from '../config.js';
 import { createMascot } from '../mascot.js';
-import { createShape } from '../shapes.js';
 import { loadBest, hasRecord } from '../storage.js';
-
-/** 캐릭터가 들고 있는 카드 — 시안과 같은 조합 (빨 네모 / 노 별 / 초 하트 / 파 십자) */
-const TITLE_CARDS = ['square', 'star', 'heart', 'cross'];
 
 /**
  * @param {import('../state.js').Ctx} ctx
@@ -18,7 +14,7 @@ const TITLE_CARDS = ['square', 'star', 'heart', 'cross'];
  */
 export async function titleScene(ctx) {
   const best = loadBest();
-  const mascot = createMascot({ size: 260 });
+  const mascot = createMascot({ size: 560 });
   mascot.say(STR.TITLE_GREETING);
 
   const recordLine = hasRecord(best)
@@ -27,12 +23,8 @@ export async function titleScene(ctx) {
 
   const node = el('section.scene.scene-title', {},
     multiline('h1.title-text', STR.TITLE),
-    el('div.title-hero', {},
-      el('div.title-cards', {}, ...TITLE_CARDS.map((shape, i) =>
-        el('span.title-card', { style: { background: COLORS[i] } },
-          createShape(shape, { size: '62%', color: '#fff' })))),
-      el('div.title-mascot', {}, mascot),
-    ),
+    // 캐릭터 그림 안에 이미 4색 카드가 들어 있어서 따로 그리지 않는다.
+    el('div.title-hero', {}, el('div.title-mascot', {}, mascot)),
     el('div.title-record', {},
       el('div.record-line', { text: recordLine }),
       best.allClearCount > 0

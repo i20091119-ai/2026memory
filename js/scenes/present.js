@@ -38,7 +38,7 @@ function renderItem(game, value, color) {
  * @param {{sequence: (number|string)[], presentColors: number[]|null}} round
  */
 export async function presentScene(ctx, state, round) {
-  const torus = createTorus({ size: 150, mood: 'talk' });
+  const torus = createTorus({ size: 190, mood: 'talk' });
   torus.say(STR.PRESENT_WATCH);
 
   const total = round.sequence.length;

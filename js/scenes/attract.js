@@ -40,7 +40,7 @@ export async function attractScene(ctx) {
   const hint = el('div.attract-hint.blink', { text: STR.ATTRACT_PRESS });
 
   // 데모 내내 따라다니는 토러스 — 씬이 바뀌어도 사라지지 않도록 오버레이에 둔다.
-  const guide = createTorus({ size: 130, mood: 'talk' });
+  const guide = createTorus({ size: 175, mood: 'talk' });
   guide.say(STR.ATTRACT_SPEECH);
   const guideBox = el('div.attract-guide', {}, guide);
 

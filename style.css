@@ -341,41 +341,10 @@ body.show-cursor, body.show-cursor button { cursor: default; }
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  /* 아래로 걸쳐 놓은 카드가 다음 줄(기록 문구)을 침범하지 않도록 자리를 비워 둔다 */
-  padding-bottom: clamp(26px, 4.5vh, 56px);
 }
 
 .title-mascot { display: flex; justify-content: center; }
 
-/* 캐릭터가 들고 있는 듯 좌우로 펼쳐지는 카드 4장 */
-.title-cards {
-  position: absolute;
-  left: 50%;
-  bottom: 0;
-  transform: translateX(-50%);
-  display: flex;
-  gap: clamp(10px, 1.7vw, 30px);
-  width: max-content;
-  pointer-events: none;
-}
-
-.title-card {
-  width: clamp(38px, 5.4vh, 74px);
-  height: clamp(38px, 5.4vh, 74px);
-  border-radius: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: var(--shadow-soft);
-  animation: cardFloat 3.4s ease-in-out infinite;
-}
-/* 바깥쪽 카드일수록 더 기울여 부채처럼 펼친다 */
-.title-card:nth-child(1) { transform: rotate(-14deg) translate(-10px, 8px); animation-delay: 0s; }
-.title-card:nth-child(2) { transform: rotate(-5deg); animation-delay: 0.2s; }
-.title-card:nth-child(3) { transform: rotate(5deg); animation-delay: 0.4s; }
-.title-card:nth-child(4) { transform: rotate(14deg) translate(10px, 8px); animation-delay: 0.6s; }
-
-@keyframes cardFloat { 50% { margin-top: -10px; } }
 
 .title-text {
   font-family: var(--display);
