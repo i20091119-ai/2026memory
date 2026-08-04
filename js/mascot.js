@@ -13,19 +13,17 @@ import { el } from './util.js';
 const MASCOT_SRC = new URL('../assets/mascot.png', import.meta.url).href;
 
 /**
- * @param {{size?: number}} [opts]
+ * 크기는 CSS 가 화면 높이에 맞춰 정한다 (style.css 의 --char-h 참조).
+ * 여기서 px 로 고정하면 화면이 낮을 때 다른 요소와 겹친다.
  * @returns {HTMLElement & {say: (text: string|null) => void}}
  */
-export function createMascot(opts = {}) {
-  const { size = 260 } = opts;
-
+export function createMascot() {
   const img = el('img.mascot-img', {
     src: MASCOT_SRC,
     alt: '',
     // 그림이 없거나 깨져도 화면이 무너지지 않게 자리만 비운다.
     onerror: (ev) => { ev.currentTarget.style.visibility = 'hidden'; },
   });
-  img.style.width = `${size}px`;
 
   const bubble = el('div.torus-bubble', { role: 'status', 'aria-live': 'polite' });
   bubble.hidden = true;

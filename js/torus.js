@@ -26,17 +26,17 @@ const srcFor = (mood) => new URL(`../assets/torus-${mood}.png`, import.meta.url)
 
 /**
  * 안내 캐릭터 노드를 만든다.
- * @param {{size?: number, mood?: string}} [opts]
+ * 크기는 CSS 가 화면 높이에 맞춰 정한다 (style.css 의 --char-h 참조).
+ * @param {{mood?: string}} [opts]
  * @returns {HTMLElement & {setMood: (m: string) => void, say: (text: string|null) => void}}
  */
 export function createTorus(opts = {}) {
-  const { size = 220, mood = 'idle' } = opts;
+  const { mood = 'idle' } = opts;
 
   const img = el('img.torus-img', {
     alt: '',
     onerror: (ev) => { ev.currentTarget.style.visibility = 'hidden'; },
   });
-  img.style.width = `${size}px`;
 
   const bubble = el('div.torus-bubble', { role: 'status', 'aria-live': 'polite' });
   bubble.hidden = true;

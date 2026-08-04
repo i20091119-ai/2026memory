@@ -31,7 +31,7 @@ function confetti(count = 60) {
 export async function allClearScene(ctx, record) {
   // 기쁜 표정은 단계 클리어와 같은 'cheer' 하나를 쓴다.
   // 올클리어의 '더 요란한' 느낌은 씬 쪽 연출(색종이·스프링클 반짝임)이 만든다.
-  const torus = createTorus({ size: 320, mood: 'cheer' });
+  const torus = createTorus({ mood: 'cheer' });
   torus.say(STR.ALL_CLEAR_CHEER);
 
   const node = el('section.scene.scene-allclear', {},

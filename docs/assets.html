@@ -202,15 +202,21 @@
      아래 권장 크기면 충분하다.</p>
   <table>
     <tr><th>에셋</th><th>권장 크기</th><th>화면 표시 크기</th><th>파일 크기</th></tr>
-    <tr><td>타이틀 로봇</td><td><strong>800 × 800</strong></td><td>약 260px</td><td>500KB 이하</td></tr>
-    <tr><td>안내 로봇 4종</td><td><strong>600 × 600</strong></td><td>130~230px</td><td>각 300KB 이하</td></tr>
+    <tr><td>타이틀 로봇</td><td><strong>가로 1000</strong> 안팎</td><td>높이 27vh (화면에 맞춰 자동)</td><td>500KB 이하</td></tr>
+    <tr><td>안내 로봇 4종</td><td><strong>세로 620</strong> 안팎</td><td>높이 11~21vh (씬마다 다름)</td><td>각 300KB 이하</td></tr>
     <tr><td>기관 로고</td><td>높이 <strong>300</strong> (가로 자유)</td><td>높이 30~96px</td><td>300KB 이하</td></tr>
     <tr><td>하트 3종</td><td><strong>200 × 200</strong></td><td>약 46px</td><td>각 100KB 이하</td></tr>
     <tr><td>파비콘</td><td><strong>256 × 256</strong></td><td>16~32px</td><td>100KB 이하</td></tr>
     <tr><td>배경</td><td><strong>2560 × 1440</strong></td><td>화면 전체</td><td>2MB 이하</td></tr>
   </table>
-  <p class="lead">캐릭터·하트·파비콘은 <strong>정사각형</strong> 캔버스로. 가로세로가 다르면 찌그러지지 않고
-     가운데 맞춰 들어가지만, 정사각이 여백 계산이 제일 쉽다.</p>
+  <div class="warn">
+    <strong>투명 여백을 넉넉히 두지 말 것.</strong> 화면에서는 그림의 <em>바깥 테두리</em> 기준으로
+    크기를 맞추기 때문에, 캔버스 대부분이 투명하면 캐릭터가 그만큼 작게 그려진다.
+    받은 그림이 1920×1080 캔버스에 캐릭터만 작게 들어 있어서, 여백을 잘라내고 넣었다.
+    다음부터는 <strong>캐릭터에 딱 맞게 잘라서</strong> 주면 그대로 쓸 수 있다.
+  </div>
+  <p class="lead">캐릭터 크기는 px 로 고정하지 않고 <strong>화면 높이에 맞춰</strong> 자동으로 정해진다.
+     낮은 화면에서도 다른 요소를 덮지 않게 하기 위함이다.</p>
 
   <h3>④ 배경이 두 종류다</h3>
   <ul>

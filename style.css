@@ -48,7 +48,15 @@
   --radius: 24px;
   --hud-h: 9vh;
   --shadow-soft: 0 10px 30px rgba(120, 90, 140, 0.16);
+
+  /* 기관 로고가 차지하는 높이. 씬은 이만큼 아래를 비워 둔다.
+     배경 그림은 네 모서리에 장식이 있고 아래 가운데가 비어 있어서, 로고를 거기 둔다. */
+  --brand-h: clamp(20px, 3.4vh, 42px);
 }
+
+/* 타이틀·올클리어에서는 로고를 크게 */
+body:has(#app .scene-title),
+body:has(#app .scene-allclear) { --brand-h: clamp(42px, 8vh, 96px); }
 
 /* ---------------- 리셋 · 키오스크 ---------------- */
 
@@ -126,7 +134,8 @@ body.show-cursor, body.show-cursor button { cursor: default; }
   justify-content: center;
   gap: 2.2vh;
   min-height: 0;
-  padding: 2vh 4vw;
+  /* 아래는 로고 자리로 비워 둔다 */
+  padding: 2vh 4vw calc(var(--brand-h) + 3vh);
 }
 
 /* ---------------- HUD ---------------- */
@@ -330,10 +339,7 @@ body.show-cursor, body.show-cursor button { cursor: default; }
 /* ---------------- 타이틀 ---------------- */
 
 /* 아래 가운데에 큰 로고가 놓이므로 그만큼 자리를 비워 둔다 */
-.scene-title,
-.scene-allclear { padding-bottom: clamp(64px, 13vh, 150px); }
-
-.scene-title { justify-content: center; gap: 1.4vh; padding-top: 3vh; }
+.scene-title { justify-content: center; gap: 1.2vh; padding: 2vh 4vw calc(var(--brand-h) + 4vh); }
 
 /* 캐릭터와 카드가 겹쳐 놓인 표지 영역 */
 .title-hero {
@@ -446,7 +452,7 @@ body.show-cursor, body.show-cursor button { cursor: default; }
 
 .exit-hint {
   position: absolute;
-  bottom: 2.5vh;
+  bottom: calc(var(--brand-h) + 3.2vh);
   left: 50%;
   transform: translateX(-50%);
   font-size: clamp(11px, 1.5vh, 18px);
@@ -529,8 +535,8 @@ body.show-cursor, body.show-cursor button { cursor: default; }
 
 .present-torus {
   position: absolute;
-  left: 2.5vw;
-  bottom: 2.5vh;
+  left: 2vw;
+  bottom: calc(var(--brand-h) + 1.5vh);
   pointer-events: none;
 }
 
@@ -811,16 +817,25 @@ body.show-cursor, body.show-cursor button { cursor: default; }
 
 /* ---------------- 타이틀 로봇 캐릭터 ---------------- */
 
+/* 크기는 화면 '높이'에 맞춘다. px 로 고정하면 낮은 화면에서 다른 요소를 덮는다. */
 .mascot {
+  --char-h: clamp(100px, 27vh, 360px);
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 1vh;
 }
 
-.mascot-img { display: block; height: auto; }
+.mascot-img {
+  display: block;
+  height: var(--char-h);
+  width: auto;
+  max-width: 86vw;
+}
 
 .mascot-body {
+  position: relative;
+  z-index: 1;                       /* 말풍선(z-index:2)보다 아래 */
   animation: torusBob 3.4s ease-in-out infinite;
   filter: drop-shadow(0 12px 22px rgba(120, 90, 140, 0.18));
 }
@@ -828,13 +843,27 @@ body.show-cursor, body.show-cursor button { cursor: default; }
 /* ---------------- 게임 중 안내 캐릭터 ---------------- */
 
 .torus {
+  --char-h: clamp(70px, 16vh, 200px);
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 1vh;
 }
 
-.torus-body { animation: torusBob 3s ease-in-out infinite; }
+/* 씬마다 캐릭터가 차지해도 되는 높이가 다르다 */
+.intro-torus    .torus { --char-h: clamp(95px, 21vh, 260px); }
+.present-torus  .torus { --char-h: clamp(55px, 11vh, 135px); }
+.clear-torus    .torus { --char-h: clamp(90px, 20vh, 250px); }
+.miss-torus     .torus { --char-h: clamp(75px, 16vh, 200px); }
+.gameover-torus .torus { --char-h: clamp(75px, 15vh, 190px); }
+.allclear-torus .torus { --char-h: clamp(95px, 21vh, 270px); }
+.attract-guide  .torus { --char-h: clamp(55px, 12vh, 150px); }
+
+.torus-body {
+  position: relative;
+  z-index: 1;                       /* 말풍선보다 아래 */
+  animation: torusBob 3s ease-in-out infinite;
+}
 @keyframes torusBob { 50% { transform: translateY(-9px); } }
 
 .torus[data-mood="cheer"] .torus-body { animation: torusHop 620ms ease-in-out infinite; }
@@ -845,6 +874,7 @@ body.show-cursor, body.show-cursor button { cursor: default; }
 
 .torus-bubble {
   position: relative;
+  z-index: 2;                       /* 캐릭터가 말풍선을 가리지 않게 */
   max-width: min(60vw, 620px);
   background: var(--panel);
   color: var(--ink);
@@ -867,7 +897,12 @@ body.show-cursor, body.show-cursor button { cursor: default; }
 }
 .torus-bubble.pop { animation: popIn 300ms cubic-bezier(0.2, 1.4, 0.4, 1) both; }
 
-.torus-img { display: block; height: auto; }
+.torus-img {
+  display: block;
+  height: var(--char-h);
+  width: auto;
+  max-width: 40vw;
+}
 
 /* 올클리어에서만 더 요란하게 — 표정을 따로 그리지 않고 씬 단위로 얹는다 */
 .scene-allclear .torus-body { animation: torusHop 480ms ease-in-out infinite; }
@@ -910,31 +945,18 @@ body.show-cursor, body.show-cursor button { cursor: default; }
    평소에는 오른쪽 아래 구석에 작게, 타이틀에서는 아래 가운데에 크게 놓는다. */
 .brand {
   position: absolute;
-  right: 2vw;
-  bottom: 2.2vh;
+  left: 50%;
+  bottom: 1.4vh;
+  transform: translateX(-50%);
   display: flex;
   align-items: center;
-  transition: all 320ms cubic-bezier(0.2, 1, 0.4, 1);
+  transition: bottom 320ms cubic-bezier(0.2, 1, 0.4, 1);
 }
 .brand-img {
-  height: clamp(20px, 3.4vh, 44px);
+  height: var(--brand-h);
   width: auto;
   display: block;
-  opacity: 0.75;
-}
-
-/* 타이틀에서는 크게 — #overlay 는 #app 의 형제라 :has() 로 현재 씬을 알 수 있다.
-   :has() 를 모르는 브라우저에서는 그냥 작은 상태로 남는다(동작에는 지장 없음). */
-#app:has(.scene-title) ~ #overlay .brand,
-#app:has(.scene-allclear) ~ #overlay .brand {
-  right: 50%;
-  bottom: 3vh;
-  transform: translateX(50%);
-}
-#app:has(.scene-title) ~ #overlay .brand-img,
-#app:has(.scene-allclear) ~ #overlay .brand-img {
-  height: clamp(40px, 8vh, 96px);
-  opacity: 1;
+  transition: height 320ms cubic-bezier(0.2, 1, 0.4, 1);
 }
 
 /* 브리지 접속 상태 — 화면 구석의 작은 점 하나로만 표시 (에러 화면 금지).
@@ -1012,12 +1034,12 @@ body.show-cursor, body.show-cursor button { cursor: default; }
 .attract-guide {
   position: absolute;
   right: 2.4vw;
-  bottom: 3vh;
+  bottom: calc(var(--brand-h) + 2vh);
 }
 
 .attract-hint {
   position: absolute;
-  bottom: 3vh;
+  bottom: calc(var(--brand-h) + 3.2vh);
   left: 50%;
   transform: translateX(-50%);
   font-family: var(--display);
@@ -1032,11 +1054,26 @@ body.show-cursor, body.show-cursor button { cursor: default; }
 /* ---------------- 세로 화면 대응 (개발용 모바일 테스트) ---------------- */
 
 @media (orientation: portrait) {
+  /* 세로 화면에서는 4칸을 한 줄에 못 놓으니 2×2 로 접는다.
+     대신 세로로 길어지므로 높이를 눌러 화면 밖으로 나가지 않게 한다. */
   .pad-row, .card-row { grid-template-columns: repeat(2, 1fr); }
-  .card-row { height: auto; }
-  .card { aspect-ratio: 3 / 4; }
-  .pad { max-height: 22vh; max-width: 22vh; }
-  .present-stage { width: 92vw; }
+  .card-row {
+    height: auto;
+    max-height: 46vh;
+    gap: clamp(8px, 2vw, 20px);
+  }
+  .card { aspect-ratio: 4 / 3; min-height: 0; }
+  .card-digit { font-size: clamp(40px, 9vh, 110px); }
+
+  .pad { max-height: 20vh; max-width: 20vh; }
+  .present-stage { width: 92vw; max-height: 42vh; }
+
+  .recall-prompt { font-size: clamp(20px, 3.4vh, 40px); }
+  .strip-row { gap: clamp(6px, 1.6vw, 12px); }
+  .slot { width: clamp(30px, 5.4vh, 60px); height: clamp(30px, 5.4vh, 60px); border-radius: 14px; }
+
+  /* 세로에서는 캐릭터가 자리를 많이 먹으므로 더 줄인다 */
+  .present-torus .torus { --char-h: clamp(46px, 8vh, 90px); }
 }
 
 /* ---------------- 모션 최소화 선호 ---------------- */

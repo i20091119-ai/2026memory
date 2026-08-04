@@ -14,7 +14,7 @@ import { loadBest, hasRecord } from '../storage.js';
  */
 export async function titleScene(ctx) {
   const best = loadBest();
-  const mascot = createMascot({ size: 560 });
+  const mascot = createMascot();
   mascot.say(STR.TITLE_GREETING);
 
   const recordLine = hasRecord(best)

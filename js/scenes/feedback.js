@@ -15,7 +15,7 @@ import { GAME_COLOR, GAME_DIGIT } from '../games.js';
  * @param {{game: number, level: number, lives: number}} state
  */
 export async function levelClearScene(ctx, state) {
-  const torus = createTorus({ size: 280, mood: 'cheer' });
+  const torus = createTorus({ mood: 'cheer' });
   const cheer = STR.LEVEL_CLEAR_CHEER[(state.level - 1) % STR.LEVEL_CLEAR_CHEER.length];
   torus.say(cheer);
 
@@ -50,7 +50,7 @@ function answerVisual(game, value, colorIndex) {
  * @param {{expectedValue: number|string, expectedColor: number|null}} miss
  */
 export async function missScene(ctx, state, miss) {
-  const torus = createTorus({ size: 250, mood: 'sad' });
+  const torus = createTorus({ mood: 'sad' });
   torus.say(STR.MISS_ENCOURAGE);
 
   const hud = createHud(state);
