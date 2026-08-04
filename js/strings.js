@@ -35,6 +35,13 @@ export const STR = {
   /* HUD */
   HUD_STAGE: (game, level) => `${game}차 ${level}단계`,
   HUD_ITEMS: (n) => `${n}개`,
+  /** HUD 배지에 들어가는 짧은 차수 이름 */
+  GAME_SHORT: { 1: '색깔', 2: '숫자', 3: '모양' },
+  HUD_ROUND: (game) => `${game}차`,
+  HUD_LEVEL: (level) => `${level}단계`,
+
+  /* 기관 로고 */
+  BRAND_ALT: '경상남도교육청 경남수학문화관',
 
   /* 답안 스트립 — 몇 개 중 몇 번째를 누르고 있는지 */
   STRIP_PRESENT: (total) => `${total}개를 외워주세요`,

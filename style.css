@@ -212,10 +212,38 @@ body::after {
   flex: 0 0 auto;
 }
 
+/* 차수·단계 배지 — 글자만 두면 밋밋해서 글상자로 감쌌다.
+   왼쪽 칸 색이 차수마다 달라 지금 어느 게임인지 색으로도 알 수 있다. */
 .hud-stage {
+  display: flex;
+  align-items: stretch;
+  border-radius: 999px;
+  overflow: hidden;
+  box-shadow: 0 5px 16px rgba(120, 90, 140, 0.2);
   font-family: var(--display);
-  font-size: clamp(18px, 3vh, 40px);
+  font-size: clamp(14px, 2.4vh, 30px);
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.stage-round,
+.stage-level {
+  display: flex;
+  align-items: center;
+  padding: 0.9vh 1.5vw;
+}
+
+.stage-round {
+  background: var(--lav);
+  color: #fff;
   letter-spacing: 0.02em;
+}
+.hud-stage[data-game="1"] .stage-round { background: var(--pink); }
+.hud-stage[data-game="2"] .stage-round { background: var(--lav); }
+.hud-stage[data-game="3"] .stage-round { background: var(--mint); }
+
+.stage-level {
+  background: var(--panel);
   color: var(--ink);
 }
 
@@ -323,7 +351,11 @@ body::after {
 
 /* ---------------- 타이틀 ---------------- */
 
-.scene-title { justify-content: center; gap: 1.4vh; padding: 3vh 4vw; }
+/* 아래 가운데에 큰 로고가 놓이므로 그만큼 자리를 비워 둔다 */
+.scene-title,
+.scene-allclear { padding-bottom: clamp(64px, 13vh, 150px); }
+
+.scene-title { justify-content: center; gap: 1.4vh; padding-top: 3vh; }
 
 /* 캐릭터와 카드가 겹쳐 놓인 표지 영역 */
 .title-hero {
@@ -979,11 +1011,43 @@ body::after {
   z-index: 10;
 }
 
-/* 브리지 접속 상태 — 화면 구석의 작은 점 하나로만 표시 (에러 화면 금지) */
+/* 기관 로고 — 씬과 무관하게 항상 떠 있다.
+   평소에는 오른쪽 아래 구석에 작게, 타이틀에서는 아래 가운데에 크게 놓는다. */
+.brand {
+  position: absolute;
+  right: 2vw;
+  bottom: 2.2vh;
+  display: flex;
+  align-items: center;
+  transition: all 320ms cubic-bezier(0.2, 1, 0.4, 1);
+}
+.brand-img {
+  height: clamp(20px, 3.4vh, 44px);
+  width: auto;
+  display: block;
+  opacity: 0.75;
+}
+
+/* 타이틀에서는 크게 — #overlay 는 #app 의 형제라 :has() 로 현재 씬을 알 수 있다.
+   :has() 를 모르는 브라우저에서는 그냥 작은 상태로 남는다(동작에는 지장 없음). */
+#app:has(.scene-title) ~ #overlay .brand,
+#app:has(.scene-allclear) ~ #overlay .brand {
+  right: 50%;
+  bottom: 3vh;
+  transform: translateX(50%);
+}
+#app:has(.scene-title) ~ #overlay .brand-img,
+#app:has(.scene-allclear) ~ #overlay .brand-img {
+  height: clamp(40px, 8vh, 96px);
+  opacity: 1;
+}
+
+/* 브리지 접속 상태 — 화면 구석의 작은 점 하나로만 표시 (에러 화면 금지).
+   오른쪽 아래는 로고 자리가 되었으므로 왼쪽 위 구석으로 옮겼다. */
 .ws-status {
   position: absolute;
-  right: 10px;
-  bottom: 10px;
+  left: 8px;
+  top: 8px;
   width: 9px;
   height: 9px;
   border-radius: 50%;

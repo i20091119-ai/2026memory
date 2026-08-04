@@ -7,6 +7,7 @@ import { STR } from './strings.js';
 import { InputManager, KeyboardInput, SocketInput } from './input.js';
 import { audio } from './audio.js';
 import { runApp } from './state.js';
+import { createBrand } from './logo.js';
 import { el } from './util.js';
 
 const root = document.getElementById('app');
@@ -18,6 +19,10 @@ if (new URLSearchParams(location.search).get('cursor') === '1') {
 }
 
 /* ---------------- 입력 ---------------- */
+
+// 기관 로고는 씬이 바뀌어도 남아야 하므로 오버레이에 한 번만 붙인다.
+// 타이틀에서 크게 보이는 것은 CSS 가 처리한다 (style.css 의 .brand 참조).
+overlay.append(createBrand());
 
 const input = new InputManager(CONFIG);
 new KeyboardInput(input, CONFIG).attach(window);

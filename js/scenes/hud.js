@@ -14,7 +14,15 @@ export function createHud(state) {
   const maxLives = state.maxLives ?? CONFIG.LIVES;
 
   const hearts = el('div.hud-hearts', { 'aria-label': '남은 목숨' });
-  const stage = el('div.hud-stage', { text: STR.HUD_STAGE(state.game, state.level) });
+
+  // 차수·단계는 글자만 두면 밋밋해서 배지(글상자)로 감싼다.
+  // 왼쪽 칸은 차수별 색이 달라 지금 어느 게임인지 색으로도 구분된다.
+  const stageRound = el('span.stage-round');
+  const stageLevel = el('span.stage-level');
+  const stage = el('div.hud-stage', {
+    'aria-label': STR.HUD_STAGE(state.game, state.level),
+  }, stageRound, stageLevel);
+
   const dots = el('div.hud-dots', { 'aria-label': '회상 진행' });
 
   // 홈으로 돌아가는 방법을 항상 눈에 띄게 둔다.
@@ -65,7 +73,13 @@ export function createHud(state) {
     }, { once: true });
   };
 
-  node.setStage = (game, level) => { stage.textContent = STR.HUD_STAGE(game, level); };
+  node.setStage = (game, level) => {
+    stage.dataset.game = String(game);
+    stage.setAttribute('aria-label', STR.HUD_STAGE(game, level));
+    stageRound.textContent = `${STR.HUD_ROUND(game)} ${STR.GAME_SHORT[game] ?? ''}`.trim();
+    stageLevel.textContent = STR.HUD_LEVEL(level);
+  };
+  node.setStage(state.game, state.level);
 
   node.setLives(state.lives);
   node.setProgress(0, 0);

@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>에셋 시트 — 토러스와 즐기는 랜덤 메모리 게임</title>
+
+<!-- 게임의 실제 스타일을 그대로 불러와, 시트에 찍히는 그림이 게임 화면과 같게 한다 -->
+<link rel="stylesheet" href="../style.css">
+
+<style>
+  /* style.css 는 키오스크용이라 화면을 꽉 채우고 스크롤을 막는다.
+     인쇄용 문서에서는 그 설정을 되돌려야 여러 장으로 나뉜다. */
+  html, body {
+    height: auto !important;
+    overflow: visible !important;
+    background: #fff !important;
+    cursor: auto !important;
+    color: #23202a;
+    font-family: system-ui, -apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+    font-size: 10.5pt;
+    line-height: 1.5;
+  }
+  body::before, body::after { display: none !important; }
+
+  @page { size: A4; margin: 14mm 13mm; }
+
+  .page { break-after: page; }
+  .page:last-child { break-after: auto; }
+
+  h1 { font-family: 'Do Hyeon', sans-serif; font-size: 26pt; margin: 0 0 4mm; }
+  h2 {
+    font-family: 'Do Hyeon', sans-serif; font-size: 15pt;
+    margin: 7mm 0 3mm; padding-bottom: 1.5mm;
+    border-bottom: 2px solid #23202a;
+  }
+  h3 { font-size: 11.5pt; margin: 4mm 0 1.5mm; }
+  p  { margin: 0 0 2.5mm; }
+  ul { margin: 0 0 3mm; padding-left: 5mm; }
+  li { margin-bottom: 1mm; }
+  code {
+    font-family: ui-monospace, Menlo, Consolas, monospace;
+    font-size: 9pt; background: #f1eef5; padding: 0.3mm 1mm; border-radius: 2px;
+  }
+  .lead { color: #55505e; }
+  .warn {
+    background: #fff6e5; border-left: 3px solid #e0a018;
+    padding: 2.5mm 3mm; margin: 3mm 0; border-radius: 0 4px 4px 0;
+  }
+  .warn strong { color: #8a5a00; }
+
+  table { width: 100%; border-collapse: collapse; margin: 2mm 0 4mm; font-size: 9.5pt; }
+  th, td { border: 1px solid #d8d3e0; padding: 1.6mm 2.2mm; text-align: left; vertical-align: top; }
+  th { background: #f4f1f8; font-weight: 600; white-space: nowrap; }
+
+  /* 에셋 한 칸 */
+  .asset {
+    border: 1px solid #d8d3e0; border-radius: 6px;
+    padding: 4mm; margin-bottom: 4mm; break-inside: avoid;
+  }
+  .asset-head { display: flex; align-items: baseline; gap: 3mm; margin-bottom: 2.5mm; }
+  .asset-no {
+    background: #23202a; color: #fff; border-radius: 999px;
+    padding: 0.5mm 2.5mm; font-size: 9pt; font-weight: 700;
+  }
+  .asset-name { font-family: 'Do Hyeon', sans-serif; font-size: 13pt; }
+  .asset-file { color: #7a7386; font-size: 9pt; margin-left: auto; }
+
+  .asset-row { display: flex; gap: 5mm; align-items: flex-start; }
+  .asset-art {
+    flex: 0 0 auto; display: flex; gap: 3mm; flex-wrap: wrap;
+    align-items: flex-end; justify-content: center;
+  }
+  .asset-spec { flex: 1; min-width: 0; }
+
+  /* 그림을 담는 규격 상자 — 캔버스 비율을 눈으로 확인하라고 테두리를 둔다 */
+  .box {
+    border: 1px dashed #b9b2c6; border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    background: #fbfafd; position: relative;
+  }
+  .box.dark { background: #4a3f5e; border-color: #4a3f5e; }
+  .box-cap {
+    position: absolute; bottom: -4.5mm; left: 0; right: 0;
+    text-align: center; font-size: 7.5pt; color: #8b8496;
+  }
+  .art-item { display: flex; flex-direction: column; align-items: center; gap: 5mm; }
+  .art-label { font-size: 8pt; color: #55505e; }
+
+  .swatches { display: flex; gap: 2mm; flex-wrap: wrap; }
+  .sw { display: flex; align-items: center; gap: 1.5mm; font-size: 8.5pt; }
+  .sw i { width: 5mm; height: 5mm; border-radius: 2px; display: block; border: 1px solid rgba(0,0,0,.12); }
+
+  .shape-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4mm 3mm; }
+  .shape-cell { text-align: center; }
+  .shape-cell .box { width: 100%; aspect-ratio: 1; margin-bottom: 1mm; }
+  .shape-cell .art-label { font-size: 8.5pt; }
+
+  .torus-row { display: flex; gap: 3mm; }
+  .torus-row .art-item .box { width: 26mm; height: 26mm; }
+
+  .footer { margin-top: 6mm; font-size: 8.5pt; color: #8b8496; text-align: center; }
+
+  /* 인쇄 시 색이 빠지지 않게 */
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+</style>
+</head>
+<body>
+
+<!-- ================= 1쪽: 개요 ================= -->
+<section class="page">
+  <h1>에셋 시트</h1>
+  <p class="lead">
+    토러스와 즐기는 랜덤 메모리 게임 — 새로 그릴 수 있는 그림 목록과 규격.<br>
+    지금 들어가 있는 그림은 전부 <strong>임시</strong>다. 이 문서의 그림은 실제 게임 코드에서
+    그대로 뽑은 것이라, 현재 화면에 나오는 것과 같다.
+  </p>
+
+  <h2>전체 목록</h2>
+  <table>
+    <tr><th>#</th><th>에셋</th><th>개수</th><th>캔버스</th><th>고칠 파일</th></tr>
+    <tr><td>1</td><td>타이틀 로봇 캐릭터</td><td>1</td><td>200 × 200</td><td><code>js/mascot.js</code></td></tr>
+    <tr><td>2</td><td>토러스(게임 중 안내자)</td><td>몸 1 + 표정 5</td><td>120 × 120</td><td><code>js/torus.js</code></td></tr>
+    <tr><td>3</td><td>도형</td><td>8</td><td>100 × 100</td><td><code>js/shapes.js</code></td></tr>
+    <tr style="background:#fff6e5"><td>4</td><td><strong>기관 로고 (경남수학문화관)</strong></td><td>1</td><td>가로형, 높이 기준</td><td><code>assets/logo.svg</code></td></tr>
+    <tr><td>5</td><td>파비콘(탭 아이콘)</td><td>1</td><td>64 × 64</td><td><code>favicon.svg</code></td></tr>
+    <tr><td>6</td><td>목숨 하트</td><td>1</td><td>글자 → SVG 교체 가능</td><td><code>js/scenes/hud.js</code></td></tr>
+    <tr><td>7</td><td>색종이·배경 방울</td><td>—</td><td>CSS 도형</td><td><code>style.css</code></td></tr>
+    <tr><td>8</td><td>제목 서체</td><td>1</td><td>woff2</td><td><code>fonts/</code></td></tr>
+  </table>
+
+  <h2>공통 규칙 — 이건 지켜야 함</h2>
+
+  <h3>① 4색은 바꾸면 안 됨</h3>
+  <p>실물 아케이드 버튼 색과 반드시 같아야 한다. 화면의 카드·패드 색은 고정이다.</p>
+  <div class="swatches">
+    <span class="sw"><i style="background:#e53935"></i> 빨강 #e53935 (0번)</span>
+    <span class="sw"><i style="background:#fdd835"></i> 노랑 #fdd835 (1번)</span>
+    <span class="sw"><i style="background:#43a047"></i> 초록 #43a047 (2번)</span>
+    <span class="sw"><i style="background:#1e88e5"></i> 파랑 #1e88e5 (3번)</span>
+  </div>
+  <p class="lead" style="margin-top:2mm">
+    왼쪽→오른쪽 순서(빨·노·초·파)도 함체 버튼 배치와 같아서 고정이다.
+  </p>
+
+  <h3>② 파일 형식은 SVG(패스)</h3>
+  <ul>
+    <li>PNG·JPG 는 쓰지 않는다. 오프라인 키오스크에서 해상도 상관없이 선명해야 한다.</li>
+    <li>일러스트레이터·피그마에서 그린 뒤 <strong>SVG로 내보내면</strong> 그대로 넣을 수 있다.</li>
+    <li>패스를 하나로 합쳐 주면 제일 깔끔하다(도형은 특히). 색은 코드에서 지정하므로 검정 단색으로 그려도 된다.</li>
+  </ul>
+
+  <h3>③ 배경이 두 종류다</h3>
+  <ul>
+    <li><strong>밝은 파스텔 배경</strong> — 타이틀·회상·결과 화면. 흰색으로 그리면 안 보인다.</li>
+    <li><strong>어두운 무대(#4a3f5e)</strong> — 암기 화면 가운데 판. 여기 올라가는 건 흰색이어야 한다.</li>
+  </ul>
+
+  <div class="warn">
+    <strong>도형 8종은 특히 중요.</strong> 2·3차 게임에서 4개 중 하나를 고르는 문제로 쓰인다.
+    두 도형이 비슷하게 생기면 <em>기억력이 아니라 눈썰미 문제</em>가 되어 게임이 불공정해진다.
+    작게 줄여 놓고 봐도 서로 확실히 구별되는지 꼭 확인할 것.
+  </div>
+
+  <div class="footer">1 / 4</div>
+</section>
+
+<!-- ================= 2쪽: 캐릭터 ================= -->
+<section class="page">
+  <h2>1. 타이틀 로봇 캐릭터</h2>
+  <div class="asset">
+    <div class="asset-head">
+      <span class="asset-no">1</span>
+      <span class="asset-name">메인 표지 캐릭터</span>
+      <span class="asset-file">js/mascot.js</span>
+    </div>
+    <div class="asset-row">
+      <div class="asset-art">
+        <div class="art-item">
+          <div class="box" style="width:46mm;height:46mm" id="slot-mascot">
+            <span class="box-cap">200 × 200 (정사각)</span>
+          </div>
+        </div>
+      </div>
+      <div class="asset-spec">
+        <p>타이틀 화면에만 나온다. 시안을 보고 대강 옮겨 그린 것이라 <strong>새로 그릴 대상 1순위</strong>다.</p>
+        <ul>
+          <li>캔버스 <code>viewBox="0 0 200 200"</code>, 정사각형</li>
+          <li>발밑 그림자까지 포함해 캔버스 안에 넣을 것</li>
+          <li>밝은 배경 위에 놓이므로 <strong>윤곽선이 있어야</strong> 형태가 산다 (지금은 남색 #232c52)</li>
+          <li>가슴 로고 자리 — 지금은 4색 점으로 대체해 뒀다. 정확한 로고 SVG를 주면 그 자리에 넣는다</li>
+          <li>움직임(안테나 흔들림·손 흔들기)은 CSS로 붙어 있다. 부위별로 그룹(<code>&lt;g&gt;</code>)을 나눠 주면 그대로 살릴 수 있다</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <h2>2. 토러스 — 게임 중 안내자</h2>
+  <div class="asset">
+    <div class="asset-head">
+      <span class="asset-no">2</span>
+      <span class="asset-name">도넛 마스코트 (표정 5종)</span>
+      <span class="asset-file">js/torus.js</span>
+    </div>
+    <div class="torus-row" id="slot-torus"></div>
+    <div class="asset-spec" style="margin-top:6mm">
+      <p>차수 안내·클리어·오답·게임오버 화면에 나온다. 몸은 하나이고 <strong>표정만 갈아 끼우는</strong> 구조다.</p>
+      <ul>
+        <li>캔버스 <code>viewBox="0 0 120 120"</code>, 정사각형</li>
+        <li>표정 5종: <code>idle</code>(기본) / <code>talk</code>(말함) / <code>cheer</code>(환호) / <code>sad</code>(시무룩) / <code>celebrate</code>(축하)</li>
+        <li>눈·입만 따로 그려 주면 된다. 몸은 하나만 그리고 표정 부품을 겹쳐 쓴다</li>
+        <li>팔은 기쁠 때 만세를 한다 — 팔을 별도 그룹으로 빼 두면 회전이 그대로 적용된다</li>
+        <li>옆에 말풍선이 붙으므로 <strong>머리 위쪽에 여백</strong>을 남길 것</li>
+      </ul>
+      <p class="lead">
+        타이틀 로봇으로 통일하고 싶으면 이 캐릭터를 없애고 로봇의 표정 5종을 그려도 된다.
+        그 경우 게임 이름(“토러스와 즐기는”)도 같이 정할 것.
+      </p>
+    </div>
+  </div>
+
+  <div class="footer">2 / 4</div>
+</section>
+
+<!-- ================= 3쪽: 도형 ================= -->
+<section class="page">
+  <h2>3. 도형 8종 <span style="font-size:10pt;font-weight:400;color:#7a7386">— 게임 난이도에 직접 영향</span></h2>
+
+  <p>3차 “모양 기억” 게임의 문제. 암기 화면에서는 <strong>색이 입혀져</strong> 크게 뜨고,
+     회상 화면에서는 <strong>흰색 실루엣</strong>으로 4개 중 하나를 고른다.</p>
+
+  <h3>회상 화면 — 색 카드 위 흰색 실루엣</h3>
+  <div class="shape-grid" id="slot-shapes-card"></div>
+
+  <h3 style="margin-top:5mm">암기 화면 — 어두운 무대 위, 색은 매번 랜덤(교란 요소)</h3>
+  <div class="shape-grid" id="slot-shapes-stage"></div>
+
+  <div class="asset-spec" style="margin-top:4mm">
+    <ul>
+      <li>캔버스 <code>viewBox="0 0 100 100"</code>, 정사각형. 8개 모두 같은 규격</li>
+      <li><strong>단색 실루엣</strong>만 쓴다 — 그라데이션·내부 선·구멍 뚫린 디테일은 지워진다</li>
+      <li>캔버스를 꽉 채우되 가장자리 2~5 정도 여백을 둘 것 (카드 안에서 잘리지 않게)</li>
+      <li>가운데가 뚫린 모양(달 같은)은 <code>fill-rule="evenodd"</code>로 처리된다</li>
+      <li>개수는 8개를 유지하는 게 좋다 — 4지선다 보기를 만들려면 최소 4개 필요하고, 적으면 쉬워진다</li>
+      <li>이름(<code>circle, square, …</code>)을 바꾸면 <code>js/config.js</code>의 <code>SHAPES</code> 목록도 같이 고쳐야 한다.
+          안 맞으면 테스트가 잡아낸다</li>
+    </ul>
+    <div class="warn">
+      <strong>서로 헷갈리면 안 됨.</strong> 지금 8종은 동그라미·네모·세모·별·하트·다이아·달·십자다.
+      새로 그릴 때 “네모와 다이아”, “동그라미와 달”처럼 실루엣이 닮은 조합이 생기지 않는지
+      네 개를 나란히 놓고 확인할 것.
+    </div>
+  </div>
+
+  <div class="footer">3 / 4</div>
+</section>
+
+<!-- ================= 4쪽: 나머지 ================= -->
+<section class="page">
+  <h2>4~8. 나머지</h2>
+
+  <div class="asset" style="border-color:#e0a018;background:#fffdf7">
+    <div class="asset-head">
+      <span class="asset-no" style="background:#e0a018">4</span>
+      <span class="asset-name">기관 로고 — 경남수학문화관</span>
+      <span class="asset-file">assets/logo.svg</span>
+    </div>
+    <div class="asset-row">
+      <div class="asset-art">
+        <div class="art-item">
+          <div class="box" style="width:56mm;height:16mm;background:#fff">
+            <img src="../assets/logo.svg" style="max-width:52mm;max-height:13mm" alt="">
+            <span class="box-cap">지금 들어간 임시 로고</span>
+          </div>
+        </div>
+      </div>
+      <div class="asset-spec">
+        <p><strong>지금 것은 임시입니다.</strong> 공식 로고 원본 파일을 받지 못해
+           기관명만 적은 임시 레터마크를 넣어 두었습니다.
+           <strong>공식 로고 파일을 주시면 그대로 교체됩니다</strong> — 코드는 안 고쳐도 됩니다.</p>
+        <ul>
+          <li>파일을 <code>assets/logo.svg</code> 자리에 <strong>같은 이름으로 덮어쓰기</strong>만 하면 끝</li>
+          <li>SVG 권장. PNG 면 <code>js/logo.js</code>의 경로 한 줄만 바꾸면 된다</li>
+          <li>가로:세로 비율은 자유 — 코드가 <strong>높이 기준</strong>으로 맞춘다</li>
+          <li>모든 화면에 나온다: 게임 중에는 오른쪽 아래 작게(약 30px),
+              타이틀·올클리어에서는 아래 가운데 크게(약 70~96px)</li>
+          <li>밝은 파스텔 배경 위에 놓이므로 <strong>흰색 단색 로고는 피할 것</strong>.
+              배경 투명(PNG면 알파) 버전이 가장 좋다</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="asset">
+    <div class="asset-head">
+      <span class="asset-no">5</span><span class="asset-name">파비콘 (브라우저 탭 아이콘)</span>
+      <span class="asset-file">favicon.svg</span>
+    </div>
+    <div class="asset-row">
+      <div class="asset-art">
+        <div class="art-item">
+          <div class="box" style="width:20mm;height:20mm">
+            <img src="../favicon.svg" style="width:16mm;height:16mm" alt="">
+            <span class="box-cap">64 × 64</span>
+          </div>
+        </div>
+      </div>
+      <div class="asset-spec">
+        <ul>
+          <li>아주 작게(16px) 표시되므로 <strong>디테일을 다 지우고</strong> 실루엣만 남길 것</li>
+          <li>배경까지 포함해 그린다(투명 배경이면 밝은 탭에서 안 보인다)</li>
+          <li>캐릭터를 새로 그리면 이것도 같이 맞추는 게 좋다</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="asset">
+    <div class="asset-head">
+      <span class="asset-no">6</span><span class="asset-name">목숨 하트</span>
+      <span class="asset-file">js/scenes/hud.js</span>
+    </div>
+    <div class="asset-row">
+      <div class="asset-art">
+        <div class="art-item">
+          <div class="box" style="width:20mm;height:20mm">
+            <span style="font-size:26pt;color:#ff8fab">♥</span>
+            <span class="box-cap">현재: 글자 ♥</span>
+          </div>
+        </div>
+      </div>
+      <div class="asset-spec">
+        <p>화면 왼쪽 위에 3개 표시된다. 지금은 <strong>글자(♥)</strong>를 쓰고 있어서 서체에 따라 모양이 달라진다.</p>
+        <ul>
+          <li>SVG로 바꾸면 어디서나 같은 모양이 된다</li>
+          <li>켜진 상태(분홍)와 꺼진 상태(회색) 두 가지가 필요하다 — 색만 바뀌면 하나로 충분</li>
+          <li>틀렸을 때 <strong>깨지는 연출</strong>이 있다. 깨진 하트를 따로 그려 주면 더 살아난다</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="asset">
+    <div class="asset-head">
+      <span class="asset-no">7</span><span class="asset-name">색종이 · 배경 방울</span>
+      <span class="asset-file">style.css</span>
+    </div>
+    <div class="asset-spec">
+      <p>그림 파일이 아니라 CSS 도형이다. 올클리어 때 떨어지는 색종이는 둥근 사각형,
+         배경에 떠다니는 건 흐린 원이다.</p>
+      <ul>
+        <li>모양을 바꾸고 싶으면 SVG 조각으로 교체 가능 (예: 별·하트 색종이)</li>
+        <li>색만 바꾸는 건 <code>style.css</code> 한 줄이면 된다</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="asset">
+    <div class="asset-head">
+      <span class="asset-no">8</span><span class="asset-name">제목 서체</span>
+      <span class="asset-file">fonts/</span>
+    </div>
+    <div class="asset-spec">
+      <p>지금은 <strong>Do Hyeon(배민 도현체)</strong>. 재배포가 허용된 무료 서체(OFL)라 저장소에 같이 넣어 뒀다.</p>
+      <ul>
+        <li>바꾸려면 <code>.woff2</code> 파일을 <code>fonts/</code>에 넣고 <code>style.css</code>의 <code>@font-face</code> 한 곳만 고치면 된다</li>
+        <li><strong>반드시 재배포 허용 서체</strong>일 것 — 키오스크는 오프라인이라 CDN을 못 쓴다</li>
+        <li>숫자 게임이 있으므로 <strong>0과 O, 6과 9</strong>가 확실히 구별되는 서체를 고를 것</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2>넘겨줄 때</h2>
+  <p>SVG 파일을 그냥 주면 된다. 파일명은 아무거나 좋고, 이 문서의 번호만 알려주면 맞춰 넣는다.
+     레이어 이름이나 그룹은 남겨 두는 게 좋다 — 움직임을 붙일 때 쓴다.</p>
+
+  <div class="footer">4 / 4 · 이 문서는 <code>docs/assets.html</code>에서 자동 생성된다</div>
+</section>
+
+<script type="module">
+  import { createShape, SHAPE_NAMES } from '../js/shapes.js';
+  import { createTorus } from '../js/torus.js';
+  import { createMascot } from '../js/mascot.js';
+  import { STR } from '../js/strings.js';
+  import { COLORS } from '../js/config.js';
+
+  const mm = (v) => `${v}mm`;
+
+  // 1. 로봇 캐릭터
+  const mascot = createMascot({ size: 150 });
+  mascot.querySelector('.torus-bubble')?.remove();
+  document.getElementById('slot-mascot').prepend(mascot);
+
+  // 2. 토러스 표정 5종
+  const MOODS = [
+    ['idle', '기본'], ['talk', '말함'], ['cheer', '환호'],
+    ['sad', '시무룩'], ['celebrate', '축하'],
+  ];
+  const torusRow = document.getElementById('slot-torus');
+  for (const [mood, label] of MOODS) {
+    const t = createTorus({ size: 78, mood });
+    t.querySelector('.torus-bubble')?.remove();
+    const box = document.createElement('div');
+    box.className = 'box';
+    box.append(t);
+    const item = document.createElement('div');
+    item.className = 'art-item';
+    const cap = document.createElement('div');
+    cap.className = 'art-label';
+    cap.textContent = `${label} (${mood})`;
+    item.append(box, cap);
+    torusRow.append(item);
+  }
+
+  // 3. 도형 8종 — 카드 위 흰색 / 무대 위 컬러
+  const cardGrid = document.getElementById('slot-shapes-card');
+  const stageGrid = document.getElementById('slot-shapes-stage');
+
+  SHAPE_NAMES.forEach((name, i) => {
+    // 색 카드 위 흰색 실루엣
+    const c1 = document.createElement('div');
+    c1.className = 'shape-cell';
+    const b1 = document.createElement('div');
+    b1.className = 'box';
+    b1.style.background = COLORS[i % 4];
+    b1.style.border = 'none';
+    b1.append(createShape(name, { size: '68%', color: '#fff' }));
+    const l1 = document.createElement('div');
+    l1.className = 'art-label';
+    l1.textContent = `${STR.SHAPE_NAME[name] ?? name} · ${name}`;
+    c1.append(b1, l1);
+    cardGrid.append(c1);
+
+    // 어두운 무대 위 컬러
+    const c2 = document.createElement('div');
+    c2.className = 'shape-cell';
+    const b2 = document.createElement('div');
+    b2.className = 'box dark';
+    b2.append(createShape(name, { size: '66%', color: COLORS[(i + 1) % 4] }));
+    const l2 = document.createElement('div');
+    l2.className = 'art-label';
+    l2.textContent = name;
+    c2.append(b2, l2);
+    stageGrid.append(c2);
+  });
+
+  document.documentElement.dataset.ready = '1';
+</script>
+</body>
+</html>

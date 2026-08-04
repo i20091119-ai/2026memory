@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 170"
+     role="img" aria-label="경상남도교육청 경남수학문화관">
+  <!--
+    ⚠ 임시 로고입니다 (placeholder).
+
+    경남수학문화관의 공식 로고 원본 파일을 받지 못해, 기관명을 적은 임시
+    레터마크를 넣어 두었습니다. 공식 로고 SVG(또는 PNG)를 이 파일 자리에
+    같은 이름으로 덮어쓰면 코드 수정 없이 그대로 교체됩니다.
+
+    - 권장 형식: SVG (해상도 무관, 오프라인 키오스크 대응)
+    - 가로:세로 비율은 자유. 코드가 '높이' 기준으로 크기를 맞춘다.
+    - 밝은 배경 위에 놓이므로 흰색 단색 로고는 피할 것.
+  -->
+  <g>
+    <!-- 게임의 4색을 쓴 중립적인 막대 (공식 심볼을 흉내 내지 않기 위함) -->
+    <rect x="0"  y="34" width="10" height="26" rx="5" fill="#e53935"/>
+    <rect x="0"  y="66" width="10" height="26" rx="5" fill="#fdd835"/>
+    <rect x="0"  y="98" width="10" height="26" rx="5" fill="#43a047"/>
+    <rect x="0" y="130" width="10" height="26" rx="5" fill="#1e88e5"/>
+  </g>
+
+  <g fill="#23202a"
+     font-family="'Apple SD Gothic Neo','Malgun Gothic','Noto Sans KR',sans-serif">
+    <text x="30" y="52"  font-size="30" letter-spacing="2">경상남도교육청</text>
+    <text x="30" y="118" font-size="58" font-weight="700" letter-spacing="1">경남수학문화관</text>
+    <text x="32" y="150" font-size="19" fill="#6b6478"
+          font-family="system-ui,-apple-system,sans-serif">Gyeongnam Mathematics Culture Center</text>
+  </g>
+</svg>

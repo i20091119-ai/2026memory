@@ -70,6 +70,7 @@ node --test          # 38개 테스트
 index.html              # 진입점
 style.css
 favicon.svg
+assets/logo.svg         # 기관 로고 — 이 파일만 덮어쓰면 전 화면에 반영된다
 fonts/                  # 로컬 번들 웹폰트 (CDN 미사용)
 js/
 ├── config.js           # 모든 튜닝 상수 (난이도·타이밍) — 조정은 여기서만
@@ -79,6 +80,7 @@ js/
 ├── main.js             # 부트스트랩·키오스크 설정
 ├── input.js            # KeyboardInput / SocketInput 추상화
 ├── audio.js            # Web Audio 효과음 합성 (외부 음원 없음)
+├── logo.js             # 기관 로고 배치 (모든 화면 공통)
 ├── mascot.js           # 타이틀 로봇 캐릭터 SVG
 ├── torus.js            # 게임 중 안내자 토러스 SVG + 표정 상태
 ├── shapes.js           # 3차 도형 8종 SVG
@@ -89,6 +91,8 @@ js/
 firmware/button_bridge/ # 우노 Q 버튼 → WebSocket 브리지
 ├── sketch/sketch.ino   # STM32: 버튼 읽기 + 디바운스
 └── python/main.py      # 리눅스: WebSocket 서버
+docs/assets.html        # 에셋 시트 (새로 그릴 그림 목록·규격)
+docs/에셋시트.pdf        # 위 문서를 인쇄용으로 뽑은 것
 docs/hardware-guide.md  # 실물 조립·설치 가이드
 test/games.test.js      # node --test
 ```
@@ -116,6 +120,15 @@ test/games.test.js      # node --test
 설계명세서는 이사만루체를 1순위로 지정했으나, 재배포 조건을 저장소 동봉 방식으로
 확인하기 어려워 명세서가 대체 후보로 열어 둔 OFL 서체 중 하나를 골랐다.
 바꾸려면 `fonts/` 에 woff2 를 넣고 `style.css` 의 `@font-face` 한 곳만 고치면 된다.
+
+## 그림 교체 (에셋)
+
+새로 그릴 수 있는 그림의 목록·규격·주의사항은 **[`docs/에셋시트.pdf`](docs/에셋시트.pdf)** 에 정리해 두었다.
+(원본은 `docs/assets.html` 이며, 브라우저로 열어 인쇄하면 PDF 가 다시 나온다 — 그림이
+실제 게임 코드에서 렌더링되므로 항상 현재 상태와 일치한다.)
+
+**기관 로고**는 `assets/logo.svg` 를 같은 이름으로 덮어쓰면 코드 수정 없이 전 화면에 반영된다.
+지금 들어 있는 것은 공식 로고 원본을 받기 전까지 쓰는 **임시 레터마크**다.
 
 ## 실물 게임기
 
