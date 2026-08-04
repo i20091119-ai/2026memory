@@ -12,9 +12,9 @@ import { CONFIG } from '../config.js';
  *   heart-off    — 이미 잃은 목숨
  *   heart-broken — 막 잃는 순간에만 잠깐 보이는 깨진 하트
  */
-const HEART_ON = 'assets/heart.svg';
-const HEART_OFF = 'assets/heart-off.svg';
-const HEART_BROKEN = 'assets/heart-broken.svg';
+const HEART_ON = new URL('../../assets/heart.png', import.meta.url).href;
+const HEART_OFF = new URL('../../assets/heart-off.png', import.meta.url).href;
+const HEART_BROKEN = new URL('../../assets/heart-broken.png', import.meta.url).href;
 
 /**
  * @param {{game: number, level: number, lives: number, maxLives?: number}} state

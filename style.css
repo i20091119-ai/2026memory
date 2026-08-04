@@ -71,10 +71,10 @@ body {
   overscroll-behavior: none;
   touch-action: manipulation;
 
-  /* 배경은 그림 파일 하나로 관리한다 — assets/background.svg 를 덮어쓰면 바뀐다.
+  /* 배경은 그림 파일 하나로 관리한다 — assets/background.png 를 덮어쓰면 바뀐다.
      파일을 못 읽어도 아래 단색이 남아 화면이 하얗게 비지 않는다. */
   background-color: var(--bg-1);
-  background-image: url('assets/background.svg');
+  background-image: url('assets/background.png');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -152,7 +152,7 @@ body.show-cursor, body.show-cursor button { cursor: default; }
 
 .hud-hearts { display: flex; gap: 0.7vw; }
 
-/* 하트는 그림 파일 3종을 쓴다 (assets/heart*.svg). 서체에 따라 모양이 달라지지 않게. */
+/* 하트는 그림 파일 3종을 쓴다 (assets/heart*.png). 서체에 따라 모양이 달라지지 않게. */
 .heart {
   width: clamp(22px, 3.4vh, 46px);
   height: clamp(22px, 3.4vh, 46px);
@@ -849,34 +849,14 @@ body.show-cursor, body.show-cursor button { cursor: default; }
   gap: 1vh;
 }
 
+.mascot-img { display: block; height: auto; }
+
 .mascot-body {
   animation: torusBob 3.4s ease-in-out infinite;
   filter: drop-shadow(0 12px 22px rgba(120, 90, 140, 0.18));
 }
 
-/* 엄지척 손을 살짝 흔든다 */
-.ms-arm-l {
-  transform-box: view-box;
-  transform-origin: 60px 116px;
-  animation: thumbWave 2.6s ease-in-out infinite;
-}
-@keyframes thumbWave {
-  0%, 70%, 100% { transform: rotate(0deg); }
-  80%  { transform: rotate(-9deg); }
-  90%  { transform: rotate(3deg); }
-}
-
-/* 안테나가 통통 튄다 */
-.ms-antenna {
-  transform-box: view-box;
-  transform-origin: 112px 32px;
-  animation: antennaWiggle 2.2s ease-in-out infinite;
-}
-@keyframes antennaWiggle {
-  50% { transform: rotate(-12deg); }
-}
-
-/* ---------------- 토러스 마스코트 (게임 중 안내자) ---------------- */
+/* ---------------- 게임 중 안내 캐릭터 ---------------- */
 
 .torus {
   display: flex;
@@ -918,39 +898,10 @@ body.show-cursor, body.show-cursor button { cursor: default; }
 }
 .torus-bubble.pop { animation: popIn 300ms cubic-bezier(0.2, 1.4, 0.4, 1) both; }
 
-/* 표정 부품: 전부 그려 두고 상태에 맞는 것만 보여 준다 */
-.tr-eye-open, .tr-eye-happy, .tr-eye-sad,
-.tr-mouth-smile, .tr-mouth-open, .tr-mouth-frown { display: none; }
-
-.torus[data-mood="idle"] .tr-eye-open,
-.torus[data-mood="idle"] .tr-mouth-smile,
-.torus[data-mood="talk"] .tr-eye-open,
-.torus[data-mood="talk"] .tr-mouth-open,
-.torus[data-mood="cheer"] .tr-eye-happy,
-.torus[data-mood="cheer"] .tr-mouth-open,
-.torus[data-mood="sad"] .tr-eye-sad,
-.torus[data-mood="sad"] .tr-mouth-frown { display: block; }
-
-/* 팔: 기쁠 때 만세 */
-.tr-arm-l, .tr-arm-r {
-  transform-box: view-box;
-  transition: transform 260ms cubic-bezier(0.2, 1.3, 0.4, 1);
-}
-.tr-arm-l { transform-origin: 16px 66px; }
-.tr-arm-r { transform-origin: 104px 66px; }
-
-.torus[data-mood="cheer"] .tr-arm-l { transform: rotate(-95deg); }
-.torus[data-mood="cheer"] .tr-arm-r { transform: rotate(95deg); }
-
-.torus[data-mood="sad"] .tr-arm-l { transform: rotate(28deg); }
-.torus[data-mood="sad"] .tr-arm-r { transform: rotate(-28deg); }
+.torus-img { display: block; height: auto; }
 
 /* 올클리어에서만 더 요란하게 — 표정을 따로 그리지 않고 씬 단위로 얹는다 */
-.scene-allclear .torus .tr-sprinkles { animation: sprinkleFlash 700ms ease-in-out infinite; }
-.scene-allclear .torus-body { animation-duration: 480ms; }
-@keyframes sprinkleFlash { 50% { opacity: 0.45; } }
-
-.torus[data-mood="sad"] .tr-blush { opacity: 0.3; }
+.scene-allclear .torus-body { animation: torusHop 480ms ease-in-out infinite; }
 
 .intro-torus, .clear-torus, .miss-torus, .gameover-torus, .allclear-torus,
 .title-torus { display: flex; justify-content: center; }

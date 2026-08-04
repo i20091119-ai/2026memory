@@ -70,10 +70,12 @@ node --test          # 38개 테스트
 index.html              # 진입점
 style.css
 favicon.svg
-assets/                 # 그림 파일 — 덮어쓰면 코드 수정 없이 반영된다
-├── background.svg      #   전 화면 배경
-├── logo.svg            #   기관 로고
-└── heart*.svg          #   목숨 하트 3종 (온전 / 깨짐 / 회색)
+assets/                 # 그림 파일(PNG) — 덮어쓰면 코드 수정 없이 반영된다
+├── background.png      #   전 화면 배경
+├── mascot.png          #   타이틀 로봇
+├── torus-*.png         #   안내 캐릭터 표정 4종
+├── logo.png            #   기관 로고
+└── heart*.png          #   목숨 하트 3종 (온전 / 깨짐 / 회색)
 fonts/                  # 로컬 번들 웹폰트 (CDN 미사용)
 js/
 ├── config.js           # 모든 튜닝 상수 (난이도·타이밍) — 조정은 여기서만
@@ -130,8 +132,9 @@ test/games.test.js      # node --test
 (원본은 `docs/assets.html` 이며, 브라우저로 열어 인쇄하면 PDF 가 다시 나온다 — 그림이
 실제 게임 코드에서 렌더링되므로 항상 현재 상태와 일치한다.)
 
-**기관 로고**는 `assets/logo.svg` 를 같은 이름으로 덮어쓰면 코드 수정 없이 전 화면에 반영된다.
-지금 들어 있는 것은 공식 로고 원본을 받기 전까지 쓰는 **임시 레터마크**다.
+그림은 전부 `assets/` 의 **PNG 파일**이다. 같은 이름으로 덮어쓰면 코드 수정 없이 반영된다.
+지금 들어 있는 것은 실제 그림을 받기 전까지 쓰는 **임시본**이다.
+(도형 8종만 예외로 `js/shapes.js` 안에 SVG 로 들어 있고, 이건 확정이다.)
 
 ## 실물 게임기
 

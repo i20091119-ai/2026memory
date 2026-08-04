@@ -1,7 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" aria-hidden="true">
-  <!-- 목숨(남아 있음). 이 파일을 덮어쓰면 바뀐다. viewBox 100×100 정사각 유지. -->
-  <path d="M50 88 C18 66 6 50 6 34 A24 24 0 0 1 50 22 A24 24 0 0 1 94 34 C94 50 82 66 50 88 Z"
-        fill="#ff8fab"/>
-  <path d="M28 30 a10 10 0 0 1 10 -6" stroke="#fff" stroke-width="5"
-        stroke-linecap="round" fill="none" opacity="0.65"/>
-</svg>

@@ -1,5 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" aria-hidden="true">
-  <!-- 목숨을 막 잃는 순간에만 잠깐 보이는 '깨진' 하트. 가운데가 갈라진 모양. -->
-  <path d="M50 88 C18 66 6 50 6 34 A24 24 0 0 1 50 22 L42 44 L58 52 L50 88 Z" fill="#ff8fab"/>
-  <path d="M50 22 A24 24 0 0 1 94 34 C94 50 82 66 50 88 L58 52 L42 44 Z" fill="#e0748f"/>
-</svg>
