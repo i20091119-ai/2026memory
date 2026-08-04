@@ -161,7 +161,7 @@
     작게 줄여 놓고 봐도 서로 확실히 구별되는지 꼭 확인할 것.
   </div>
 
-  <div class="footer">1 / 4</div>
+  <div class="footer">에셋 시트 · 토러스와 즐기는 랜덤 메모리 게임</div>
 </section>
 
 <!-- ================= 2쪽: 캐릭터 ================= -->
@@ -220,7 +220,7 @@
     </div>
   </div>
 
-  <div class="footer">2 / 4</div>
+  <div class="footer">에셋 시트 · 토러스와 즐기는 랜덤 메모리 게임</div>
 </section>
 
 <!-- ================= 3쪽: 도형 ================= -->
@@ -253,7 +253,7 @@
     </div>
   </div>
 
-  <div class="footer">3 / 4</div>
+  <div class="footer">에셋 시트 · 토러스와 즐기는 랜덤 메모리 게임</div>
 </section>
 
 <!-- ================= 4쪽: 나머지 ================= -->
@@ -371,11 +371,62 @@
     </div>
   </div>
 
-  <h2>넘겨줄 때</h2>
-  <p>SVG 파일을 그냥 주면 된다. 파일명은 아무거나 좋고, 이 문서의 번호만 알려주면 맞춰 넣는다.
-     레이어 이름이나 그룹은 남겨 두는 게 좋다 — 움직임을 붙일 때 쓴다.</p>
+  <div class="footer">에셋 시트 · 토러스와 즐기는 랜덤 메모리 게임</div>
+</section>
 
-  <div class="footer">4 / 4 · 이 문서는 <code>docs/assets.html</code>에서 자동 생성된다</div>
+<!-- ================= 파일 이름 ================= -->
+<section class="page">
+  <h2>파일 이름 — 이대로 주시면 됩니다</h2>
+  <p class="lead">이름을 코드에서 쓰는 키와 똑같이 맞추면 어느 파일이 어느 그림인지 헷갈릴 일이 없다.</p>
+
+  <table>
+    <tr><th>에셋</th><th>파일 이름</th><th>비고</th></tr>
+    <tr>
+      <td rowspan="8">도형 8종</td>
+      <td><code>assets/shapes/circle.svg</code></td><td>동그라미</td>
+    </tr>
+    <tr><td><code>assets/shapes/square.svg</code></td><td>네모</td></tr>
+    <tr><td><code>assets/shapes/triangle.svg</code></td><td>세모</td></tr>
+    <tr><td><code>assets/shapes/star.svg</code></td><td>별</td></tr>
+    <tr><td><code>assets/shapes/heart.svg</code></td><td>하트</td></tr>
+    <tr><td><code>assets/shapes/diamond.svg</code></td><td>다이아</td></tr>
+    <tr><td><code>assets/shapes/moon.svg</code></td><td>달</td></tr>
+    <tr><td><code>assets/shapes/cross.svg</code></td><td>십자</td></tr>
+
+    <tr><td>타이틀 로봇</td><td><code>assets/mascot.svg</code></td><td>1개</td></tr>
+
+    <tr>
+      <td rowspan="4">토러스 표정</td>
+      <td><code>assets/torus-idle.svg</code></td><td>기본</td>
+    </tr>
+    <tr><td><code>assets/torus-talk.svg</code></td><td>말함</td></tr>
+    <tr><td><code>assets/torus-cheer.svg</code></td><td>기쁨</td></tr>
+    <tr><td><code>assets/torus-sad.svg</code></td><td>시무룩</td></tr>
+
+    <tr><td>기관 로고</td><td><code>assets/logo.svg</code></td><td>지금 임시 파일을 덮어쓰면 됨</td></tr>
+    <tr><td>파비콘</td><td><code>favicon.svg</code></td><td>저장소 맨 위</td></tr>
+    <tr><td>목숨 하트</td><td><code>assets/heart.svg</code></td><td>깨진 버전은 <code>heart-broken.svg</code></td></tr>
+  </table>
+
+  <div class="warn">
+    <strong>도형 8개 이름은 코드와 글자까지 같아야 한다.</strong>
+    <code>js/config.js</code> 의 <code>SHAPES</code> 목록과 대조되며, 어긋나면 테스트가 잡아낸다.
+    이름을 바꾸고 싶으면 바꿔도 되지만 두 곳을 같이 고쳐야 한다.
+  </div>
+
+  <h3>그릴 때 공통</h3>
+  <ul>
+    <li><strong>색은 신경 쓰지 않아도 된다.</strong> 코드에서 칠한다 — 검정 단색으로 그려도 그대로 쓴다
+        (도형은 특히. 흰색으로 칠해 두면 오히려 확인하기 어렵다)</li>
+    <li>토러스 표정 4종은 <strong>몸까지 통째로</strong> 그려서 4장 주면 된다. 달라지는 부분(눈·입·팔)만 내가 뽑아 쓴다</li>
+    <li>레이어·그룹 이름은 남겨 둘 것 — 움직임을 붙일 때 쓴다</li>
+  </ul>
+
+  <h2>넘겨줄 때</h2>
+  <p>위 이름으로 SVG 파일을 주면 된다. 한꺼번에 다 줄 필요는 없고, 다 된 것부터 하나씩 줘도
+     그때그때 바꿔 넣는다. 이름이 다르면 어느 그림인지만 알려주면 맞춰 넣는다.</p>
+
+  <div class="footer">이 문서는 <code>docs/assets.html</code> 에서 자동 생성된다</div>
 </section>
 
 <script type="module">
