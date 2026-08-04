@@ -20,7 +20,7 @@ export const CONFIG = {
   ATTRACT_IDLE_MS: 60000,    // 타이틀 방치 → 어트랙트 데모
   EXIT_HOLD_MS: 2000,        // 빨+파 홀드 → 타이틀 복귀
   GAMEOVER_IDLE_MS: 15000,   // 게임오버 방치 → 타이틀
-  INTRO_MS: 2500,            // 차수 안내 화면 표시 시간
+  INTRO_MIN_MS: 600,         // 차수 안내: 이 시간 동안은 입력을 안 받는다(오입력 방지)
   LEVEL_CLEAR_MS: 1000,      // 단계 클리어 연출
   DEBOUNCE_MS: 80,           // 연타 방지 최소 간격
   WS_RETRY_MS: 3000,         // WebSocket 재접속 간격
@@ -45,7 +45,7 @@ export const FAST = params.get('fast') === '1';
 if (FAST) {
   for (const key of [
     'PRESENT_MS', 'GAP_MS', 'COUNTDOWN_MS', 'FEEDBACK_MS', 'MISS_MS',
-    'INTRO_MS', 'LEVEL_CLEAR_MS', 'ATTRACT_IDLE_MS', 'GAMEOVER_IDLE_MS',
+    'INTRO_MIN_MS', 'LEVEL_CLEAR_MS', 'ATTRACT_IDLE_MS', 'GAMEOVER_IDLE_MS',
   ]) {
     CONFIG[key] = Math.round(CONFIG[key] / 3);
   }

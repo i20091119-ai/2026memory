@@ -75,11 +75,22 @@ test('games.poolFor 가 config.SHAPES 를 그대로 쓴다', () => {
 
 test('타이밍 상수는 모두 0 이상이고, 무제한 입력은 0 으로 표현된다', () => {
   for (const key of ['PRESENT_MS', 'GAP_MS', 'COUNTDOWN_MS', 'FEEDBACK_MS', 'MISS_MS',
-    'INTRO_MS', 'LEVEL_CLEAR_MS', 'ATTRACT_IDLE_MS', 'GAMEOVER_IDLE_MS',
+    'INTRO_MIN_MS', 'LEVEL_CLEAR_MS', 'ATTRACT_IDLE_MS', 'GAMEOVER_IDLE_MS',
     'EXIT_HOLD_MS', 'DEBOUNCE_MS', 'WS_RETRY_MS']) {
     assert.ok(Number.isFinite(CONFIG[key]) && CONFIG[key] > 0, `${key} 가 이상하다`);
   }
   assert.equal(CONFIG.INPUT_TIMEOUT_MS, 0, '입력 제한시간은 무제한(0)이 확정 사양이다');
+});
+
+test('답안 스트립·홈 안내 문구가 빠짐없이 있다', () => {
+  for (const key of ['STRIP_DONE', 'HOME_HINT', 'HOME_HOLDING', 'INTRO_PRESS', 'EXIT_HINT']) {
+    assert.ok(typeof STR[key] === 'string' && STR[key].length > 0, `${key} 문구가 없다`);
+  }
+  // 최대 단계 수까지 스트립 문구가 정상적으로 만들어지는지
+  for (let k = 1; k <= CONFIG.LEVELS_PER_GAME; k++) {
+    assert.ok(!STR.STRIP_RECALL(k, CONFIG.LEVELS_PER_GAME).includes('undefined'));
+  }
+  assert.ok(!STR.STRIP_PRESENT(CONFIG.LEVELS_PER_GAME).includes('undefined'));
 });
 
 test('LEVELS_PER_GAME 만큼 클리어 응원 문구가 돌아간다', () => {

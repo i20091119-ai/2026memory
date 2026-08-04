@@ -37,10 +37,13 @@ socket.connect();
 // 빨+파를 누르고 있는 동안 진행률을 보여 준다. 실수로 눌렀을 때
 // "뭔가 일어나려 한다"를 알 수 있어야 당황하지 않는다.
 
-const holdGauge = el('div.hold-gauge', {}, el('div.hold-bar'));
+const holdBar = el('div.hold-bar');
+const holdGauge = el('div.hold-gauge', {},
+  holdBar,
+  el('div.hold-text', { text: STR.HOME_HOLDING }),
+);
 overlay.append(holdGauge);
 
-const holdBar = holdGauge.firstChild;
 let holdRaf = null;
 
 input.onRaw(() => {

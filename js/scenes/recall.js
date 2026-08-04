@@ -10,6 +10,7 @@ import { el, mount, sleep, waitButton, edgeFlash } from '../util.js';
 import { STR } from '../strings.js';
 import { CONFIG, COLORS } from '../config.js';
 import { createHud } from './hud.js';
+import { createStrip } from './strip.js';
 import { createShape } from '../shapes.js';
 import { judgeStep, GAME_COLOR, GAME_DIGIT } from '../games.js';
 
@@ -61,10 +62,16 @@ async function recallByButtons(ctx, state, round, opts) {
     return makeTappable(pad, id, ctx.input);
   });
 
+  // 지금까지 무엇을 눌렀는지 보여 주는 답안 스트립
+  const strip = createStrip(state.game, total);
+  const entered = [];
+  strip.setEntered(entered);
+
   const node = el('section.scene.scene-recall.recall-color', {},
     hud,
     el('div.recall-body', {},
       el('h2.recall-prompt', { text: STR.RECALL_COLOR_PROMPT }),
+      strip,
       el('div.pad-row', {}, ...pads),
     ),
   );
@@ -94,6 +101,7 @@ async function recallByButtons(ctx, state, round, opts) {
     if (!ok) {
       pad.classList.add('wrong');
       pads[round.answers[k]].classList.add('reveal');
+      strip.reveal(k, round.sequence[k]);     // 놓친 자리에 정답을 밝혀 준다
       edgeFlash(node, 'wrong');
       // 눌러야 했던 패드를 잠깐이라도 보여 주고 나서 MISS 씬으로 넘긴다.
       // (바로 return 하면 강조 연출이 한 프레임도 보이지 않는다)
@@ -104,6 +112,8 @@ async function recallByButtons(ctx, state, round, opts) {
       };
     }
 
+    entered.push(round.sequence[k]);
+    strip.setEntered(entered);
     hud.setProgress(k + 1, total);
     if (done) {
       await sleep(CONFIG.FEEDBACK_MS, ctx.signal);
@@ -131,9 +141,14 @@ async function recallByChoices(ctx, state, round, opts) {
   const prompt = el('h2.recall-prompt');
   const cardRow = el('div.card-row');
 
+  // 지금까지 무엇을 골랐는지 보여 주는 답안 스트립 (예: 4 5 7 ? ?)
+  const strip = createStrip(state.game, total);
+  const entered = [];
+  strip.setEntered(entered);
+
   const node = el('section.scene.scene-recall.recall-choice', {},
     hud,
-    el('div.recall-body', {}, prompt, cardRow),
+    el('div.recall-body', {}, prompt, strip, cardRow),
   );
   mount(ctx.root, node);
   hud.setProgress(0, total);
@@ -172,6 +187,7 @@ async function recallByChoices(ctx, state, round, opts) {
     if (!ok) {
       cards[ev.id].classList.add('wrong');
       cards[round.answers[k]].classList.add('reveal');
+      strip.reveal(k, round.sequence[k]);     // 놓친 자리에 정답을 밝혀 준다
       edgeFlash(node, 'wrong');
       // 정답 카드를 잠깐 보여 주고 나서 MISS 씬으로 (바로 return 하면 안 보인다)
       await sleep(CONFIG.FEEDBACK_MS, ctx.signal);
@@ -185,6 +201,8 @@ async function recallByChoices(ctx, state, round, opts) {
     cards[ev.id].classList.add('correct');
     edgeFlash(node, 'correct');
     ctx.audio.correct();
+    entered.push(round.sequence[k]);
+    strip.setEntered(entered);
     hud.setProgress(k + 1, total);
     await sleep(CONFIG.FEEDBACK_MS, ctx.signal);
 

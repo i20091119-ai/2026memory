@@ -118,6 +118,16 @@ export class InputManager {
     }
   }
 
+  /**
+   * 즉시 홈으로 나가기를 요청한다 (ESC 등 콤보를 거치지 않는 경로).
+   * 플레이 중이 아닐 때(exitComboEnabled=false)는 무시한다 — 이미 타이틀이다.
+   */
+  requestExit() {
+    if (!this.exitComboEnabled) return;
+    this._cancelHold();
+    for (const h of [...this._exitHandlers]) h();
+  }
+
   /** 지금 이탈 콤보를 누르고 있는 중인가 (게이지를 띄울지 판단용) */
   isHolding() {
     return this._holdTimer !== null;
@@ -167,6 +177,15 @@ export class KeyboardInput {
 
   _onKeyDown(ev) {
     if (ev.repeat) return;                      // 키 반복 이벤트는 무시 (§5.2)
+
+    // 브라우저로 할 때는 ESC 한 번으로도 홈에 갈 수 있게 한다.
+    // (실기에는 ESC 가 없으므로 빨강+파랑 홀드가 여전히 정식 경로다)
+    if (ev.key === 'Escape') {
+      ev.preventDefault();
+      this.manager.requestExit();
+      return;
+    }
+
     const id = this.config.KEY_MAP[ev.key];
     if (id === undefined) return;
     ev.preventDefault();

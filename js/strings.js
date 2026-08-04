@@ -26,10 +26,20 @@ export const STR = {
 
   /* 조작 안내 */
   EXIT_HINT: '그만하려면 빨강 + 파랑을 2초 동안 함께 누르세요',
+  INTRO_PRESS: '아무 버튼이나 누르면 시작!',
+
+  /* 홈으로 돌아가기 */
+  HOME_HINT: '빨강+파랑 2초 = 홈',
+  HOME_HOLDING: '홈으로 돌아가는 중…',
 
   /* HUD */
   HUD_STAGE: (game, level) => `${game}차 ${level}단계`,
   HUD_ITEMS: (n) => `${n}개`,
+
+  /* 답안 스트립 — 몇 개 중 몇 번째를 누르고 있는지 */
+  STRIP_PRESENT: (total) => `${total}개를 외워주세요`,
+  STRIP_RECALL: (k, total) => `${total}개 중 ${k}번째`,
+  STRIP_DONE: '완성!',
 
   /* 제시(PRESENT) */
   PRESENT_WATCH: '잘 봐!',

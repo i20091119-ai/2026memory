@@ -17,8 +17,12 @@ export function createHud(state) {
   const stage = el('div.hud-stage', { text: STR.HUD_STAGE(state.game, state.level) });
   const dots = el('div.hud-dots', { 'aria-label': '회상 진행' });
 
+  // 홈으로 돌아가는 방법을 항상 눈에 띄게 둔다.
+  // 콤보를 모르면 게임 중에 빠져나갈 방법이 없다시피 하다.
+  const home = el('div.hud-home', {}, el('span.home-key'), el('span', { text: STR.HOME_HINT }));
+
   const node = el('header.hud', {},
-    el('div.hud-left', {}, hearts),
+    el('div.hud-left', {}, hearts, home),
     el('div.hud-center', {}, stage),
     el('div.hud-right', {}, dots),
   );

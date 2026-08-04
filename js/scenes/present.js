@@ -9,6 +9,7 @@ import { STR } from '../strings.js';
 import { CONFIG, COLORS } from '../config.js';
 import { createTorus } from '../torus.js';
 import { createHud } from './hud.js';
+import { createStrip } from './strip.js';
 import { createShape } from '../shapes.js';
 import { GAME_COLOR, GAME_DIGIT } from '../games.js';
 
@@ -40,20 +41,25 @@ export async function presentScene(ctx, state, round) {
   const torus = createTorus({ size: 150, mood: 'talk' });
   torus.say(STR.PRESENT_WATCH);
 
+  const total = round.sequence.length;
   const stage = el('div.present-stage');
-  const counter = el('div.present-counter');
   const hud = createHud(state);
+
+  // 답안 스트립을 여기서도 쓴다. 단, 값은 채우지 않는다 — 채우면 외울 필요가 없어진다.
+  // 몇 개짜리인지, 지금 몇 번째를 보여 주는지만 알린다.
+  const strip = createStrip(state.game, total);
+  strip.setLabel(STR.STRIP_PRESENT(total));
 
   const node = el('section.scene.scene-present', {},
     hud,
-    el('div.present-body', {}, stage, counter),
+    el('div.present-body', {}, stage, strip),
     el('div.present-torus', {}, torus),
   );
   mount(ctx.root, node);
 
   // 몇 개를 외워야 하는지 카운트다운 전에 미리 보여 준다.
   // (마음의 준비를 하고 시작하는 것과 아닌 것은 체감 난이도가 꽤 다르다)
-  hud.setProgress(0, round.sequence.length);
+  hud.setProgress(0, total);
 
   // 3-2-1 카운트다운 (각 COUNTDOWN_MS)
   for (const n of [3, 2, 1]) {
@@ -68,14 +74,14 @@ export async function presentScene(ctx, state, round) {
   torus.setMood('idle');
   torus.say(null);
 
-  // 항목을 하나씩 제시.
-  // HUD 진행 점을 회상 때와 똑같이 써서 "몇 개 중 몇 번째"를 한눈에 보여 준다.
-  for (let i = 0; i < round.sequence.length; i++) {
+  // 항목을 하나씩 제시. 스트립의 현재 칸이 함께 움직여 "몇 개 중 몇 번째"를 알린다.
+  for (let i = 0; i < total; i++) {
     const value = round.sequence[i];
     const color = round.presentColors ? round.presentColors[i] : null;
 
-    hud.setProgress(i, round.sequence.length);
-    counter.textContent = `${i + 1} / ${round.sequence.length}`;
+    hud.setProgress(i, total);
+    strip.setCurrent(i);
+    strip.setLabel(STR.STRIP_RECALL(i + 1, total));
     stage.replaceChildren(renderItem(state.game, value, color));
     ctx.audio.present(state.game, state.game === GAME_COLOR ? value : i);
 
@@ -86,6 +92,6 @@ export async function presentScene(ctx, state, round) {
     await sleep(CONFIG.GAP_MS, ctx.signal);
   }
 
-  hud.setProgress(round.sequence.length, round.sequence.length);
-  counter.textContent = '';
+  hud.setProgress(total, total);
+  strip.setCurrent(-1);
 }

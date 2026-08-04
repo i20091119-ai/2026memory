@@ -34,8 +34,13 @@ python3 -m http.server 8000
 |---|---|
 | 1차 회상 | 외운 색 순서대로 해당 색 버튼을 누른다 |
 | 2·3차 회상 | 4지선다 — 외운 숫자/모양이 들어 있는 칸의 **색 버튼**을 누른다 |
-| 게임 중단 | **빨강 + 파랑을 2초 동안 함께 누르면** 타이틀로 (화면 위쪽에 게이지가 찬다) |
+| 화면 넘기기 | 차수 안내는 **아무 버튼이나 누를 때까지 기다린다** (자동으로 넘어가지 않는다) |
+| 홈으로 나가기 | **빨강 + 파랑을 2초 동안 함께** (화면 위쪽에 게이지가 찬다). 브라우저에서는 **ESC** 로도 된다 |
 | 입력 제한시간 | 없음 |
+
+회상 중에는 화면 가운데 **답안 스트립**이 있어, 이번 단계가 몇 개짜리인지와
+지금까지 무엇을 눌렀는지를 함께 보여 준다 (예: `4` `5` `7` `_` `_` — "5개 중 4번째").
+틀리면 놓친 자리에 정답이 빨갛게 밝혀진다.
 
 ## 개발용 URL 옵션
 
@@ -53,7 +58,7 @@ python3 -m http.server 8000
 **DOM 무의존 순수 함수**로 분리해 두었다. 그래서 별도 도구 없이 노드 내장 러너로 돌아간다.
 
 ```bash
-node --test          # 37개 테스트
+node --test          # 38개 테스트
 ```
 
 ## 저장소 구조
@@ -78,8 +83,8 @@ js/
 ├── shapes.js           # 3차 도형 8종 SVG
 ├── storage.js          # 최고기록 저장/로드
 ├── util.js             # DOM·대기 도우미 (중도 이탈 신호 포함)
-└── scenes/             # title, intro, present, recall, feedback,
-                        #   gameover, allclear, attract, hud
+└── scenes/             # title, intro, present, recall, feedback, gameover,
+                        #   allclear, attract, hud, strip(답안 스트립)
 firmware/button_bridge/ # 우노 Q 버튼 → WebSocket 브리지
 ├── sketch/sketch.ino   # STM32: 버튼 읽기 + 디바운스
 └── python/main.py      # 리눅스: WebSocket 서버
