@@ -79,7 +79,8 @@ js/
 ├── main.js             # 부트스트랩·키오스크 설정
 ├── input.js            # KeyboardInput / SocketInput 추상화
 ├── audio.js            # Web Audio 효과음 합성 (외부 음원 없음)
-├── torus.js            # 마스코트 SVG + 표정 상태
+├── mascot.js           # 타이틀 로봇 캐릭터 SVG
+├── torus.js            # 게임 중 안내자 토러스 SVG + 표정 상태
 ├── shapes.js           # 3차 도형 8종 SVG
 ├── storage.js          # 최고기록 저장/로드
 ├── util.js             # DOM·대기 도우미 (중도 이탈 신호 포함)

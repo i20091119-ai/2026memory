@@ -323,19 +323,49 @@ body::after {
 
 /* ---------------- 타이틀 ---------------- */
 
-.scene-title { justify-content: center; gap: 1.6vh; padding: 3vh 4vw; }
+.scene-title { justify-content: center; gap: 1.4vh; padding: 3vh 4vw; }
 
-.title-deco { display: flex; gap: 1.2vw; }
-.title-chip {
-  width: clamp(28px, 4vw, 72px);
-  height: clamp(10px, 1.4vh, 18px);
-  border-radius: 999px;
-  animation: chipWave 2.4s ease-in-out infinite;
+/* 캐릭터와 카드가 겹쳐 놓인 표지 영역 */
+.title-hero {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  /* 아래로 걸쳐 놓은 카드가 다음 줄(기록 문구)을 침범하지 않도록 자리를 비워 둔다 */
+  padding-bottom: clamp(26px, 4.5vh, 56px);
 }
-.title-chip:nth-child(2) { animation-delay: 0.15s; }
-.title-chip:nth-child(3) { animation-delay: 0.3s; }
-.title-chip:nth-child(4) { animation-delay: 0.45s; }
-@keyframes chipWave { 50% { transform: translateY(-8px) scaleX(1.1); } }
+
+.title-mascot { display: flex; justify-content: center; }
+
+/* 캐릭터가 들고 있는 듯 좌우로 펼쳐지는 카드 4장 */
+.title-cards {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  display: flex;
+  gap: clamp(10px, 1.7vw, 30px);
+  width: max-content;
+  pointer-events: none;
+}
+
+.title-card {
+  width: clamp(38px, 5.4vh, 74px);
+  height: clamp(38px, 5.4vh, 74px);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-soft);
+  animation: cardFloat 3.4s ease-in-out infinite;
+}
+/* 바깥쪽 카드일수록 더 기울여 부채처럼 펼친다 */
+.title-card:nth-child(1) { transform: rotate(-14deg) translate(-10px, 8px); animation-delay: 0s; }
+.title-card:nth-child(2) { transform: rotate(-5deg); animation-delay: 0.2s; }
+.title-card:nth-child(3) { transform: rotate(5deg); animation-delay: 0.4s; }
+.title-card:nth-child(4) { transform: rotate(14deg) translate(10px, 8px); animation-delay: 0.6s; }
+
+@keyframes cardFloat { 50% { margin-top: -10px; } }
 
 .title-text {
   font-family: var(--display);
@@ -800,7 +830,43 @@ body::after {
   to   { transform: translateY(110vh) rotate(720deg); opacity: 0.9; }
 }
 
-/* ---------------- 토러스 마스코트 ---------------- */
+/* ---------------- 타이틀 로봇 캐릭터 ---------------- */
+
+.mascot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1vh;
+}
+
+.mascot-body {
+  animation: torusBob 3.4s ease-in-out infinite;
+  filter: drop-shadow(0 12px 22px rgba(120, 90, 140, 0.18));
+}
+
+/* 엄지척 손을 살짝 흔든다 */
+.ms-arm-l {
+  transform-box: view-box;
+  transform-origin: 60px 116px;
+  animation: thumbWave 2.6s ease-in-out infinite;
+}
+@keyframes thumbWave {
+  0%, 70%, 100% { transform: rotate(0deg); }
+  80%  { transform: rotate(-9deg); }
+  90%  { transform: rotate(3deg); }
+}
+
+/* 안테나가 통통 튄다 */
+.ms-antenna {
+  transform-box: view-box;
+  transform-origin: 112px 32px;
+  animation: antennaWiggle 2.2s ease-in-out infinite;
+}
+@keyframes antennaWiggle {
+  50% { transform: rotate(-12deg); }
+}
+
+/* ---------------- 토러스 마스코트 (게임 중 안내자) ---------------- */
 
 .torus {
   display: flex;

@@ -5,8 +5,12 @@
 import { el, multiline, mount, waitButton } from '../util.js';
 import { STR } from '../strings.js';
 import { CONFIG, COLORS } from '../config.js';
-import { createTorus } from '../torus.js';
+import { createMascot } from '../mascot.js';
+import { createShape } from '../shapes.js';
 import { loadBest, hasRecord } from '../storage.js';
+
+/** 캐릭터가 들고 있는 카드 — 시안과 같은 조합 (빨 네모 / 노 별 / 초 하트 / 파 십자) */
+const TITLE_CARDS = ['square', 'star', 'heart', 'cross'];
 
 /**
  * @param {import('../state.js').Ctx} ctx
@@ -14,18 +18,21 @@ import { loadBest, hasRecord } from '../storage.js';
  */
 export async function titleScene(ctx) {
   const best = loadBest();
-  const torus = createTorus({ size: 240, mood: 'idle' });
-  torus.say(STR.TITLE_GREETING);
+  const mascot = createMascot({ size: 260 });
+  mascot.say(STR.TITLE_GREETING);
 
   const recordLine = hasRecord(best)
     ? STR.TITLE_BEST(best.bestGame, best.bestLevel)
     : STR.TITLE_NO_RECORD;
 
   const node = el('section.scene.scene-title', {},
-    el('div.title-deco', {}, ...COLORS.map((c) =>
-      el('span.title-chip', { style: { background: c } }))),
     multiline('h1.title-text', STR.TITLE),
-    el('div.title-torus', {}, torus),
+    el('div.title-hero', {},
+      el('div.title-cards', {}, ...TITLE_CARDS.map((shape, i) =>
+        el('span.title-card', { style: { background: COLORS[i] } },
+          createShape(shape, { size: '62%', color: '#fff' })))),
+      el('div.title-mascot', {}, mascot),
+    ),
     el('div.title-record', {},
       el('div.record-line', { text: recordLine }),
       best.allClearCount > 0
