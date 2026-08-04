@@ -70,7 +70,10 @@ node --test          # 38개 테스트
 index.html              # 진입점
 style.css
 favicon.svg
-assets/logo.svg         # 기관 로고 — 이 파일만 덮어쓰면 전 화면에 반영된다
+assets/                 # 그림 파일 — 덮어쓰면 코드 수정 없이 반영된다
+├── background.svg      #   전 화면 배경
+├── logo.svg            #   기관 로고
+└── heart*.svg          #   목숨 하트 3종 (온전 / 깨짐 / 회색)
 fonts/                  # 로컬 번들 웹폰트 (CDN 미사용)
 js/
 ├── config.js           # 모든 튜닝 상수 (난이도·타이밍) — 조정은 여기서만

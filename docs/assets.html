@@ -100,6 +100,49 @@
 
   .footer { margin-top: 6mm; font-size: 8.5pt; color: #8b8496; text-align: center; }
 
+
+  /* 배경 안전 영역 도해 */
+  .safezone {
+    position: relative; width: 100%; aspect-ratio: 16/9;
+    border: 1px solid #d8d3e0; border-radius: 6px; overflow: hidden;
+    margin: 2mm 0 5mm;
+  }
+  .safezone > img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .sz {
+    position: absolute; display: flex; align-items: center; justify-content: center;
+    text-align: center; font-size: 8pt; line-height: 1.35;
+  }
+  .sz span { padding: 1mm 2mm; }
+  .sz-hud {
+    left: 0; right: 0; top: 0; height: 9%;
+    background: rgba(255, 143, 171, 0.22);
+    border-bottom: 1.5px dashed #d4587d; color: #8d2f4c;
+    justify-content: flex-end;          /* 위쪽 잘림 안내와 겹치지 않게 오른쪽으로 */
+  }
+  .sz-core {
+    left: 12%; right: 12%; top: 14%; bottom: 22%;
+    background: rgba(75, 63, 87, 0.1);
+    border: 2px dashed #4b3f57; border-radius: 8px; color: #3a3049; font-weight: 700;
+  }
+  .sz-logo {
+    left: 36%; right: 36%; bottom: 2%; height: 14%;
+    background: rgba(224, 160, 24, 0.2);
+    border: 1.5px dashed #a06a00; border-radius: 6px; color: #7a5100;
+  }
+  .sz-char {
+    left: 2%; bottom: 3%; width: 15%; height: 20%;
+    background: rgba(111, 216, 193, 0.25);
+    border: 1.5px dashed #2c8d77; border-radius: 6px; color: #175f4f;
+  }
+  .sz-crop {
+    left: 5%; right: 5%; top: 5%; bottom: 5%;
+    border: 1.5px solid rgba(229, 57, 53, 0.75); border-radius: 4px;
+  }
+  .sz-crop-tag {
+    position: absolute; left: 2mm; top: 1mm;
+    font-size: 7.5pt; color: #b3231f;
+  }
+
   /* 인쇄 시 색이 빠지지 않게 */
   * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 </style>
@@ -111,21 +154,23 @@
   <h1>에셋 시트</h1>
   <p class="lead">
     토러스와 즐기는 랜덤 메모리 게임 — 그림 목록과 규격.<br>
-    <strong>도형 8종은 확정</strong>이고, 나머지는 새로 그릴 대상이다.
+    <strong>도형 8종은 확정</strong>, 캐릭터·로고·파비콘·하트는 <strong>그림을 받았고</strong>,
+    지금 남은 것은 <strong>배경</strong>이다.
     이 문서의 그림은 실제 게임 코드에서 그대로 뽑은 것이라 현재 화면과 같다.
   </p>
 
   <h2>전체 목록</h2>
   <table>
     <tr><th>#</th><th>에셋</th><th>상태</th><th>개수</th><th>캔버스</th><th>고칠 파일</th></tr>
-    <tr><td>1</td><td>타이틀 로봇 캐릭터</td><td>새로 그릴 것</td><td>1</td><td>200 × 200</td><td><code>js/mascot.js</code></td></tr>
-    <tr><td>2</td><td>토러스(게임 중 안내자)</td><td>새로 그릴 것</td><td>몸 1 + 표정 4</td><td>120 × 120</td><td><code>js/torus.js</code></td></tr>
+    <tr style="background:#eefbf5"><td>1</td><td>타이틀 로봇 캐릭터</td><td><strong>그림 받음</strong></td><td>1</td><td>200 × 200</td><td><code>js/mascot.js</code></td></tr>
+    <tr style="background:#eefbf5"><td>2</td><td>안내 캐릭터 (게임 중)</td><td><strong>그림 받음</strong></td><td>몸 1 + 표정 4</td><td>120 × 120</td><td><code>js/torus.js</code></td></tr>
     <tr style="background:#eefbf5"><td>3</td><td>도형</td><td><strong>확정 · 유지</strong></td><td>8</td><td>100 × 100</td><td><code>js/shapes.js</code></td></tr>
-    <tr style="background:#fff6e5"><td>4</td><td><strong>기관 로고 (경남수학문화관)</strong></td><td>원본 파일 필요</td><td>1</td><td>가로형, 높이 기준</td><td><code>assets/logo.svg</code></td></tr>
-    <tr><td>5</td><td>파비콘(탭 아이콘)</td><td>새로 그릴 것</td><td>1</td><td>64 × 64</td><td><code>favicon.svg</code></td></tr>
-    <tr><td>6</td><td>목숨 하트</td><td>선택</td><td>1</td><td>글자 → SVG 교체 가능</td><td><code>js/scenes/hud.js</code></td></tr>
-    <tr><td>7</td><td>색종이·배경 방울</td><td>선택</td><td>—</td><td>CSS 도형</td><td><code>style.css</code></td></tr>
-    <tr><td>8</td><td>제목 서체</td><td>선택</td><td>1</td><td>woff2</td><td><code>fonts/</code></td></tr>
+    <tr style="background:#eefbf5"><td>4</td><td>기관 로고 (경남수학문화관)</td><td><strong>그림 받음</strong></td><td>1</td><td>가로형, 높이 기준</td><td><code>assets/logo.svg</code></td></tr>
+    <tr style="background:#eefbf5"><td>5</td><td>파비콘(탭 아이콘)</td><td><strong>그림 받음</strong></td><td>1</td><td>64 × 64</td><td><code>favicon.svg</code></td></tr>
+    <tr style="background:#eefbf5"><td>6</td><td>목숨 하트</td><td><strong>그림 받음</strong></td><td>3</td><td>100 × 100</td><td><code>assets/heart*.svg</code></td></tr>
+    <tr style="background:#fff6e5"><td>7</td><td><strong>배경 그림</strong></td><td><strong>지금 그리는 중</strong></td><td>1</td><td>1920 × 1080</td><td><code>assets/background.svg</code></td></tr>
+    <tr><td>8</td><td>색종이 조각</td><td>선택</td><td>—</td><td>CSS 도형</td><td><code>style.css</code></td></tr>
+    <tr><td>9</td><td>제목 서체</td><td>선택</td><td>1</td><td>woff2</td><td><code>fonts/</code></td></tr>
   </table>
 
   <h2>공통 규칙 — 이건 지켜야 함</h2>
@@ -378,6 +423,94 @@
   <div class="footer">에셋 시트 · 토러스와 즐기는 랜덤 메모리 게임</div>
 </section>
 
+<!-- ================= 배경 ================= -->
+<section class="page">
+  <h2>7. 배경 그림 <span style="font-size:10pt;font-weight:400;color:#a06a00">— 지금 그리는 중</span></h2>
+
+  <div class="asset" style="border-color:#e0a018;background:#fffdf7">
+    <div class="asset-head">
+      <span class="asset-no" style="background:#e0a018">7</span>
+      <span class="asset-name">전 화면 공통 배경</span>
+      <span class="asset-file">assets/background.svg</span>
+    </div>
+    <div class="asset-art" style="width:100%">
+      <div class="art-item" style="width:100%">
+        <div class="box" style="width:100%;aspect-ratio:16/9;overflow:hidden;padding:0">
+          <img src="../assets/background.svg" style="width:100%;height:100%;object-fit:cover" alt="">
+          <span class="box-cap">지금 들어간 배경 (1920 × 1080)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h3>규격</h3>
+  <ul>
+    <li><strong>1920 × 1080 (16:9)</strong> 기준으로 그린다. 파일 이름은 <code>assets/background.svg</code></li>
+    <li>모든 화면에서 <strong>같은 배경 하나</strong>를 쓴다. 화면마다 바꾸지 않는다</li>
+    <li>화면 비율이 다르면 <code>cover</code>로 <strong>잘려서</strong> 들어간다(늘어나지 않는다).
+        → <strong>가장자리 10% 안쪽에는 중요한 걸 두지 말 것</strong></li>
+    <li>SVG 권장. 사진 같은 그림이면 PNG/JPG 도 되지만, 키오스크가 오프라인이라 파일이 크면 로딩이 느려진다
+        (2MB 넘지 않게)</li>
+  </ul>
+
+  <div class="warn">
+    <strong>배경은 주인공이 아니다.</strong> 이 위에 카드·숫자·글자가 올라간다.
+    배경이 진하거나 무늬가 촘촘하면 <em>글씨가 안 읽히고 카드가 묻힌다.</em>
+    연한 색으로, 대비를 낮게, 가운데는 되도록 비워 둘 것.
+  </div>
+
+  <h3>안전 영역 — 어디를 비워야 하는지</h3>
+  <div class="safezone">
+    <img src="../assets/background.svg" alt="">
+    <div class="sz sz-hud"><span>위쪽 띠 — 하트 · 차수 배지 · 진행 점</span></div>
+    <div class="sz sz-core"><span>가운데 · 비워 둘 것<br>카드 · 큰 숫자 · 어두운 무대</span></div>
+    <div class="sz sz-logo"><span>기관 로고</span></div>
+    <div class="sz sz-char"><span>안내 캐릭터</span></div>
+    <div class="sz sz-crop"></div>
+    <div class="sz-crop-tag">빨간 선 바깥쪽은 화면 비율에 따라 잘릴 수 있음</div>
+  </div>
+
+  <h3>화면 어디에 뭐가 올라오는지</h3>
+  <table>
+    <tr><th>자리</th><th>올라오는 것</th><th>배경에서 주의할 점</th></tr>
+    <tr>
+      <td>위쪽 띠<br><span class="lead">(높이 9%)</span></td>
+      <td>하트 · 차수 배지 · 진행 점</td>
+      <td>흰 배지와 분홍 하트가 놓인다. 이 띠는 <strong>밝게</strong> 두는 게 안전</td>
+    </tr>
+    <tr>
+      <td><strong>가운데 (제일 중요)</strong></td>
+      <td>암기용 어두운 무대, 4색 카드, 큰 글자</td>
+      <td><strong>비워 둘 것.</strong> 무늬가 있으면 카드 테두리와 섞여 지저분해진다</td>
+    </tr>
+    <tr>
+      <td>아래 가운데</td>
+      <td>기관 로고(타이틀에서는 크게)</td>
+      <td>로고가 묻히지 않게 <strong>연한 색</strong>으로</td>
+    </tr>
+    <tr>
+      <td>왼쪽 아래</td>
+      <td>암기 화면의 안내 캐릭터</td>
+      <td>캐릭터와 색이 겹치지 않게</td>
+    </tr>
+    <tr>
+      <td>네 모서리</td>
+      <td>—</td>
+      <td>여기는 <strong>마음껏 써도 되는 자리.</strong> 장식은 여기에</td>
+    </tr>
+  </table>
+
+  <h3>확인하는 법</h3>
+  <ul>
+    <li>그린 파일을 <code>assets/background.svg</code> 에 덮어쓰고 게임을 열면 바로 보인다</li>
+    <li><strong>타이틀 화면과 암기 화면 두 곳만 봐도</strong> 대부분 판단이 된다 —
+        글자가 읽히는지, 카드가 뜨는지</li>
+    <li>창 크기를 가로로 길게 / 세로로 길게 늘여 보면 잘리는 범위를 알 수 있다</li>
+  </ul>
+
+  <div class="footer">에셋 시트 · 토러스와 즐기는 랜덤 메모리 게임</div>
+</section>
+
 <!-- ================= 파일 이름 ================= -->
 <section class="page">
   <h2>파일 이름 — 이대로 주시면 됩니다</h2>
@@ -391,19 +524,24 @@
         <span style="color:#55505e">(지금 그림 그대로 간다)</span></td>
     </tr>
 
-    <tr><td>타이틀 로봇</td><td><code>assets/mascot.svg</code></td><td>1개</td></tr>
+    <tr style="background:#eefbf5"><td>타이틀 로봇</td><td><code>assets/mascot.svg</code></td><td>받음</td></tr>
 
-    <tr>
-      <td rowspan="4">토러스 표정</td>
-      <td><code>assets/torus-idle.svg</code></td><td>기본</td>
+    <tr style="background:#eefbf5">
+      <td rowspan="4">안내 캐릭터 4종<br><span class="lead">(게임 중)</span></td>
+      <td><code>assets/torus-idle.svg</code></td><td>기본 · 받음</td>
     </tr>
-    <tr><td><code>assets/torus-talk.svg</code></td><td>말함</td></tr>
-    <tr><td><code>assets/torus-cheer.svg</code></td><td>기쁨</td></tr>
-    <tr><td><code>assets/torus-sad.svg</code></td><td>시무룩</td></tr>
+    <tr style="background:#eefbf5"><td><code>assets/torus-talk.svg</code></td><td>말함 · 받음</td></tr>
+    <tr style="background:#eefbf5"><td><code>assets/torus-cheer.svg</code></td><td>기쁨 · 받음</td></tr>
+    <tr style="background:#eefbf5"><td><code>assets/torus-sad.svg</code></td><td>시무룩 · 받음</td></tr>
 
-    <tr><td>기관 로고</td><td><code>assets/logo.svg</code></td><td>지금 임시 파일을 덮어쓰면 됨</td></tr>
-    <tr><td>파비콘</td><td><code>favicon.svg</code></td><td>저장소 맨 위</td></tr>
-    <tr><td>목숨 하트</td><td><code>assets/heart.svg</code></td><td>깨진 버전은 <code>heart-broken.svg</code></td></tr>
+    <tr style="background:#eefbf5"><td>기관 로고</td><td><code>assets/logo.svg</code></td><td>받음</td></tr>
+    <tr style="background:#eefbf5"><td>파비콘</td><td><code>favicon.svg</code></td><td>받음 · 저장소 맨 위</td></tr>
+        <tr style="background:#eefbf5"><td rowspan="3">목숨 하트 3종</td>
+      <td><code>assets/heart.svg</code></td><td>온전 · 받음</td></tr>
+    <tr style="background:#eefbf5"><td><code>assets/heart-broken.svg</code></td><td>깨짐 · 받음</td></tr>
+    <tr style="background:#eefbf5"><td><code>assets/heart-off.svg</code></td><td>회색(잃음) · 받음</td></tr>
+    <tr style="background:#fff6e5"><td><strong>배경</strong></td>
+      <td><code>assets/background.svg</code></td><td><strong>지금 그리는 중</strong></td></tr>
   </table>
 
   <div class="warn">
@@ -426,6 +564,10 @@
   <h2>넘겨줄 때</h2>
   <p>위 이름으로 SVG 파일을 주면 된다. 한꺼번에 다 줄 필요는 없고, 다 된 것부터 하나씩 줘도
      그때그때 바꿔 넣는다. 이름이 다르면 어느 그림인지만 알려주면 맞춰 넣는다.</p>
+  <p><strong>지금 남은 것은 배경 하나다</strong> — 나머지는 자리와 크기를 모두 잡아 뒀으니
+     파일만 오면 바로 들어간다.</p>
+  <p class="lead">참고: <code>torus-</code> 는 도넛이 아니라 <em>마스코트 이름</em>에서 온 것이라,
+     캐릭터가 로봇으로 바뀌어도 파일 이름은 그대로 쓴다.</p>
 
   <div class="footer">이 문서는 <code>docs/assets.html</code> 에서 자동 생성된다</div>
 </section>

@@ -71,12 +71,13 @@ body {
   overscroll-behavior: none;
   touch-action: manipulation;
 
-  /* 은은하게 흐르는 파스텔 배경 */
-  background:
-    radial-gradient(120vh 90vh at 12% 8%,  #ffe8f0 0%, transparent 62%),
-    radial-gradient(110vh 90vh at 88% 14%, #e6f0ff 0%, transparent 60%),
-    radial-gradient(120vh 90vh at 50% 100%, var(--bg-3) 0%, transparent 58%),
-    linear-gradient(160deg, var(--bg-1), var(--bg-2));
+  /* 배경은 그림 파일 하나로 관리한다 — assets/background.svg 를 덮어쓰면 바뀐다.
+     파일을 못 읽어도 아래 단색이 남아 화면이 하얗게 비지 않는다. */
+  background-color: var(--bg-1);
+  background-image: url('assets/background.svg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   background-attachment: fixed;
 }
 
@@ -96,31 +97,6 @@ body.show-cursor, body.show-cursor button { cursor: default; }
   width: 100vw;
   height: 100vh;
   height: 100dvh;
-}
-
-/* 배경에 둥둥 떠다니는 장식 — 화면이 심심하지 않게 */
-body::before, body::after {
-  content: '';
-  position: fixed;
-  border-radius: 50%;
-  pointer-events: none;
-  opacity: 0.45;
-  z-index: 0;
-}
-body::before {
-  width: 22vh; height: 22vh;
-  left: 5vw; bottom: 8vh;
-  background: radial-gradient(circle at 35% 32%, #fff, var(--pink));
-  animation: float 9s ease-in-out infinite;
-}
-body::after {
-  width: 15vh; height: 15vh;
-  right: 7vw; top: 16vh;
-  background: radial-gradient(circle at 35% 32%, #fff, var(--lav));
-  animation: float 11s ease-in-out infinite reverse;
-}
-@keyframes float {
-  50% { transform: translateY(-26px) translateX(12px); }
 }
 
 /* ---------------- 씬 공통 ---------------- */
@@ -176,19 +152,21 @@ body::after {
 
 .hud-hearts { display: flex; gap: 0.7vw; }
 
+/* 하트는 그림 파일 3종을 쓴다 (assets/heart*.svg). 서체에 따라 모양이 달라지지 않게. */
 .heart {
-  font-size: clamp(22px, 3.4vh, 46px);
-  line-height: 1;
-  transition: color 200ms, transform 200ms, opacity 200ms;
+  width: clamp(22px, 3.4vh, 46px);
+  height: clamp(22px, 3.4vh, 46px);
+  display: block;
+  transition: transform 200ms, opacity 200ms;
 }
-.heart.on  { color: var(--pink); filter: drop-shadow(0 3px 6px rgba(255, 143, 171, 0.5)); }
-.heart.off { color: #ded6e6; }
+.heart-img { width: 100%; height: 100%; display: block; }
+.heart.on  { filter: drop-shadow(0 3px 6px rgba(255, 143, 171, 0.5)); }
 
 .heart.breaking { animation: heartBreak 700ms ease-in both; }
 @keyframes heartBreak {
-  0%   { transform: scale(1.35); color: #fff; }
-  30%  { transform: scale(0.9) rotate(-14deg); color: var(--pink); }
-  100% { transform: scale(1) rotate(0); color: #ded6e6; }
+  0%   { transform: scale(1.35); }
+  30%  { transform: scale(0.9) rotate(-14deg); }
+  100% { transform: scale(1) rotate(0); }
 }
 
 /* 홈으로 돌아가는 방법 — 항상 보이게 */

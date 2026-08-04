@@ -7,6 +7,16 @@ import { STR } from '../strings.js';
 import { CONFIG } from '../config.js';
 
 /**
+ * 목숨 하트 그림 3종. 파일을 덮어쓰면 그대로 바뀐다 (코드 수정 불필요).
+ *   heart        — 남아 있는 목숨
+ *   heart-off    — 이미 잃은 목숨
+ *   heart-broken — 막 잃는 순간에만 잠깐 보이는 깨진 하트
+ */
+const HEART_ON = 'assets/heart.svg';
+const HEART_OFF = 'assets/heart-off.svg';
+const HEART_BROKEN = 'assets/heart-broken.svg';
+
+/**
  * @param {{game: number, level: number, lives: number, maxLives?: number}} state
  * @returns {HTMLElement & {setLives: Function, setProgress: Function, breakHeart: Function}}
  */
@@ -39,7 +49,8 @@ export function createHud(state) {
   node.setLives = (lives) => {
     hearts.replaceChildren(
       ...Array.from({ length: maxLives }, (_, i) =>
-        el('span.heart', { class: i < lives ? 'on' : 'off', text: '♥' })),
+        el('span.heart', { class: i < lives ? 'on' : 'off' },
+          el('img.heart-img', { src: i < lives ? HEART_ON : HEART_OFF, alt: '' }))),
     );
   };
 
@@ -65,11 +76,14 @@ export function createHud(state) {
   node.breakHeart = (livesAfter) => {
     const target = hearts.children[livesAfter];
     if (!target) return;
+    const img = target.querySelector('.heart-img');
     target.classList.add('breaking');
+    if (img) img.src = HEART_BROKEN;          // 깨지는 동안만 '깨진 하트' 그림
     // 애니메이션이 끝나면 꺼진 하트로 확정
     target.addEventListener('animationend', () => {
       target.classList.remove('breaking');
       target.classList.replace('on', 'off');
+      if (img) img.src = HEART_OFF;
     }, { once: true });
   };
 
