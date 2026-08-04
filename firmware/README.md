@@ -9,7 +9,7 @@
                        main.py (리눅스)
                           │  WebSocket ws://localhost:8765
                           ▼
-                       웹앱 (web/)
+                       웹앱 (저장소 루트)
 ```
 
 ## 전송 방식 두 가지

@@ -92,7 +92,7 @@ Description=Torus Memory Game (static web)
 After=network.target
 
 [Service]
-ExecStart=/usr/bin/python3 -m http.server 8000 -d %h/torus-memory-game/web
+ExecStart=/usr/bin/python3 -m http.server 8000 -d %h/torus-memory-game
 Restart=always
 
 [Install]

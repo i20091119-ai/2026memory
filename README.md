@@ -14,14 +14,18 @@ n단계에서는 n개를 외운다. 오답이 나오면 목숨이 하나 줄고 
 
 ## 바로 해보기
 
+**https://i20091119-ai.github.io/2026memory/** 에서 바로 할 수 있다.
+
+직접 띄우려면:
+
 ```bash
-python3 -m http.server 8000 -d web/
+python3 -m http.server 8000
 # 브라우저에서 http://localhost:8000
 ```
 
 키보드 **1 2 3 4** = 빨강·노랑·초록·파랑. 화면의 버튼·카드를 마우스나 터치로 직접 눌러도 된다.
 
-> 빌드 단계가 없다. `web/` 을 그대로 정적 서빙하면 끝이다.
+> 빌드 단계가 없다. 저장소를 그대로 정적 서빙하면 끝이다.
 > (파일을 직접 여는 `file://` 방식은 ES 모듈 제약 때문에 동작하지 않는다 — 위 명령을 쓸 것.)
 
 ## 조작
@@ -45,34 +49,36 @@ python3 -m http.server 8000 -d web/
 
 ## 테스트
 
-게임 규칙(시퀀스 생성·4지선다 보기 생성·판정·상태 전이)은 `web/js/games.js` 에
+게임 규칙(시퀀스 생성·4지선다 보기 생성·판정·상태 전이)은 `js/games.js` 에
 **DOM 무의존 순수 함수**로 분리해 두었다. 그래서 별도 도구 없이 노드 내장 러너로 돌아간다.
 
 ```bash
-node --test          # 25개 테스트
+node --test          # 37개 테스트
 ```
 
 ## 저장소 구조
 
+게임 파일이 저장소 루트에 있다. GitHub Pages 를 루트로 배포하면 주소가 곧 게임이
+되고, 하위 폴더 설정이나 리다이렉트가 필요 없다.
+
 ```
-web/                    # GitHub Pages 루트 — 이 폴더만 서빙하면 게임이 돈다
-├── index.html
-├── style.css
-├── favicon.svg
-├── fonts/              # 로컬 번들 웹폰트 (CDN 미사용)
-└── js/
-    ├── config.js       # 모든 튜닝 상수 (난이도·타이밍) — 조정은 여기서만
-    ├── strings.js      # 모든 화면 문구 — 문구 수정은 여기서만
-    ├── games.js        # 게임 규칙 순수 함수 (테스트 대상)
-    ├── state.js        # 상태 머신 메인 루프
-    ├── main.js         # 부트스트랩·키오스크 설정
-    ├── input.js        # KeyboardInput / SocketInput 추상화
-    ├── audio.js        # Web Audio 효과음 합성 (외부 음원 없음)
-    ├── torus.js        # 마스코트 SVG + 표정 상태
-    ├── shapes.js       # 3차 도형 8종 SVG
-    ├── storage.js      # 최고기록 저장/로드
-    ├── util.js         # DOM·대기 도우미 (중도 이탈 신호 포함)
-    └── scenes/         # title, intro, present, recall, feedback,
+index.html              # 진입점
+style.css
+favicon.svg
+fonts/                  # 로컬 번들 웹폰트 (CDN 미사용)
+js/
+├── config.js           # 모든 튜닝 상수 (난이도·타이밍) — 조정은 여기서만
+├── strings.js          # 모든 화면 문구 — 문구 수정은 여기서만
+├── games.js            # 게임 규칙 순수 함수 (테스트 대상)
+├── state.js            # 상태 머신 메인 루프
+├── main.js             # 부트스트랩·키오스크 설정
+├── input.js            # KeyboardInput / SocketInput 추상화
+├── audio.js            # Web Audio 효과음 합성 (외부 음원 없음)
+├── torus.js            # 마스코트 SVG + 표정 상태
+├── shapes.js           # 3차 도형 8종 SVG
+├── storage.js          # 최고기록 저장/로드
+├── util.js             # DOM·대기 도우미 (중도 이탈 신호 포함)
+└── scenes/             # title, intro, present, recall, feedback,
                         #   gameover, allclear, attract, hud
 firmware/button_bridge/ # 우노 Q 버튼 → WebSocket 브리지
 ├── sketch/sketch.ino   # STM32: 버튼 읽기 + 디바운스
@@ -81,7 +87,7 @@ docs/hardware-guide.md  # 실물 조립·설치 가이드
 test/games.test.js      # node --test
 ```
 
-설계명세서 §2 의 목록에 더해 `shapes.js`(도형 SVG)와 `util.js`(공통 도우미),
+설계명세서 §2 는 `web/` 하위에 두도록 되어 있으나, GitHub Pages 를 루트로 배포해도 바로 열리도록 저장소 루트로 옮겼다. 파일 구성 자체는 그대로다. 또 §2 목록에 더해 `shapes.js`(도형 SVG)와 `util.js`(공통 도우미),
 `scenes/hud.js`·`scenes/attract.js` 를 두었다. 역할 분리를 위한 것으로 의존성은 늘지 않았다.
 
 ## 기술 스택
@@ -95,15 +101,15 @@ test/games.test.js      # node --test
 
 ### 폰트
 
-제목·큰 문구는 **Do Hyeon(배민 도현체)** 를 `web/fonts/DoHyeon-Regular.woff2` 로 동봉해 쓴다.
+제목·큰 문구는 **Do Hyeon(배민 도현체)** 를 `fonts/DoHyeon-Regular.woff2` 로 동봉해 쓴다.
 
-- 라이선스: SIL Open Font License 1.1 (`web/fonts/OFL.txt` 동봉) — 재배포 허용
+- 라이선스: SIL Open Font License 1.1 (`fonts/OFL.txt` 동봉) — 재배포 허용
 - 출처: [google/fonts · ofl/dohyeon](https://github.com/google/fonts/tree/main/ofl/dohyeon)
 - 원본 TTF 를 woff2 로 변환해 넣었다 (880KB → 200KB)
 
 설계명세서는 이사만루체를 1순위로 지정했으나, 재배포 조건을 저장소 동봉 방식으로
 확인하기 어려워 명세서가 대체 후보로 열어 둔 OFL 서체 중 하나를 골랐다.
-바꾸려면 `web/fonts/` 에 woff2 를 넣고 `style.css` 의 `@font-face` 한 곳만 고치면 된다.
+바꾸려면 `fonts/` 에 woff2 를 넣고 `style.css` 의 `@font-face` 한 곳만 고치면 된다.
 
 ## 실물 게임기
 
@@ -116,18 +122,16 @@ test/games.test.js      # node --test
 
 ## GitHub Pages 배포
 
-저장소 **Settings → Pages** 에서 Source 를 `Deploy from a branch` 로 두고
-브랜치를 고른 뒤, **폴더는 두 가지 중 아무거나** 써도 된다.
+저장소 **Settings → Pages** 에서
 
-| 폴더 설정 | 결과 |
-|---|---|
-| `/web` (권장) | `web/` 이 그대로 사이트 루트가 된다 |
-| `/` (루트) | 루트의 `index.html` 이 `web/` 로 넘겨준다 |
+- Source: `Deploy from a branch`
+- Branch: 배포할 브랜치 + 폴더 **`/`(root)**
 
-폴더를 `/` 로 두면 원래는 루트에 `index.html` 이 없어 GitHub 이 `README.md` 를
-대신 렌더링해 버린다(게임이 아니라 이 문서가 뜬다). 그 상황을 막으려고
-루트에 `web/` 로 보내는 리다이렉트 페이지를 하나 두었다.
-폴더를 `/web` 으로 지정하면 그 파일은 배포되지 않으므로 아무 영향이 없다.
+로 지정하면 끝이다. 게임이 저장소 루트에 있으므로 주소가 곧 게임이 된다.
+
+> 게임 파일을 하위 폴더(예전의 `web/`)에 두면, Pages 폴더 설정을 그 폴더로
+> 정확히 맞추지 않는 한 루트에 `index.html` 이 없어 GitHub 이 `README.md` 를
+> 대신 렌더링한다 — 게임 대신 이 문서가 뜬다. 그 함정을 없애려고 루트에 두었다.
 
 빌드 단계가 없으므로 워크플로 설정은 필요 없다.
 `.nojekyll` 은 Pages 가 파일을 Jekyll 로 가공하지 않고 그대로 서빙하게 한다.

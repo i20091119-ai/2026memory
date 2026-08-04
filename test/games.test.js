@@ -11,7 +11,7 @@ import {
   makeRng, shuffle, randomSequence, makeChoices, answerIndex,
   judgeStep, nextAfterClear, nextAfterMiss, compareRecord,
   poolFor, buildRound,
-} from '../web/js/games.js';
+} from '../js/games.js';
 
 const SHAPES = ['circle', 'square', 'triangle', 'star', 'heart', 'diamond', 'moon', 'cross'];
 const DIGITS = poolFor(GAME_DIGIT);

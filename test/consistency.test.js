@@ -8,10 +8,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 
-import { CONFIG, COLORS, COLOR_TONES } from '../web/js/config.js';
-import { SHAPE_PATHS, SHAPE_NAMES } from '../web/js/shapes.js';
-import { STR } from '../web/js/strings.js';
-import { poolFor, GAME_SHAPE, GAME_DIGIT } from '../web/js/games.js';
+import { CONFIG, COLORS, COLOR_TONES } from '../js/config.js';
+import { SHAPE_PATHS, SHAPE_NAMES } from '../js/shapes.js';
+import { STR } from '../js/strings.js';
+import { poolFor, GAME_SHAPE, GAME_DIGIT } from '../js/games.js';
 
 test('config.SHAPES 의 모든 모양이 shapes.js 에 그려져 있다', () => {
   for (const name of CONFIG.SHAPES) {
