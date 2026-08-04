@@ -12,6 +12,7 @@ import { CONFIG, COLORS, COLOR_TONES } from '../js/config.js';
 import { SHAPE_PATHS, SHAPE_NAMES } from '../js/shapes.js';
 import { STR } from '../js/strings.js';
 import { poolFor, GAME_SHAPE, GAME_DIGIT } from '../js/games.js';
+import { MOODS } from '../js/torus.js';
 
 test('config.SHAPES 의 모든 모양이 shapes.js 에 그려져 있다', () => {
   for (const name of CONFIG.SHAPES) {
@@ -80,6 +81,12 @@ test('타이밍 상수는 모두 0 이상이고, 무제한 입력은 0 으로 �
     assert.ok(Number.isFinite(CONFIG[key]) && CONFIG[key] > 0, `${key} 가 이상하다`);
   }
   assert.equal(CONFIG.INPUT_TIMEOUT_MS, 0, '입력 제한시간은 무제한(0)이 확정 사양이다');
+});
+
+test('토러스 표정은 서로 다른 4종뿐이다 (그릴 사람이 헛일하지 않게)', () => {
+  // 표정을 늘리면 그림을 그 수만큼 더 그려야 한다. 정말 다르게 보이는 것만 남긴다.
+  assert.deepEqual(MOODS, ['idle', 'talk', 'cheer', 'sad']);
+  assert.equal(new Set(MOODS).size, MOODS.length, '표정 이름이 중복된다');
 });
 
 test('답안 스트립·홈 안내 문구가 빠짐없이 있다', () => {

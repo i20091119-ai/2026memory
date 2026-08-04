@@ -2,12 +2,20 @@
  * torus.js — 마스코트 캐릭터 "토러스" (설계명세서 §4).
  *
  * 도넛(토러스) 한 마리를 인라인 SVG 하나로 그리고, 표정 부품을 CSS 클래스로
- * 갈아 끼워 상태를 바꾼다: idle / talk / cheer / sad / celebrate.
+ * 갈아 끼워 상태를 바꾼다: idle / talk / cheer / sad.
  * 말풍선은 옆에 붙는 별도 노드다.
  */
 import { el } from './util.js';
 
-const MOODS = ['idle', 'talk', 'cheer', 'sad', 'celebrate'];
+/**
+ * 표정 목록.
+ *
+ * 기쁜 표정은 'cheer' 하나뿐이다. 예전엔 단계 클리어(cheer)와 올클리어(celebrate)를
+ * 나눠 뒀는데, 눈·입·팔이 완전히 같아서 그릴 사람 입장에서 헛일이었다.
+ * 올클리어를 더 요란하게 만드는 건 표정이 아니라 씬 쪽 연출로 처리한다
+ * (style.css 의 `.scene-allclear .torus` 참조).
+ */
+export const MOODS = ['idle', 'talk', 'cheer', 'sad'];
 
 /** 도넛 위 스프링클: [x, y, 회전각, 색] */
 const SPRINKLES = [

@@ -910,8 +910,7 @@ body::after {
 .torus-body { animation: torusBob 3s ease-in-out infinite; }
 @keyframes torusBob { 50% { transform: translateY(-9px); } }
 
-.torus[data-mood="cheer"] .torus-body,
-.torus[data-mood="celebrate"] .torus-body { animation: torusHop 620ms ease-in-out infinite; }
+.torus[data-mood="cheer"] .torus-body { animation: torusHop 620ms ease-in-out infinite; }
 @keyframes torusHop { 50% { transform: translateY(-20px) rotate(-4deg); } }
 
 .torus[data-mood="sad"] .torus-body { animation: torusSag 2.4s ease-in-out infinite; }
@@ -951,8 +950,6 @@ body::after {
 .torus[data-mood="talk"] .tr-mouth-open,
 .torus[data-mood="cheer"] .tr-eye-happy,
 .torus[data-mood="cheer"] .tr-mouth-open,
-.torus[data-mood="celebrate"] .tr-eye-happy,
-.torus[data-mood="celebrate"] .tr-mouth-open,
 .torus[data-mood="sad"] .tr-eye-sad,
 .torus[data-mood="sad"] .tr-mouth-frown { display: block; }
 
@@ -964,15 +961,15 @@ body::after {
 .tr-arm-l { transform-origin: 16px 66px; }
 .tr-arm-r { transform-origin: 104px 66px; }
 
-.torus[data-mood="cheer"] .tr-arm-l,
-.torus[data-mood="celebrate"] .tr-arm-l { transform: rotate(-95deg); }
-.torus[data-mood="cheer"] .tr-arm-r,
-.torus[data-mood="celebrate"] .tr-arm-r { transform: rotate(95deg); }
+.torus[data-mood="cheer"] .tr-arm-l { transform: rotate(-95deg); }
+.torus[data-mood="cheer"] .tr-arm-r { transform: rotate(95deg); }
 
 .torus[data-mood="sad"] .tr-arm-l { transform: rotate(28deg); }
 .torus[data-mood="sad"] .tr-arm-r { transform: rotate(-28deg); }
 
-.torus[data-mood="celebrate"] .tr-sprinkles { animation: sprinkleFlash 700ms ease-in-out infinite; }
+/* 올클리어에서만 더 요란하게 — 표정을 따로 그리지 않고 씬 단위로 얹는다 */
+.scene-allclear .torus .tr-sprinkles { animation: sprinkleFlash 700ms ease-in-out infinite; }
+.scene-allclear .torus-body { animation-duration: 480ms; }
 @keyframes sprinkleFlash { 50% { opacity: 0.45; } }
 
 .torus[data-mood="sad"] .tr-blush { opacity: 0.3; }
