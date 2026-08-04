@@ -116,9 +116,18 @@ test/games.test.js      # node --test
 
 ## GitHub Pages 배포
 
-저장소 **Settings → Pages** 에서
+저장소 **Settings → Pages** 에서 Source 를 `Deploy from a branch` 로 두고
+브랜치를 고른 뒤, **폴더는 두 가지 중 아무거나** 써도 된다.
 
-- Source: `Deploy from a branch`
-- Branch: 배포할 브랜치 + 폴더 `/web`
+| 폴더 설정 | 결과 |
+|---|---|
+| `/web` (권장) | `web/` 이 그대로 사이트 루트가 된다 |
+| `/` (루트) | 루트의 `index.html` 이 `web/` 로 넘겨준다 |
 
-로 지정하면 `web/` 이 그대로 사이트 루트가 된다. 빌드 단계가 없으므로 워크플로 설정도 필요 없다.
+폴더를 `/` 로 두면 원래는 루트에 `index.html` 이 없어 GitHub 이 `README.md` 를
+대신 렌더링해 버린다(게임이 아니라 이 문서가 뜬다). 그 상황을 막으려고
+루트에 `web/` 로 보내는 리다이렉트 페이지를 하나 두었다.
+폴더를 `/web` 으로 지정하면 그 파일은 배포되지 않으므로 아무 영향이 없다.
+
+빌드 단계가 없으므로 워크플로 설정은 필요 없다.
+`.nojekyll` 은 Pages 가 파일을 Jekyll 로 가공하지 않고 그대로 서빙하게 한다.

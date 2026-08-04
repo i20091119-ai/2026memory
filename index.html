@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <title>토러스와 즐기는 랜덤 메모리 게임</title>
+  <!--
+    GitHub Pages 를 저장소 루트(/)에서 배포하는 경우를 위한 안내 페이지.
+
+    이 게임의 실제 진입점은 web/index.html 이다. Pages 설정에서 폴더를 /web 으로
+    지정하면 이 파일은 아예 배포되지 않으므로 아무 영향이 없다. 반대로 루트로
+    배포됐다면 루트에 index.html 이 없어 README.md 가 대신 보이게 되는데,
+    그때 이 파일이 게임으로 넘겨 준다.
+  -->
+  <meta http-equiv="refresh" content="0; url=./web/">
+  <link rel="canonical" href="./web/">
+  <link rel="icon" href="web/favicon.svg" type="image/svg+xml">
+  <style>
+    html, body {
+      margin: 0; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+      background: #0e0e12; color: #f2f2f5;
+      font-family: system-ui, -apple-system, 'Apple SD Gothic Neo', sans-serif;
+      text-align: center;
+    }
+    a { color: #fdd835; }
+  </style>
+</head>
+<body>
+  <div>
+    <p>게임을 여는 중…</p>
+    <p><a href="./web/">바로 열리지 않으면 여기를 누르세요</a></p>
+  </div>
+  <script>location.replace('./web/');</script>
+</body>
+</html>
