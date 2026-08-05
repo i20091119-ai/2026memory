@@ -106,6 +106,8 @@ scripts/                # 실물 게임기 설치용 (우노 Q 리눅스에서 �
 └── start-all.sh        # 서버+브리지+전체화면 한 번에 띄우기
 docs/assets.html        # 에셋 시트 (새로 그릴 그림 목록·규격)
 docs/에셋시트.pdf        # 위 문서를 인쇄용으로 뽑은 것
+docs/wiring.html        # 배선도 (조립용)
+docs/배선도.pdf          # 위 문서를 인쇄용으로 뽑은 것
 docs/hardware-guide.md  # 실물 조립·설치 가이드
 test/games.test.js      # node --test
 ```
@@ -152,7 +154,8 @@ test/games.test.js      # node --test
 
 ## 실물 게임기
 
-조립·배선·키오스크 설정은 [`docs/hardware-guide.md`](docs/hardware-guide.md),
+조립하면서 볼 배선 그림은 **[`docs/배선도.pdf`](docs/배선도.pdf)** 에 있다.
+그 밖의 조립·키오스크 설정은 [`docs/hardware-guide.md`](docs/hardware-guide.md),
 버튼 브리지는 [`firmware/README.md`](firmware/README.md) 참조.
 
 우노 Q 리눅스에서 설치는 스크립트 세 줄이면 끝난다.
