@@ -99,6 +99,11 @@ js/
 firmware/button_bridge/ # 우노 Q 버튼 → WebSocket 브리지
 ├── sketch/sketch.ino   # STM32: 버튼 읽기 + 디바운스
 └── python/main.py      # 리눅스: WebSocket 서버
+scripts/                # 실물 게임기 설치용 (우노 Q 리눅스에서 실행)
+├── survey.sh           # 부팅 시 켜지는 것 훑어보기 (읽기 전용)
+├── disable-autostart.sh#   그중 하나만 끄기 / 되돌리기
+├── install-kiosk.sh    # 게임 설치 + 자동시작 등록
+└── start-all.sh        # 서버+브리지+전체화면 한 번에 띄우기
 docs/assets.html        # 에셋 시트 (새로 그릴 그림 목록·규격)
 docs/에셋시트.pdf        # 위 문서를 인쇄용으로 뽑은 것
 docs/hardware-guide.md  # 실물 조립·설치 가이드
@@ -149,6 +154,14 @@ test/games.test.js      # node --test
 
 조립·배선·키오스크 설정은 [`docs/hardware-guide.md`](docs/hardware-guide.md),
 버튼 브리지는 [`firmware/README.md`](firmware/README.md) 참조.
+
+우노 Q 리눅스에서 설치는 스크립트 세 줄이면 끝난다.
+
+```bash
+bash scripts/survey.sh morse          # 예전 앱이 어디에 걸려 있는지 (읽기만 함)
+bash scripts/disable-autostart.sh …   # 그것만 끄기 (--restore 로 되돌림)
+bash scripts/install-kiosk.sh         # 게임 설치 + 부팅 자동시작
+```
 
 웹앱은 시작할 때 `ws://localhost:8765` 접속을 시도하고, 실패하면 **조용히 키보드 모드로만
 동작한다**(에러 화면이 뜨지 않는다). 접속 여부는 화면 오른쪽 아래 점으로만 표시된다 —

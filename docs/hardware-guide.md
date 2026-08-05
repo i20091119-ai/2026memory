@@ -68,63 +68,86 @@
 
 ## 5. 소프트웨어 설치 (우노 Q)
 
-### 5.1 버튼 브리지
+보드 화면 앞에서 터미널을 열고 진행한다. **SSH 로만 붙으면 사용자 서비스 등록이
+안 될 수 있다** (그 경우 스크립트가 알아서 데스크톱 자동시작으로 대신 걸고 알려 준다).
 
-App Lab 에서 `firmware/button_bridge` 앱을 배포하고 자동시작에 등록한다.
-전송 방식(시리얼/Bridge RPC) 선택과 확인 절차는
-[`../firmware/README.md`](../firmware/README.md) 를 따른다.
+### 5.0 이미 켜져 있는 다른 앱 정리
 
-```bash
-pip3 install websockets pyserial
-```
+전에 쓰던 앱(예: 모스부호)이 부팅과 함께 켜지고 있다면 먼저 그것부터 끈다.
+**리눅스 자체의 상시 켜짐 설정은 건드리지 않는다** — 앱 하나만 뗀다.
 
-### 5.2 웹앱 정적 서빙
+먼저 무엇이 어떤 방식으로 켜지는지 확인한다. 이 명령은 아무것도 고치지 않는다.
 
 ```bash
-git clone <이 저장소> ~/torus-memory-game
+bash scripts/survey.sh            # 부팅 시 켜지는 것 전부
+bash scripts/survey.sh morse      # 이름으로 추려 보기
 ```
 
-`~/.config/systemd/user/torus-web.service`
-
-```ini
-[Unit]
-Description=Torus Memory Game (static web)
-After=network.target
-
-[Service]
-ExecStart=/usr/bin/python3 -m http.server 8000 -d %h/torus-memory-game
-Restart=always
-
-[Install]
-WantedBy=default.target
-```
-
-### 5.3 Chromium 키오스크
-
-`~/.config/systemd/user/torus-kiosk.service`
-
-```ini
-[Unit]
-Description=Torus Memory Game (kiosk browser)
-After=torus-web.service
-
-[Service]
-ExecStart=/usr/bin/chromium --kiosk --noerrdialogs --disable-infobars \
-          --disable-session-crashed-bubble --disable-features=Translate \
-          --autoplay-policy=no-user-gesture-required \
-          http://localhost:8000
-Restart=always
-
-[Install]
-WantedBy=default.target
-```
-
-등록:
+찾았으면 그 항목만 끈다. 지우지 않고 되돌릴 수 있게 막아 둔다.
 
 ```bash
-systemctl --user daemon-reload
-systemctl --user enable --now torus-web torus-kiosk
-loginctl enable-linger $USER     # 로그인 없이도 부팅 시 뜨게
+bash scripts/disable-autostart.sh <서비스명 또는 .desktop 경로>
+bash scripts/disable-autostart.sh --list      # 무엇을 껐는지
+bash scripts/disable-autostart.sh --restore   # 전부 되돌리기
+```
+
+> **App Lab 으로 등록한 앱이면** systemd·crontab 이 아니라 App Lab 자체가 띄운다.
+> 이때는 위 스크립트에 안 잡히므로 **App Lab 화면에서 그 앱의 "부팅 시 실행"을
+> 끄는 것이 정답**이다. `survey.sh` 의 7번 항목에 App Lab 앱 디렉터리가 나온다.
+
+스케치(STM32)는 앱 하나만 올라간다. 다음 절에서 버튼 브리지 스케치를 올리면
+모스부호 스케치는 자연히 지워진다.
+
+### 5.1 설치
+
+```bash
+git clone https://github.com/i20091119-ai/2026memory.git ~/torus-memory-game
+cd ~/torus-memory-game
+pip3 install websockets pyserial      # 버튼 브리지용
+bash scripts/install-kiosk.sh
+```
+
+스크립트가 하는 일 — 몇 번을 돌려도 결과가 같다(멱등).
+
+| | |
+|---|---|
+| `torus-web` | 정적 웹서버 (`python3 -m http.server 8000`, localhost 전용) |
+| `torus-bridge` | 버튼 → WebSocket 브리지 |
+| `torus-kiosk` | 크로미움 전체화면 |
+| linger | 로그인 없이도 부팅 시 뜨게 |
+| 절전 | 화면 블랭킹·자동 잠금 해제 시도 |
+
+확인·해제:
+
+```bash
+bash scripts/install-kiosk.sh --status      # 지금 상태
+bash scripts/install-kiosk.sh --uninstall   # 자동시작 해제 (게임 파일은 남는다)
+```
+
+서비스를 안 쓰고 지금 한 번만 띄워 보려면:
+
+```bash
+bash scripts/start-all.sh              # 웹서버+브리지+전체화면 한 번에
+bash scripts/start-all.sh --windowed   # 창 모드 (디버깅)
+```
+
+### 5.2 스케치 올리기
+
+버튼을 읽는 쪽은 App Lab 으로 올려야 한다. `firmware/button_bridge/sketch` 를
+App Lab 에서 열어 우노 Q 에 업로드한다. 전송 방식(시리얼/Bridge RPC) 선택과
+확인 절차는 [`../firmware/README.md`](../firmware/README.md) 참조.
+
+올린 뒤 확인:
+
+```bash
+python3 firmware/button_bridge/python/main.py -v   # 버튼을 누르면 로그가 뜬다
+```
+
+### 5.3 업데이트
+
+```bash
+cd ~/torus-memory-game && git pull
+systemctl --user restart torus-web torus-kiosk
 ```
 
 ### 5.4 장시간 구동 설정 (필수)
@@ -141,10 +164,15 @@ loginctl enable-linger $USER     # 로그인 없이도 부팅 시 뜨게
 
 ### 5.5 확인
 
-부팅 → 자동으로 타이틀 화면이 뜨면 완료. 버튼을 눌러 동작을 확인한다.
-화면 오른쪽 아래 점이 **초록**이면 브리지 연결 성공이다.
+재부팅 → 자동으로 타이틀 화면이 뜨면 완료. 버튼을 눌러 동작을 확인한다.
+화면 오른쪽 아래 점이 **초록**이면 브리지 연결 성공이다(회색이면 미연결 —
+이때도 키보드 1234 로는 플레이된다).
 
-업데이트는 `git pull` 후 재부팅(또는 `systemctl --user restart torus-web torus-kiosk`).
+```bash
+bash scripts/install-kiosk.sh --status
+journalctl --user -u torus-kiosk -n 50 --no-pager     # 화면이 안 뜰 때
+journalctl --user -u torus-bridge -n 50 --no-pager    # 버튼이 안 먹을 때
+```
 
 ---
 
@@ -158,3 +186,7 @@ loginctl enable-linger $USER     # 로그인 없이도 부팅 시 뜨게
 | 소리가 안 남 | 브라우저 자동재생 정책 — 첫 버튼 입력 후부터 소리가 난다(정상). 계속 안 나면 키오스크 플래그의 `--autoplay-policy` 확인 |
 | 화면이 꺼짐 | §5.4 의 절전·블랭킹 설정 |
 | LED 안 켜짐 | 12V 어댑터 극성과 병렬 결선 (우노 Q 와 무관한 회로) |
+| 예전 앱이 계속 뜸 | `bash scripts/survey.sh` 로 어디에 걸렸는지 확인 → §5.0. systemd·crontab 에 없으면 App Lab 쪽 설정이다 |
+| 부팅해도 게임이 안 뜸 | `bash scripts/install-kiosk.sh --status`. 서비스가 `enabled` 인지, linger 가 `yes` 인지 확인 |
+| SSH 로 설치했더니 서비스 등록 실패 | 보드 화면 앞 터미널에서 다시 `install-kiosk.sh` 실행. 급하면 `start-all.sh` 로 즉시 구동 |
+| 껐던 앱을 되살리고 싶음 | `bash scripts/disable-autostart.sh --restore` |
