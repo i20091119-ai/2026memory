@@ -83,6 +83,14 @@ test('타이밍 상수는 모두 0 이상이고, 무제한 입력은 0 으로 �
   assert.equal(CONFIG.INPUT_TIMEOUT_MS, 0, '입력 제한시간은 무제한(0)이 확정 사양이다');
 });
 
+test('카운트다운은 한글 3칸이고, 외울 숫자와 겹치는 글자가 없다', () => {
+  // 아라비아 숫자로 되돌리면 2차(숫자)에서 카운트인지 문제인지 헷갈린다.
+  assert.equal(STR.COUNTDOWN_WORDS.length, 3, 'present.js 는 [3,2,1] 세 칸을 돈다');
+  for (const w of STR.COUNTDOWN_WORDS) {
+    assert.ok(!/[0-9]/.test(w), `카운트다운에 아라비아 숫자가 있다: ${w}`);
+  }
+});
+
 test('오답 연출이 화면에 머무는 시간보다 길지 않다 (연출이 잘리면 안 된다)', () => {
   // style.css 애니메이션 길이. 여기를 고치면 저기도 같이 고쳐야 한다.
   const HEART_BREAK_MS = 1500;   // .heart.breaking

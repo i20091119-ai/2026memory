@@ -51,7 +51,12 @@ export const STR = {
 
   /* 제시(PRESENT) */
   PRESENT_WATCH: '잘 봐!',
-  PRESENT_READY: '준비!',
+  /* 카운트다운은 한글로 읽는다.
+     2차(숫자)에서 3·2·1 을 아라비아 숫자로 띄우면 외워야 할 숫자와 생김새가
+     똑같아서 "이게 카운트인가 문제인가" 헷갈린다. 한글이면 절대 안 겹친다. */
+  COUNTDOWN_WORDS: ['셋', '둘', '하나'],
+  COUNTDOWN_HINT: '곧 시작해요',
+  PRESENT_READY: '시작!',
 
   /* 회상(RECALL) */
   RECALL_COLOR_PROMPT: '외운 순서대로 눌러!',

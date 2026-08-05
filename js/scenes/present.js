@@ -33,6 +33,48 @@ function renderItem(game, value, color) {
 }
 
 /**
+ * 카운트다운 한 칸.
+ *
+ * 외울 항목과 절대 헷갈리지 않아야 한다. 네 가지를 한꺼번에 다르게 둔다.
+ *   글자 — 아라비아 숫자가 아니라 한글 (셋·둘·하나)
+ *   색   — 외울 숫자는 흰색, 카운트는 노란색
+ *   모양 — 시간이 줄어드는 원형 게이지 링 안에 넣어 "타이머"로 보이게
+ *   문구 — 위에 '곧 시작해요'
+ *
+ * @param {string} word 셋 | 둘 | 하나
+ * @param {number} ms 이 칸이 화면에 머무는 시간 (링이 도는 시간)
+ */
+function countdownTick(word, ms) {
+  const NS = 'http://www.w3.org/2000/svg';
+  const R = 90;
+  const CIRC = 2 * Math.PI * R;
+
+  const svg = document.createElementNS(NS, 'svg');
+  svg.setAttribute('viewBox', '0 0 200 200');
+  svg.setAttribute('class', 'count-ring');
+  svg.setAttribute('aria-hidden', 'true');
+
+  for (const cls of ['count-ring-bg', 'count-ring-fg']) {
+    const c = document.createElementNS(NS, 'circle');
+    c.setAttribute('cx', '100');
+    c.setAttribute('cy', '100');
+    c.setAttribute('r', String(R));
+    c.setAttribute('class', cls);
+    if (cls === 'count-ring-fg') {
+      // 링이 한 칸 시간에 정확히 한 바퀴 비도록 JS 상수를 그대로 넘긴다.
+      c.style.strokeDasharray = String(CIRC);
+      c.style.animationDuration = `${ms}ms`;
+    }
+    svg.append(c);
+  }
+
+  return el('div.countdown', {},
+    el('div.count-hint', { text: STR.COUNTDOWN_HINT }),
+    el('div.count-dial', {}, svg, el('span.count-word', { text: word })),
+  );
+}
+
+/**
  * @param {import('../state.js').Ctx} ctx
  * @param {{game: number, level: number, lives: number}} state
  * @param {{sequence: (number|string)[], presentColors: number[]|null}} round
@@ -61,9 +103,9 @@ export async function presentScene(ctx, state, round) {
   // (마음의 준비를 하고 시작하는 것과 아닌 것은 체감 난이도가 꽤 다르다)
   hud.setProgress(0, total);
 
-  // 3-2-1 카운트다운 (각 COUNTDOWN_MS)
-  for (const n of [3, 2, 1]) {
-    stage.replaceChildren(el('div.countdown', { text: String(n) }));
+  // 셋-둘-하나 카운트다운 (각 COUNTDOWN_MS)
+  for (const [i, n] of [3, 2, 1].entries()) {
+    stage.replaceChildren(countdownTick(STR.COUNTDOWN_WORDS[i], CONFIG.COUNTDOWN_MS));
     ctx.audio.countdown(n);
     await sleep(CONFIG.COUNTDOWN_MS, ctx.signal);
   }
