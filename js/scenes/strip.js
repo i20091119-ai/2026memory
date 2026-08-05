@@ -72,13 +72,24 @@ export function createStrip(game, total) {
       : STR.STRIP_RECALL(values.length + 1, total);
   };
 
-  /** 오답으로 끝났을 때, 놓친 자리에 정답을 회색으로 밝혀 준다 */
-  node.reveal = (index, value) => {
+  /**
+   * 오답일 때 — 그 자리에 **누른 값 그대로** 넣고 틀렸다고 표시한다.
+   *
+   * 예전에는 이 자리에 정답을 대신 넣어 밝혀 주었는데, 배우는 입장에서는
+   * "나는 분명 이걸 눌렀는데 왜 다른 게 들어갔지?" 하는 오해를 부른다.
+   * 누른 것은 누른 대로 두고, 빨간 테두리와 큰 흔들림으로 틀렸음을 알린다.
+   * (정답이 무엇이었는지는 이어지는 오답 화면에서 따로 크게 보여 준다.)
+   *
+   * @param {number} index 틀린 자리
+   * @param {number|string} value 그 자리에 **실제로 누른** 값
+   */
+  node.markWrong = (index, value) => {
     const slot = slots[index];
     if (!slot) return;
     slot.replaceChildren(slotContent(game, value));
-    slot.classList.add('filled', 'revealed');
-    slot.classList.remove('current');
+    slot.classList.remove('current', 'pop');
+    slot.classList.add('filled', 'wrong');
+    label.textContent = STR.STRIP_WRONG(index + 1, total);
   };
 
   node.setLabel = (text) => { label.textContent = text; };

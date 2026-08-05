@@ -75,12 +75,27 @@ test('games.poolFor 가 config.SHAPES 를 그대로 쓴다', () => {
 });
 
 test('타이밍 상수는 모두 0 이상이고, 무제한 입력은 0 으로 표현된다', () => {
-  for (const key of ['PRESENT_MS', 'GAP_MS', 'COUNTDOWN_MS', 'FEEDBACK_MS', 'MISS_MS',
-    'INTRO_MIN_MS', 'LEVEL_CLEAR_MS', 'ATTRACT_IDLE_MS', 'GAMEOVER_IDLE_MS',
-    'EXIT_HOLD_MS', 'DEBOUNCE_MS', 'WS_RETRY_MS']) {
+  for (const key of ['PRESENT_MS', 'GAP_MS', 'COUNTDOWN_MS', 'FEEDBACK_MS', 'WRONG_HOLD_MS',
+    'MISS_MS', 'HEART_BREAK_DELAY_MS', 'INTRO_MIN_MS', 'LEVEL_CLEAR_MS', 'ATTRACT_IDLE_MS',
+    'GAMEOVER_IDLE_MS', 'EXIT_HOLD_MS', 'DEBOUNCE_MS', 'WS_RETRY_MS']) {
     assert.ok(Number.isFinite(CONFIG[key]) && CONFIG[key] > 0, `${key} 가 이상하다`);
   }
   assert.equal(CONFIG.INPUT_TIMEOUT_MS, 0, '입력 제한시간은 무제한(0)이 확정 사양이다');
+});
+
+test('오답 연출이 화면에 머무는 시간보다 길지 않다 (연출이 잘리면 안 된다)', () => {
+  // style.css 애니메이션 길이. 여기를 고치면 저기도 같이 고쳐야 한다.
+  const HEART_BREAK_MS = 1500;   // .heart.breaking
+  const SLOT_WRONG_MS = 720;     // .slot.wrong
+  assert.ok(
+    CONFIG.HEART_BREAK_DELAY_MS + HEART_BREAK_MS <= CONFIG.MISS_MS,
+    `오답 화면 ${CONFIG.MISS_MS}ms 안에 ` +
+    `${CONFIG.HEART_BREAK_DELAY_MS}+${HEART_BREAK_MS}ms 하트 연출이 다 들어가지 않는다`,
+  );
+  assert.ok(
+    SLOT_WRONG_MS <= CONFIG.WRONG_HOLD_MS,
+    `틀린 칸 흔들림 ${SLOT_WRONG_MS}ms 가 ${CONFIG.WRONG_HOLD_MS}ms 안에 끝나지 않는다`,
+  );
 });
 
 test('토러스 표정은 서로 다른 4종뿐이다 (그릴 사람이 헛일하지 않게)', () => {

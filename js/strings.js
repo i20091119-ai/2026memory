@@ -47,6 +47,7 @@ export const STR = {
   STRIP_PRESENT: (total) => `${total}개를 외워주세요`,
   STRIP_RECALL: (k, total) => `${total}개 중 ${k}번째`,
   STRIP_DONE: '완성!',
+  STRIP_WRONG: (k, total) => `${total}개 중 ${k}번째 — 틀렸어요!`,
 
   /* 제시(PRESENT) */
   PRESENT_WATCH: '잘 봐!',

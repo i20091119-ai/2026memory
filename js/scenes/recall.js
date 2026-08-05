@@ -101,11 +101,13 @@ async function recallByButtons(ctx, state, round, opts) {
     if (!ok) {
       pad.classList.add('wrong');
       pads[round.answers[k]].classList.add('reveal');
-      strip.reveal(k, round.sequence[k]);     // 놓친 자리에 정답을 밝혀 준다
+      // 스트립에는 **누른 색 그대로** 넣고 틀렸다고 표시한다.
+      // 1차는 누른 버튼 번호가 곧 색 값이다.
+      strip.markWrong(k, ev.id);
       edgeFlash(node, 'wrong');
-      // 눌러야 했던 패드를 잠깐이라도 보여 주고 나서 MISS 씬으로 넘긴다.
-      // (바로 return 하면 강조 연출이 한 프레임도 보이지 않는다)
-      await sleep(CONFIG.FEEDBACK_MS, ctx.signal);
+      // 흔들리는 스트립과 눌러야 했던 패드를 충분히 보여 주고 나서 MISS 씬으로.
+      // (FEEDBACK_MS 로는 흔들림이 채 끝나기도 전에 화면이 넘어간다)
+      await sleep(CONFIG.WRONG_HOLD_MS, ctx.signal);
       return {
         cleared: false, failedIndex: k,
         expected: round.answers[k], expectedValue: round.sequence[k],
@@ -187,10 +189,11 @@ async function recallByChoices(ctx, state, round, opts) {
     if (!ok) {
       cards[ev.id].classList.add('wrong');
       cards[round.answers[k]].classList.add('reveal');
-      strip.reveal(k, round.sequence[k]);     // 놓친 자리에 정답을 밝혀 준다
+      // 스트립에는 **고른 칸의 값 그대로** 넣고 틀렸다고 표시한다.
+      strip.markWrong(k, round.choices[k][ev.id]);
       edgeFlash(node, 'wrong');
-      // 정답 카드를 잠깐 보여 주고 나서 MISS 씬으로 (바로 return 하면 안 보인다)
-      await sleep(CONFIG.FEEDBACK_MS, ctx.signal);
+      // 흔들리는 스트립과 정답 카드를 충분히 보여 주고 나서 MISS 씬으로
+      await sleep(CONFIG.WRONG_HOLD_MS, ctx.signal);
       return {
         cleared: false, failedIndex: k,
         expected: round.answers[k], expectedValue: round.sequence[k],

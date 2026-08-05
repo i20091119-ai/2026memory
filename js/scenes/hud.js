@@ -72,19 +72,26 @@ export function createHud(state) {
     );
   };
 
-  /** 목숨이 깨지는 연출 — 방금 잃은 하트를 지목해 애니메이션을 건다 */
+  /**
+   * 목숨이 깨지는 연출 — 방금 잃은 하트를 지목해 애니메이션을 건다.
+   *
+   * 화면이 막 뜨면서(페이드·흔들림) 동시에 시작하면 연출이 묻힌다.
+   * 잠깐 뜸을 들였다가 시작해야 "하트가 깨졌다"가 눈에 들어온다.
+   * 또 애니메이션이 끝나도 회색 하트로 되돌리지 않는다 — 깨진 하트를 그대로
+   * 남겨 두고, 다음 화면에서 HUD 가 새로 그려질 때 자연히 회색이 된다.
+   */
   node.breakHeart = (livesAfter) => {
     const target = hearts.children[livesAfter];
     if (!target) return;
     const img = target.querySelector('.heart-img');
-    target.classList.add('breaking');
-    if (img) img.src = HEART_BROKEN;          // 깨지는 동안만 '깨진 하트' 그림
-    // 애니메이션이 끝나면 꺼진 하트로 확정
-    target.addEventListener('animationend', () => {
-      target.classList.remove('breaking');
-      target.classList.replace('on', 'off');
-      if (img) img.src = HEART_OFF;
-    }, { once: true });
+    setTimeout(() => {
+      if (img) img.src = HEART_BROKEN;        // 깨지는 순간부터 '깨진 하트' 그림
+      target.classList.add('breaking');
+      target.addEventListener('animationend', () => {
+        target.classList.remove('breaking');
+        target.classList.replace('on', 'off');
+      }, { once: true });
+    }, CONFIG.HEART_BREAK_DELAY_MS);
   };
 
   node.setStage = (game, level) => {

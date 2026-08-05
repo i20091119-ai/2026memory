@@ -11,7 +11,9 @@ export const CONFIG = {
   GAP_MS: 350,               // 항목 간 공백
   COUNTDOWN_MS: 600,         // 3-2-1 한 칸
   FEEDBACK_MS: 400,          // 정답 카드 강조
-  MISS_MS: 1200,             // 오답 연출
+  WRONG_HOLD_MS: 900,        // 틀린 자리 흔들기 — 오답 화면으로 넘어가기 전에 붙잡아 두는 시간
+  MISS_MS: 2100,             // 오답 연출 (하트 깨짐 연출이 다 보일 만큼)
+  HEART_BREAK_DELAY_MS: 220, // 화면이 뜬 뒤 하트가 깨지기까지 — 동시에 하면 묻힌다
   INPUT_TIMEOUT_MS: 0,       // 0 = 무제한 (확정), 값 주면 타임아웃 활성화
   DIGIT_MIN: 0, DIGIT_MAX: 9,
   SHAPES: ['circle', 'square', 'triangle', 'star', 'heart', 'diamond', 'moon', 'cross'],
@@ -44,7 +46,8 @@ export const FAST = params.get('fast') === '1';
 
 if (FAST) {
   for (const key of [
-    'PRESENT_MS', 'GAP_MS', 'COUNTDOWN_MS', 'FEEDBACK_MS', 'MISS_MS',
+    'PRESENT_MS', 'GAP_MS', 'COUNTDOWN_MS', 'FEEDBACK_MS', 'WRONG_HOLD_MS',
+    'MISS_MS', 'HEART_BREAK_DELAY_MS',
     'INTRO_MIN_MS', 'LEVEL_CLEAR_MS', 'ATTRACT_IDLE_MS', 'GAMEOVER_IDLE_MS',
   ]) {
     CONFIG[key] = Math.round(CONFIG[key] / 3);
