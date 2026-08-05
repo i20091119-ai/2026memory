@@ -58,7 +58,7 @@ python3 -m http.server 8000
 **DOM 무의존 순수 함수**로 분리해 두었다. 그래서 별도 도구 없이 노드 내장 러너로 돌아간다.
 
 ```bash
-node --test          # 38개 테스트
+node --test          # 39개 테스트
 ```
 
 ## 저장소 구조
@@ -69,12 +69,12 @@ node --test          # 38개 테스트
 ```
 index.html              # 진입점
 style.css
-favicon.svg
 assets/                 # 그림 파일(PNG) — 덮어쓰면 코드 수정 없이 반영된다
 ├── background.png      #   전 화면 배경
 ├── mascot.png          #   타이틀 로봇
 ├── torus-*.png         #   안내 캐릭터 표정 4종
 ├── logo.png            #   기관 로고
+├── favicon.png         #   탭 아이콘
 └── heart*.png          #   목숨 하트 3종 (온전 / 깨짐 / 회색)
 fonts/                  # 로컬 번들 웹폰트 (CDN 미사용)
 js/
@@ -86,8 +86,8 @@ js/
 ├── input.js            # KeyboardInput / SocketInput 추상화
 ├── audio.js            # Web Audio 효과음 합성 (외부 음원 없음)
 ├── logo.js             # 기관 로고 배치 (모든 화면 공통)
-├── mascot.js           # 타이틀 로봇 캐릭터 SVG
-├── torus.js            # 게임 중 안내자 토러스 SVG + 표정 상태
+├── mascot.js           # 타이틀 로봇 캐릭터
+├── torus.js            # 게임 중 안내 캐릭터 + 표정 4종
 ├── shapes.js           # 3차 도형 8종 SVG
 ├── storage.js          # 최고기록 저장/로드
 ├── util.js             # DOM·대기 도우미 (중도 이탈 신호 포함)
@@ -116,15 +116,19 @@ test/games.test.js      # node --test
 
 ### 폰트
 
-제목·큰 문구는 **Do Hyeon(배민 도현체)** 를 `fonts/DoHyeon-Regular.woff2` 로 동봉해 쓴다.
+두 벌을 `fonts/` 에 동봉해 쓴다. 둘 다 **SIL Open Font License 1.1** 이라 재배포가 허용된다.
 
-- 라이선스: SIL Open Font License 1.1 (`fonts/OFL.txt` 동봉) — 재배포 허용
-- 출처: [google/fonts · ofl/dohyeon](https://github.com/google/fonts/tree/main/ofl/dohyeon)
-- 원본 TTF 를 woff2 로 변환해 넣었다 (880KB → 200KB)
+| 쓰임 | 서체 | 파일 | 라이선스 |
+|---|---|---|---|
+| 제목·큰 글씨 | **Do Hyeon** (배민 도현체) | `DoHyeon-Regular.woff2` (200KB) | `OFL-DoHyeon.txt` |
+| 말풍선·안내 문구 등 나머지 | **Jua** (주아체) | `Jua-Regular.woff2` (360KB) | `OFL-Jua.txt` |
 
-설계명세서는 이사만루체를 1순위로 지정했으나, 재배포 조건을 저장소 동봉 방식으로
-확인하기 어려워 명세서가 대체 후보로 열어 둔 OFL 서체 중 하나를 골랐다.
-바꾸려면 `fonts/` 에 woff2 를 넣고 `style.css` 의 `@font-face` 한 곳만 고치면 된다.
+출처: [google/fonts](https://github.com/google/fonts) — 원본 TTF 를 woff2 로 변환해 넣었다.
+
+메이플스토리체처럼 둥글고 귀여운 느낌을 원했으나, 그 서체는 저장소 동봉(재배포)
+조건을 확인할 수 없어 쓰지 않았다. 키오스크가 오프라인이라 폰트는 반드시 동봉해야
+하므로, 재배포가 명확히 허용된 OFL 서체 중 가장 가까운 **주아체**를 골랐다.
+바꾸려면 `fonts/` 에 woff2 를 넣고 `style.css` 의 `@font-face` 와 `--body` 만 고치면 된다.
 
 ## 그림 교체 (에셋)
 
@@ -133,8 +137,10 @@ test/games.test.js      # node --test
 실제 게임 코드에서 렌더링되므로 항상 현재 상태와 일치한다.)
 
 그림은 전부 `assets/` 의 **PNG 파일**이다. 같은 이름으로 덮어쓰면 코드 수정 없이 반영된다.
-지금 들어 있는 것은 실제 그림을 받기 전까지 쓰는 **임시본**이다.
 (도형 8종만 예외로 `js/shapes.js` 안에 SVG 로 들어 있고, 이건 확정이다.)
+
+캐릭터·로고 크기는 px 로 고정하지 않고 **화면 높이에 맞춰** 정해진다
+(`style.css` 의 `--char-h`, `--brand-h`). 낮은 화면에서도 서로 겹치지 않게 하기 위함이다.
 
 ## 실물 게임기
 

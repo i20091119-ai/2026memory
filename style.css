@@ -8,10 +8,19 @@
    ================================================================== */
 
 /* 로컬 번들 웹폰트 — CDN 링크 금지(오프라인 키오스크 필수 조건).
-   Do Hyeon (배민 도현체), SIL Open Font License 1.1. 출처는 README 참조. */
+   둘 다 SIL Open Font License 1.1. 출처와 라이선스는 README·fonts/ 참조.
+     Do Hyeon (배민 도현체) — 제목·큰 글씨
+     Jua (주아체)          — 말풍선·안내 문구 등 나머지 전부 */
 @font-face {
   font-family: 'Do Hyeon';
   src: url('fonts/DoHyeon-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Jua';
+  src: url('fonts/Jua-Regular.woff2') format('woff2');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -42,8 +51,8 @@
 
   --display: 'Do Hyeon', 'Apple SD Gothic Neo', 'Malgun Gothic',
              'Noto Sans KR', sans-serif;
-  --body: system-ui, -apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic',
-          'Noto Sans KR', sans-serif;
+  --body: 'Jua', 'Apple SD Gothic Neo', 'Malgun Gothic',
+          'Noto Sans KR', system-ui, sans-serif;
 
   --radius: 24px;
   --hud-h: 9vh;
@@ -163,8 +172,8 @@ body.show-cursor, body.show-cursor button { cursor: default; }
 
 /* 하트는 그림 파일 3종을 쓴다 (assets/heart*.png). 서체에 따라 모양이 달라지지 않게. */
 .heart {
-  width: clamp(22px, 3.4vh, 46px);
-  height: clamp(22px, 3.4vh, 46px);
+  width: clamp(30px, 4.8vh, 64px);
+  height: clamp(30px, 4.8vh, 64px);
   display: block;
   transition: transform 200ms, opacity 200ms;
 }
@@ -186,8 +195,8 @@ body.show-cursor, body.show-cursor button { cursor: default; }
   background: rgba(255, 255, 255, 0.78);
   border: 1px solid rgba(160, 140, 180, 0.18);
   border-radius: 999px;
-  padding: 0.5vh 1vw;
-  font-size: clamp(10px, 1.4vh, 17px);
+  padding: 0.6vh 1.2vw;
+  font-size: clamp(12px, 1.8vh, 23px);
   color: var(--ink-dim);
   white-space: nowrap;
 }
@@ -852,12 +861,12 @@ body.show-cursor, body.show-cursor button { cursor: default; }
 
 /* 씬마다 캐릭터가 차지해도 되는 높이가 다르다 */
 .intro-torus    .torus { --char-h: clamp(95px, 21vh, 260px); }
-.present-torus  .torus { --char-h: clamp(55px, 11vh, 135px); }
+.present-torus  .torus { --char-h: clamp(80px, 16vh, 195px); }
 .clear-torus    .torus { --char-h: clamp(90px, 20vh, 250px); }
 .miss-torus     .torus { --char-h: clamp(75px, 16vh, 200px); }
 .gameover-torus .torus { --char-h: clamp(75px, 15vh, 190px); }
 .allclear-torus .torus { --char-h: clamp(95px, 21vh, 270px); }
-.attract-guide  .torus { --char-h: clamp(55px, 12vh, 150px); }
+.attract-guide  .torus { --char-h: clamp(85px, 17vh, 205px); }
 
 .torus-body {
   position: relative;
@@ -878,9 +887,9 @@ body.show-cursor, body.show-cursor button { cursor: default; }
   max-width: min(60vw, 620px);
   background: var(--panel);
   color: var(--ink);
-  font-size: clamp(13px, 2.1vh, 26px);
+  font-size: clamp(16px, 2.7vh, 34px);
   line-height: 1.35;
-  padding: 1.1vh 1.6vw;
+  padding: 1.2vh 1.8vw;
   border-radius: 22px;
   text-align: center;
   box-shadow: var(--shadow-soft);
@@ -1016,15 +1025,15 @@ body.show-cursor, body.show-cursor button { cursor: default; }
   gap: 0.6vw;
   background: var(--panel);
   border-radius: 999px;
-  padding: 0.7vh 1.4vw;
-  font-size: clamp(11px, 1.6vh, 20px);
+  padding: 1vh 2vw;
+  font-size: clamp(15px, 2.4vh, 30px);
   color: var(--ink);
-  letter-spacing: 0.06em;
+  letter-spacing: 0.04em;
   box-shadow: var(--shadow-soft);
 }
 .attract-dot {
-  width: 9px;
-  height: 9px;
+  width: clamp(9px, 1.4vh, 16px);
+  height: clamp(9px, 1.4vh, 16px);
   border-radius: 50%;
   background: var(--c-red);
   animation: blink 1.2s ease-in-out infinite;
@@ -1043,11 +1052,11 @@ body.show-cursor, body.show-cursor button { cursor: default; }
   left: 50%;
   transform: translateX(-50%);
   font-family: var(--display);
-  font-size: clamp(15px, 2.4vh, 30px);
+  font-size: clamp(18px, 3vh, 38px);
   color: var(--ink);
   background: var(--panel);
   border-radius: 999px;
-  padding: 0.8vh 2vw;
+  padding: 1vh 2.4vw;
   box-shadow: var(--shadow-soft);
 }
 
