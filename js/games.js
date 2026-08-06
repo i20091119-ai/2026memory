@@ -1,16 +1,27 @@
 /**
- * games.js — 3개 게임의 시퀀스 생성·보기 생성·판정 로직.
+ * games.js — 4개 게임의 시퀀스 생성·보기 생성·판정 로직.
  *
  * 이 파일은 순수 함수만 담는다. DOM·config.js·브라우저 API에 의존하지 않으므로
  * `node --test` 로 그대로 테스트할 수 있다 (설계명세서 §7).
  * 난수는 항상 인자로 주입받아(rng) 테스트에서 결정적으로 만들 수 있게 한다.
+ *
+ * 게임 구조 (v2):
+ *   시작할 때 게임 종류를 하나 고른다 — 색상 / 숫자 / 모양 / 혼합.
+ *   한 게임은 1단계(1개 기억)부터 4단계(4개 기억)까지, 단계마다 5라운드씩이다.
+ *   혼합은 항목 하나하나가 색상·숫자·모양 중에서 랜덤으로 나온다.
  */
 
 /** 버튼 인덱스 표준: 0=빨강, 1=노랑, 2=초록, 3=파랑 (전 코드베이스 고정) */
 export const RED = 0, YELLOW = 1, GREEN = 2, BLUE = 3;
 
-/** 차수 식별자 */
-export const GAME_COLOR = 1, GAME_DIGIT = 2, GAME_SHAPE = 3;
+/**
+ * 게임(항목 종류) 식별자. 1~3은 항목 종류이기도 하다 — 혼합 게임의 각 항목은
+ * 이 셋 중 하나의 kind 를 가진다.
+ */
+export const GAME_COLOR = 1, GAME_DIGIT = 2, GAME_SHAPE = 3, GAME_MIXED = 4;
+
+/** 혼합 게임에서 항목마다 뽑는 종류 후보 */
+export const MIXED_KINDS = [GAME_COLOR, GAME_DIGIT, GAME_SHAPE];
 
 /** 같은 값이 몇 번까지 연속으로 나올 수 있는가 (3연속부터 재추첨) */
 export const MAX_RUN = 2;
@@ -142,22 +153,24 @@ export function judgeStep(expected, index, value) {
 }
 
 /**
- * 단계 클리어 후 다음 목적지를 계산한다 (§3.1 상태 머신).
- * @param {number} game 현재 차수 1..totalGames
- * @param {number} level 현재 단계 1..levelsPerGame
- * @param {{levelsPerGame?: number, totalGames?: number}} opts
- * @returns {{kind: 'nextLevel'|'nextGame'|'allClear', game: number, level: number}}
+ * 라운드 클리어 후 다음 목적지를 계산한다 (상태 머신 v2).
+ * 같은 단계를 roundsPerLevel 번 반복한 뒤 다음 단계로, 마지막 단계의 마지막
+ * 라운드를 깨면 완주다.
+ * @param {number} level 현재 단계 1..levels (= 기억할 개수)
+ * @param {number} round 현재 라운드 1..roundsPerLevel
+ * @param {{levels?: number, roundsPerLevel?: number}} opts
+ * @returns {{kind: 'nextRound'|'nextLevel'|'allClear', level: number, round: number}}
  */
-export function nextAfterClear(game, level, opts = {}) {
-  const levelsPerGame = opts.levelsPerGame ?? 5;
-  const totalGames = opts.totalGames ?? 3;
-  if (level < levelsPerGame) {
-    return { kind: 'nextLevel', game, level: level + 1 };
+export function nextAfterClear(level, round, opts = {}) {
+  const levels = opts.levels ?? 4;
+  const roundsPerLevel = opts.roundsPerLevel ?? 5;
+  if (round < roundsPerLevel) {
+    return { kind: 'nextRound', level, round: round + 1 };
   }
-  if (game < totalGames) {
-    return { kind: 'nextGame', game: game + 1, level: 1 };
+  if (level < levels) {
+    return { kind: 'nextLevel', level: level + 1, round: 1 };
   }
-  return { kind: 'allClear', game, level };
+  return { kind: 'allClear', level, round };
 }
 
 /**
@@ -172,74 +185,95 @@ export function nextAfterMiss(lives) {
 }
 
 /**
- * 기록 비교 — (차수, 단계) 사전식 (§6).
- * @param {{game: number, level: number}|null} a
- * @param {{game: number, level: number}|null} b
+ * 진행도 비교 — (단계, 라운드) 사전식.
+ * @param {{level: number, round: number}|null} a
+ * @param {{level: number, round: number}|null} b
  * @returns {number} a>b 면 1, 같으면 0, a<b 면 -1
  */
 export function compareRecord(a, b) {
-  const ag = a?.game ?? 0, al = a?.level ?? 0;
-  const bg = b?.game ?? 0, bl = b?.level ?? 0;
-  if (ag !== bg) return ag > bg ? 1 : -1;
+  const al = a?.level ?? 0, ar = a?.round ?? 0;
+  const bl = b?.level ?? 0, br = b?.round ?? 0;
   if (al !== bl) return al > bl ? 1 : -1;
+  if (ar !== br) return ar > br ? 1 : -1;
   return 0;
 }
 
 /**
- * 차수별 값 후보 풀을 돌려준다.
- * @param {number} game 1|2|3
+ * 항목 종류별 값 후보 풀을 돌려준다.
+ * @param {number} kind 1|2|3 (혼합은 항목 단위로 이 셋 중 하나)
  * @param {{digitMin?: number, digitMax?: number, shapes?: string[]}} opts
  * @returns {(number|string)[]}
  */
-export function poolFor(game, opts = {}) {
-  if (game === GAME_COLOR) return [RED, YELLOW, GREEN, BLUE];
-  if (game === GAME_DIGIT) {
+export function poolFor(kind, opts = {}) {
+  if (kind === GAME_COLOR) return [RED, YELLOW, GREEN, BLUE];
+  if (kind === GAME_DIGIT) {
     const min = opts.digitMin ?? 0, max = opts.digitMax ?? 9;
     const out = [];
     for (let d = min; d <= max; d++) out.push(d);
     return out;
   }
-  if (game === GAME_SHAPE) {
+  if (kind === GAME_SHAPE) {
     return (opts.shapes ?? []).slice();
   }
-  throw new Error('poolFor: 알 수 없는 차수 ' + game);
+  throw new Error('poolFor: 알 수 없는 종류 ' + kind);
 }
 
 /**
- * 한 단계에 필요한 모든 랜덤 데이터를 한 번에 만든다.
+ * @typedef {{kind: number, value: number|string,
+ *            choices: (number|string)[]|null, answer: number,
+ *            presentColor: number|null}} RoundItem
  *
- * - 1차(색깔): 회상이 버튼 직접 입력이므로 보기(choices)가 없다.
- * - 2·3차: 항목마다 4지선다 보기를 미리 만들어 둔다. 각 보기 배열의
- *   인덱스가 곧 눌러야 할 버튼 색이며, `answers[k]` 가 정답 버튼 인덱스다.
- * - 3차: 제시할 때 쓸 교란용 색(presentColors)도 함께 뽑는다 (§3.5).
+ * kind 별 규칙:
+ * - 색상: 보기 없음. 그 색 버튼을 직접 누른다 → answer = 색 인덱스.
+ * - 숫자·모양: 4지선다. choices 의 인덱스가 곧 버튼 색이고 answer 가 정답 칸.
+ * - 모양: 제시할 때 쓸 교란용 색(presentColor)을 함께 뽑는다.
+ */
+
+/**
+ * 한 라운드에 필요한 모든 랜덤 데이터를 한 번에 만든다.
  *
- * @param {number} game 1|2|3
- * @param {number} level 1..5 (=항목 개수)
+ * 항목 수 = level. 순수 게임(1~3)은 모든 항목의 kind 가 같고,
+ * 혼합(4)은 항목마다 색상·숫자·모양 중 하나가 랜덤으로 정해진다.
+ *
+ * @param {number} game 1|2|3|4
+ * @param {number} level 1..4 (=항목 개수)
  * @param {{digitMin?: number, digitMax?: number, shapes?: string[], rng?: () => number}} opts
- * @returns {{game: number, level: number, sequence: (number|string)[],
- *            choices: (number|string)[][]|null, answers: number[],
- *            presentColors: number[]|null}}
+ * @returns {{game: number, level: number, items: RoundItem[]}}
  */
 export function buildRound(game, level, opts = {}) {
   const rng = opts.rng ?? Math.random;
-  const pool = poolFor(game, opts);
-  const sequence = randomSequence(level, pool, rng);
 
-  if (game === GAME_COLOR) {
-    return {
-      game, level, sequence,
-      choices: null,
-      // 색깔 게임은 시퀀스 값 자체가 눌러야 할 버튼 인덱스다.
-      answers: sequence.slice(),
-      presentColors: null,
-    };
+  // 항목마다 종류를 정한다. 혼합이면 랜덤, 아니면 게임 종류 그대로.
+  const kinds = game === GAME_MIXED
+    ? Array.from({ length: level }, () => pick(MIXED_KINDS, rng))
+    : Array.from({ length: level }, () => game);
+
+  // 값 시퀀스는 종류별로 따로 뽑는다 — "같은 값 3연속 금지"가 종류 안에서 걸린다.
+  // (혼합에서 색상 2 · 숫자 7 은 애초에 다른 값이라 연속 제한과 무관하다)
+  const byKind = new Map();
+  for (const kind of new Set(kinds)) {
+    const count = kinds.filter((k) => k === kind).length;
+    byKind.set(kind, {
+      pool: poolFor(kind, opts),
+      values: randomSequence(count, poolFor(kind, opts), rng),
+      next: 0,
+    });
   }
 
-  const choices = sequence.map((answer) => makeChoices(answer, pool, rng));
-  const answers = choices.map((c, k) => answerIndex(c, sequence[k]));
-  const presentColors = game === GAME_SHAPE
-    ? sequence.map(() => pick([RED, YELLOW, GREEN, BLUE], rng))
-    : null;
+  const items = kinds.map((kind) => {
+    const bucket = byKind.get(kind);
+    const value = bucket.values[bucket.next++];
 
-  return { game, level, sequence, choices, answers, presentColors };
+    if (kind === GAME_COLOR) {
+      return { kind, value, choices: null, answer: value, presentColor: null };
+    }
+    const choices = makeChoices(value, bucket.pool, rng);
+    return {
+      kind, value, choices,
+      answer: answerIndex(choices, value),
+      presentColor: kind === GAME_SHAPE ? pick([RED, YELLOW, GREEN, BLUE], rng) : null,
+    };
+  });
+
+  return { game, level, items };
 }

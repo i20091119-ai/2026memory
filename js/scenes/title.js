@@ -6,30 +6,27 @@ import { el, multiline, mount, waitButton } from '../util.js';
 import { STR } from '../strings.js';
 import { CONFIG } from '../config.js';
 import { createMascot } from '../mascot.js';
-import { loadBest, hasRecord } from '../storage.js';
+import { totalClearCount } from '../storage.js';
 
 /**
  * @param {import('../state.js').Ctx} ctx
  * @returns {Promise<'start'|'attract'>}
  */
 export async function titleScene(ctx) {
-  const best = loadBest();
   const mascot = createMascot();
   mascot.say(STR.TITLE_GREETING);
 
-  const recordLine = hasRecord(best)
-    ? STR.TITLE_BEST(best.bestGame, best.bestLevel)
-    : STR.TITLE_NO_RECORD;
+  // 종류별 상세 기록은 선택 화면의 각 카드에 있다. 타이틀엔 완주 합계만.
+  const clears = totalClearCount();
 
   const node = el('section.scene.scene-title', {},
     multiline('h1.title-text', STR.TITLE),
     // 캐릭터 그림 안에 이미 4색 카드가 들어 있어서 따로 그리지 않는다.
     el('div.title-hero', {}, el('div.title-mascot', {}, mascot)),
     el('div.title-record', {},
-      el('div.record-line', { text: recordLine }),
-      best.allClearCount > 0
-        ? el('div.record-sub', { text: STR.TITLE_ALL_CLEAR_COUNT(best.allClearCount) })
-        : null,
+      el('div.record-line', {
+        text: clears > 0 ? STR.TITLE_ALL_CLEAR_COUNT(clears) : STR.TITLE_NO_RECORD,
+      }),
     ),
     el('div.title-press.blink', { text: STR.TITLE_START }),
     el('div.title-keyhint', { text: '키보드 1 2 3 4 = 빨 노 초 파' }),

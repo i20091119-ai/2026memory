@@ -14,22 +14,22 @@ import { createShape } from '../shapes.js';
 import { GAME_COLOR, GAME_DIGIT } from '../games.js';
 
 /**
- * 제시 항목 하나를 그린다.
- * @param {number} game
- * @param {number|string} value
- * @param {number|null} color 3차 교란용 색 인덱스
+ * 제시 항목 하나를 그린다. 항목 종류(kind)에 따라 다르게 —
+ * 혼합 게임에서는 색·숫자·모양이 한 시퀀스 안에 섞여 나온다.
+ * @param {import('../games.js').RoundItem} item
  */
-function renderItem(game, value, color) {
-  if (game === GAME_COLOR) {
+function renderItem(item) {
+  if (item.kind === GAME_COLOR) {
     // 색 자체가 정보이므로 색 이름 텍스트는 표시하지 않는다 (§3.3).
-    return el('div.present-color', { style: { background: COLORS[value] } });
+    return el('div.present-color', { style: { background: COLORS[item.value] } });
   }
-  if (game === GAME_DIGIT) {
+  if (item.kind === GAME_DIGIT) {
     // 숫자는 항상 흰색 (§3.4).
-    return el('div.present-digit', { text: String(value) });
+    return el('div.present-digit', { text: String(item.value) });
   }
-  // 3차: 모양이 기억 대상, 색은 순수 교란 요소 (§3.5).
-  return el('div.present-shape', {}, createShape(value, { size: 380, color: COLORS[color] }));
+  // 모양이 기억 대상, 색은 순수 교란 요소 (§3.5).
+  return el('div.present-shape', {},
+    createShape(item.value, { size: 380, color: COLORS[item.presentColor] }));
 }
 
 /**
@@ -76,20 +76,20 @@ function countdownTick(word, ms) {
 
 /**
  * @param {import('../state.js').Ctx} ctx
- * @param {{game: number, level: number, lives: number}} state
- * @param {{sequence: (number|string)[], presentColors: number[]|null}} round
+ * @param {{game: number, level: number, round?: number, lives: number}} state
+ * @param {{items: import('../games.js').RoundItem[]}} round
  */
 export async function presentScene(ctx, state, round) {
   const torus = createTorus({ mood: 'talk' });
   torus.say(STR.PRESENT_WATCH);
 
-  const total = round.sequence.length;
+  const total = round.items.length;
   const stage = el('div.present-stage');
   const hud = createHud(state);
 
   // 답안 스트립을 여기서도 쓴다. 단, 값은 채우지 않는다 — 채우면 외울 필요가 없어진다.
   // 몇 개짜리인지, 지금 몇 번째를 보여 주는지만 알린다.
-  const strip = createStrip(state.game, total);
+  const strip = createStrip(round.items);
   strip.setLabel(STR.STRIP_PRESENT(total));
 
   const node = el('section.scene.scene-present', {},
@@ -118,14 +118,14 @@ export async function presentScene(ctx, state, round) {
 
   // 항목을 하나씩 제시. 스트립의 현재 칸이 함께 움직여 "몇 개 중 몇 번째"를 알린다.
   for (let i = 0; i < total; i++) {
-    const value = round.sequence[i];
-    const color = round.presentColors ? round.presentColors[i] : null;
+    const item = round.items[i];
 
     hud.setProgress(i, total);
     strip.setCurrent(i);
     strip.setLabel(STR.STRIP_RECALL(i + 1, total));
-    stage.replaceChildren(renderItem(state.game, value, color));
-    ctx.audio.present(state.game, state.game === GAME_COLOR ? value : i);
+    stage.replaceChildren(renderItem(item));
+    // 색상 항목은 색마다 음이 다르다 (도·미·솔·도′) — 혼합에서도 똑같이.
+    ctx.audio.present(item.kind, item.kind === GAME_COLOR ? item.value : i);
 
     await sleep(CONFIG.PRESENT_MS, ctx.signal);
 

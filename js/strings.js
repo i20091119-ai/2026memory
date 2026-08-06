@@ -8,21 +8,36 @@ export const STR = {
   TITLE: '토러스와 즐기는\n랜덤 메모리 게임',
   TITLE_START: '아무 버튼이나 눌러 시작',
   TITLE_NO_RECORD: '아직 기록이 없어요',
-  TITLE_BEST: (game, level) => `최고 기록: ${game}차 ${level}단계`,
-  TITLE_ALL_CLEAR_COUNT: (n) => `올클리어 ${n}회`,
+  TITLE_ALL_CLEAR_COUNT: (n) => `완주 ${n}회`,
   TITLE_GREETING: '안녕! 나는 토러스야. 같이 기억력 대결 해볼래?',
 
-  /* 차수 안내 (GAME_INTRO) */
+  /* 게임 선택 */
+  SELECT_TITLE: '무슨 게임 할래?',
+  SELECT_GREETING: '버튼 색으로 골라줘!',
+  SELECT_DESC: {
+    1: '나온 색깔 순서를 그대로!',
+    2: '나온 숫자를 기억!',
+    3: '모양만 기억 — 색은 함정!',
+    4: '색깔·숫자·모양이 마구 섞여서!',
+  },
+  SELECT_BEST: (level, round) => `최고 ${level}개 ${round}/5`,
+  SELECT_CLEARED: (n) => `완주 ${n}회`,
+  SELECT_NO_RECORD: '도전해 봐!',
+
+  /* 게임 안내 (GAME_INTRO) */
   GAME_NAME: {
-    1: '1차 · 색깔 기억',
-    2: '2차 · 숫자 기억',
-    3: '3차 · 모양 기억',
+    1: '색상 메모리 게임',
+    2: '숫자 메모리 게임',
+    3: '모양 메모리 게임',
+    4: '혼합 메모리 게임',
   },
   GAME_RULE: {
     1: '나오는 색깔 순서를 외워서, 그 색 버튼을 똑같이 눌러줘!',
     2: '나오는 숫자를 외워둬. 그 숫자가 있는 칸의 색 버튼을 누르면 돼!',
     3: '모양만 외우면 돼 — 색깔은 함정이야! 그 모양이 있는 칸을 눌러줘!',
+    4: '색깔·숫자·모양이 섞여 나와! 색깔은 그 색 버튼, 나머지는 그게 있는 칸!',
   },
+  INTRO_FLOW: '1개 기억부터 4개 기억까지 · 단계마다 5번씩!',
 
   /* 조작 안내 */
   EXIT_HINT: '그만하려면 빨강 + 파랑을 2초 동안 함께 누르세요',
@@ -33,12 +48,11 @@ export const STR = {
   HOME_HOLDING: '홈으로 돌아가는 중…',
 
   /* HUD */
-  HUD_STAGE: (game, level) => `${game}차 ${level}단계`,
-  HUD_ITEMS: (n) => `${n}개`,
-  /** HUD 배지에 들어가는 짧은 차수 이름 */
-  GAME_SHORT: { 1: '색깔', 2: '숫자', 3: '모양' },
-  HUD_ROUND: (game) => `${game}차`,
-  HUD_LEVEL: (level) => `${level}단계`,
+  HUD_STAGE: (game, level, round) =>
+    `${STR.GAME_SHORT[game] ?? ''} ${level}개 기억 ${round}/5`,
+  /** HUD 배지에 들어가는 짧은 게임 이름 */
+  GAME_SHORT: { 1: '색상', 2: '숫자', 3: '모양', 4: '혼합' },
+  HUD_LEVEL: (level) => `${level}개 기억`,
 
   /* 기관 로고 */
   BRAND_ALT: '경상남도교육청 경남수학문화관',
@@ -58,14 +72,17 @@ export const STR = {
   COUNTDOWN_HINT: '곧 시작해요',
   PRESENT_READY: '시작!',
 
-  /* 회상(RECALL) */
-  RECALL_COLOR_PROMPT: '외운 순서대로 눌러!',
+  /* 회상(RECALL) — 항목 종류별 프롬프트 (혼합에서도 그대로 쓴다) */
   RECALL_ORDINAL: ['첫 번째', '두 번째', '세 번째', '네 번째', '다섯 번째'],
-  RECALL_DIGIT_PROMPT: (k) => `${STR.RECALL_ORDINAL[k]} 숫자는?`,
-  RECALL_SHAPE_PROMPT: (k) => `${STR.RECALL_ORDINAL[k]} 모양은?`,
+  RECALL_PROMPT: {
+    1: (k) => `${STR.RECALL_ORDINAL[k]} 색깔 버튼을 눌러!`,
+    2: (k) => `${STR.RECALL_ORDINAL[k]} 숫자는?`,
+    3: (k) => `${STR.RECALL_ORDINAL[k]} 모양은?`,
+  },
 
-  /* 단계 클리어 */
-  LEVEL_CLEAR: '단계 클리어!',
+  /* 라운드 클리어 */
+  ROUND_CLEAR: '성공!',
+  LEVEL_UP: (n) => `이제 ${n}개 기억!`,
   LEVEL_CLEAR_CHEER: ['좋았어!', '완벽해!', '기억력 대단한데?', '역시!', '착착 맞추네!'],
 
   /* 오답 */
@@ -75,18 +92,19 @@ export const STR = {
 
   /* 게임 오버 */
   GAME_OVER: '게임 오버',
-  GAME_OVER_REACHED: (game, level) => `도달 기록: ${game}차 ${level}단계`,
-  GAME_OVER_BEST: (game, level) => `최고 기록: ${game}차 ${level}단계`,
+  GAME_OVER_REACHED: (game, level, round) =>
+    `도달 기록: ${STR.GAME_SHORT[game]} ${level}개 기억 ${round}/5`,
+  GAME_OVER_BEST: (level, round) => `이 게임 최고: ${level}개 기억 ${round}/5`,
   NEW_RECORD: '신기록!',
   CONTINUE_TITLE: '계속할래?',
-  CONTINUE_GREEN: '초록 · 이번 차수부터 이어하기',
-  CONTINUE_RED: '빨강 · 처음부터 다시',
+  CONTINUE_GREEN: '초록 · 이번 단계부터 이어하기',
+  CONTINUE_RED: '빨강 · 다른 게임 고르기',
   CONTINUE_COUNTDOWN: (sec) => `${sec}초 후 타이틀로 돌아가요`,
   GAME_OVER_SAD: '아쉽다… 한 번 더 해볼까?',
 
-  /* 올클리어 */
-  ALL_CLEAR: '올 클리어!',
-  ALL_CLEAR_SUB: '3차 5단계까지 전부 클리어했어!',
+  /* 완주 */
+  ALL_CLEAR: '완주!',
+  ALL_CLEAR_SUB: (game) => `${STR.GAME_NAME[game]}, 4개 기억까지 전부 클리어!`,
   ALL_CLEAR_CHEER: '우와, 진짜 대단해! 너 기억력 천재구나!',
   ALL_CLEAR_PRESS: '아무 버튼이나 눌러 타이틀로',
 

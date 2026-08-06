@@ -26,11 +26,11 @@ function confetti(count = 60) {
 
 /**
  * @param {import('../state.js').Ctx} ctx
- * @param {{updated: boolean, best: object}} record
+ * @param {{game: number, updated: boolean, clearCount: number}} record
  */
 export async function allClearScene(ctx, record) {
-  // 기쁜 표정은 단계 클리어와 같은 'cheer' 하나를 쓴다.
-  // 올클리어의 '더 요란한' 느낌은 씬 쪽 연출(색종이·스프링클 반짝임)이 만든다.
+  // 기쁜 표정은 라운드 클리어와 같은 'cheer' 하나를 쓴다.
+  // 완주의 '더 요란한' 느낌은 씬 쪽 연출(색종이·스프링클 반짝임)이 만든다.
   const torus = createTorus({ mood: 'cheer' });
   torus.say(STR.ALL_CLEAR_CHEER);
 
@@ -38,11 +38,11 @@ export async function allClearScene(ctx, record) {
     confetti(),
     el('div.allclear-body', {},
       el('h2.allclear-title.pop-in', { text: STR.ALL_CLEAR }),
-      el('div.allclear-sub', { text: STR.ALL_CLEAR_SUB }),
+      el('div.allclear-sub', { text: STR.ALL_CLEAR_SUB(record.game) }),
       el('div.allclear-torus', {}, torus),
       record.updated ? el('div.new-record.pop-in', { text: STR.NEW_RECORD }) : null,
       el('div.record-sub', {
-        text: STR.TITLE_ALL_CLEAR_COUNT(record.best.allClearCount),
+        text: STR.TITLE_ALL_CLEAR_COUNT(record.clearCount),
       }),
       el('div.allclear-press.blink', { text: STR.ALL_CLEAR_PRESS }),
     ),

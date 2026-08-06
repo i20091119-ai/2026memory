@@ -14,8 +14,8 @@ import { createHud } from './hud.js';
 import { createShape } from '../shapes.js';
 
 /**
- * 차수를 한눈에 보여 주는 아이콘 묶음.
- * 1차=색칩, 2차=숫자, 3차=도형.
+ * 게임을 한눈에 보여 주는 아이콘 묶음.
+ * 색상=색칩, 숫자=숫자, 모양=도형, 혼합=셋을 섞어서.
  */
 function introIcon(game) {
   if (game === 1) {
@@ -26,8 +26,17 @@ function introIcon(game) {
     return el('div.intro-icon', {}, ...['3', '7', '5', '0'].map((d) =>
       el('span.intro-digit', { text: d })));
   }
-  return el('div.intro-icon', {}, ...['star', 'heart', 'triangle', 'moon'].map((s) =>
-    el('span.intro-shape', {}, createShape(s, { size: 52, color: '#fff' }))));
+  if (game === 3) {
+    return el('div.intro-icon', {}, ...['star', 'heart', 'triangle', 'moon'].map((s) =>
+      el('span.intro-shape', {}, createShape(s, { size: 52, color: '#fff' }))));
+  }
+  // 혼합 — 색칩·숫자·모양이 섞여 나온다는 걸 아이콘부터 보여 준다.
+  return el('div.intro-icon', {},
+    el('span.intro-swatch', { style: { background: COLORS[0] } }),
+    el('span.intro-digit', { text: '7' }),
+    el('span.intro-shape', {}, createShape('star', { size: 52, color: '#fff' })),
+    el('span.intro-swatch', { style: { background: COLORS[3] } }),
+  );
 }
 
 /**
@@ -47,6 +56,7 @@ export async function introScene(ctx, state) {
     hud,
     el('div.intro-body', {},
       el('h2.intro-title', { text: STR.GAME_NAME[state.game] }),
+      el('div.intro-flow', { text: STR.INTRO_FLOW }),
       introIcon(state.game),
       el('div.intro-torus', {}, torus),
       press,

@@ -17,7 +17,7 @@ const HEART_OFF = new URL('../../assets/heart-off.png', import.meta.url).href;
 const HEART_BROKEN = new URL('../../assets/heart-broken.png', import.meta.url).href;
 
 /**
- * @param {{game: number, level: number, lives: number, maxLives?: number}} state
+ * @param {{game: number, level: number, round?: number, lives: number, maxLives?: number}} state
  * @returns {HTMLElement & {setLives: Function, setProgress: Function, breakHeart: Function}}
  */
 export function createHud(state) {
@@ -25,13 +25,15 @@ export function createHud(state) {
 
   const hearts = el('div.hud-hearts', { 'aria-label': '남은 목숨' });
 
-  // 차수·단계는 글자만 두면 밋밋해서 배지(글상자)로 감싼다.
-  // 왼쪽 칸은 차수별 색이 달라 지금 어느 게임인지 색으로도 구분된다.
+  // 게임·단계는 글자만 두면 밋밋해서 배지(글상자)로 감싼다.
+  // 왼쪽 칸은 게임별 색이 달라 지금 어느 게임인지 색으로도 구분된다.
+  // 라운드(같은 단계 5번 반복)는 점 5개로 — "이 단계에서 몇 번째 판인지".
   const stageRound = el('span.stage-round');
   const stageLevel = el('span.stage-level');
+  const roundPips = el('span.stage-pips', { 'aria-label': '라운드 진행' });
   const stage = el('div.hud-stage', {
-    'aria-label': STR.HUD_STAGE(state.game, state.level),
-  }, stageRound, stageLevel);
+    'aria-label': STR.HUD_STAGE(state.game, state.level, state.round ?? 1),
+  }, stageRound, stageLevel, roundPips);
 
   const dots = el('div.hud-dots', { 'aria-label': '회상 진행' });
 
@@ -94,13 +96,17 @@ export function createHud(state) {
     }, CONFIG.HEART_BREAK_DELAY_MS);
   };
 
-  node.setStage = (game, level) => {
+  node.setStage = (game, level, round = 1) => {
     stage.dataset.game = String(game);
-    stage.setAttribute('aria-label', STR.HUD_STAGE(game, level));
-    stageRound.textContent = `${STR.HUD_ROUND(game)} ${STR.GAME_SHORT[game] ?? ''}`.trim();
+    stage.setAttribute('aria-label', STR.HUD_STAGE(game, level, round));
+    stageRound.textContent = STR.GAME_SHORT[game] ?? '';
     stageLevel.textContent = STR.HUD_LEVEL(level);
+    roundPips.replaceChildren(
+      ...Array.from({ length: CONFIG.ROUNDS_PER_LEVEL }, (_, i) =>
+        el('span.pip', { class: i < round - 1 ? 'done' : (i === round - 1 ? 'current' : '') })),
+    );
   };
-  node.setStage(state.game, state.level);
+  node.setStage(state.game, state.level, state.round ?? 1);
 
   node.setLives(state.lives);
   node.setProgress(0, 0);

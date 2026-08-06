@@ -1,8 +1,8 @@
 /**
- * scenes/gameover.js — 게임 오버 + 컨티뉴 선택 (설계명세서 §3.1, §4).
+ * scenes/gameover.js — 게임 오버 + 컨티뉴 선택.
  *
- * 초록 = 죽은 차수 1단계부터 (목숨 3 회복)
- * 빨강 = 처음부터
+ * 초록 = 죽은 단계 1라운드부터 (목숨 3 회복)
+ * 빨강 = 게임 선택 화면으로
  * 15초 무입력 = 타이틀
  */
 import { el, mount, waitButton } from '../util.js';
@@ -13,9 +13,9 @@ import { GREEN, RED } from '../games.js';
 
 /**
  * @param {import('../state.js').Ctx} ctx
- * @param {{game: number, level: number}} reached 이번 판 도달 기록
+ * @param {{game: number, level: number, round: number}} reached 이번 판 도달 기록
  * @param {{updated: boolean, best: object}} record submitRecord 결과
- * @returns {Promise<'continue'|'restart'|'title'>}
+ * @returns {Promise<'continue'|'select'|'title'>}
  */
 export async function gameOverScene(ctx, reached, record) {
   const torus = createTorus({ mood: 'sad' });
@@ -33,9 +33,11 @@ export async function gameOverScene(ctx, reached, record) {
       el('h2.gameover-title', { text: STR.GAME_OVER }),
       record.updated ? el('div.new-record.pop-in', { text: STR.NEW_RECORD }) : null,
       el('div.gameover-record', {},
-        el('div.record-line', { text: STR.GAME_OVER_REACHED(reached.game, reached.level) }),
+        el('div.record-line', {
+          text: STR.GAME_OVER_REACHED(reached.game, reached.level, reached.round),
+        }),
         el('div.record-sub', {
-          text: STR.GAME_OVER_BEST(record.best.bestGame, record.best.bestLevel),
+          text: STR.GAME_OVER_BEST(record.best.level, record.best.round),
         }),
       ),
       el('div.gameover-torus', {}, torus),
@@ -67,7 +69,7 @@ export async function gameOverScene(ctx, reached, record) {
     });
     if (ev === null) return 'title';
     ctx.audio.blip();
-    return ev.id === GREEN ? 'continue' : 'restart';
+    return ev.id === GREEN ? 'continue' : 'select';
   } finally {
     clearInterval(tick);
   }

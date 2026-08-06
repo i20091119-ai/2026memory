@@ -7,7 +7,7 @@ import assert from 'node:assert/strict';
 
 import {
   RED, YELLOW, GREEN, BLUE,
-  GAME_COLOR, GAME_DIGIT, GAME_SHAPE,
+  GAME_COLOR, GAME_DIGIT, GAME_SHAPE, GAME_MIXED, MIXED_KINDS,
   makeRng, shuffle, randomSequence, makeChoices, answerIndex,
   judgeStep, nextAfterClear, nextAfterMiss, compareRecord,
   poolFor, buildRound,
@@ -111,26 +111,26 @@ test('judgeStep: 오답이면 done 없이 즉시 실패', () => {
   assert.deepEqual(judgeStep(expected, 2, 0), { ok: false, done: false });
 });
 
-test('nextAfterClear: 5단계 미만이면 다음 단계', () => {
-  assert.deepEqual(nextAfterClear(1, 1), { kind: 'nextLevel', game: 1, level: 2 });
-  assert.deepEqual(nextAfterClear(2, 4), { kind: 'nextLevel', game: 2, level: 5 });
+test('nextAfterClear: 라운드 5회 미만이면 다음 라운드', () => {
+  assert.deepEqual(nextAfterClear(1, 1), { kind: 'nextRound', level: 1, round: 2 });
+  assert.deepEqual(nextAfterClear(3, 4), { kind: 'nextRound', level: 3, round: 5 });
 });
 
-test('nextAfterClear: 5단계 클리어면 다음 차수 1단계', () => {
-  assert.deepEqual(nextAfterClear(1, 5), { kind: 'nextGame', game: 2, level: 1 });
-  assert.deepEqual(nextAfterClear(2, 5), { kind: 'nextGame', game: 3, level: 1 });
+test('nextAfterClear: 5라운드를 채우면 다음 단계 1라운드', () => {
+  assert.deepEqual(nextAfterClear(1, 5), { kind: 'nextLevel', level: 2, round: 1 });
+  assert.deepEqual(nextAfterClear(3, 5), { kind: 'nextLevel', level: 4, round: 1 });
 });
 
-test('nextAfterClear: 3차 5단계면 올클리어', () => {
-  assert.equal(nextAfterClear(3, 5).kind, 'allClear');
+test('nextAfterClear: 4단계 5라운드면 완주', () => {
+  assert.equal(nextAfterClear(4, 5).kind, 'allClear');
 });
 
-test('nextAfterClear: levelsPerGame/totalGames 조정이 반영된다', () => {
+test('nextAfterClear: levels/roundsPerLevel 조정이 반영된다', () => {
   assert.deepEqual(
-    nextAfterClear(1, 3, { levelsPerGame: 3, totalGames: 2 }),
-    { kind: 'nextGame', game: 2, level: 1 },
+    nextAfterClear(1, 3, { levels: 2, roundsPerLevel: 3 }),
+    { kind: 'nextLevel', level: 2, round: 1 },
   );
-  assert.equal(nextAfterClear(2, 3, { levelsPerGame: 3, totalGames: 2 }).kind, 'allClear');
+  assert.equal(nextAfterClear(2, 3, { levels: 2, roundsPerLevel: 3 }).kind, 'allClear');
 });
 
 test('nextAfterMiss: 목숨이 남으면 재도전, 0이면 게임오버', () => {
@@ -139,87 +139,114 @@ test('nextAfterMiss: 목숨이 남으면 재도전, 0이면 게임오버', () =>
   assert.deepEqual(nextAfterMiss(1), { kind: 'gameOver', lives: 0 });
 });
 
-test('compareRecord: (차수, 단계) 사전식 비교', () => {
-  assert.equal(compareRecord({ game: 2, level: 4 }, { game: 2, level: 3 }), 1);
-  assert.equal(compareRecord({ game: 2, level: 1 }, { game: 1, level: 5 }), 1);
-  assert.equal(compareRecord({ game: 1, level: 5 }, { game: 2, level: 1 }), -1);
-  assert.equal(compareRecord({ game: 3, level: 5 }, { game: 3, level: 5 }), 0);
-  assert.equal(compareRecord({ game: 1, level: 1 }, null), 1, '기록 없음보다는 무조건 크다');
+test('compareRecord: (단계, 라운드) 사전식 비교', () => {
+  assert.equal(compareRecord({ level: 2, round: 4 }, { level: 2, round: 3 }), 1);
+  assert.equal(compareRecord({ level: 2, round: 1 }, { level: 1, round: 5 }), 1);
+  assert.equal(compareRecord({ level: 1, round: 5 }, { level: 2, round: 1 }), -1);
+  assert.equal(compareRecord({ level: 4, round: 5 }, { level: 4, round: 5 }), 0);
+  assert.equal(compareRecord({ level: 1, round: 1 }, null), 1, '기록 없음보다는 무조건 크다');
 });
 
-test('poolFor: 차수별 후보 풀', () => {
+test('poolFor: 종류별 후보 풀', () => {
   assert.deepEqual(poolFor(GAME_COLOR), [0, 1, 2, 3]);
   assert.deepEqual(poolFor(GAME_DIGIT), [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
   assert.deepEqual(poolFor(GAME_SHAPE, { shapes: SHAPES }), SHAPES);
   assert.throws(() => poolFor(9));
 });
 
-test('buildRound(1차): 보기 없이 시퀀스 값이 곧 정답 버튼', () => {
+test('buildRound(색상): 보기 없이 값이 곧 정답 버튼', () => {
   const r = buildRound(GAME_COLOR, 4, { rng: makeRng(11) });
-  assert.equal(r.sequence.length, 4);
-  assert.equal(r.choices, null);
-  assert.deepEqual(r.answers, r.sequence);
-  for (const v of r.answers) assert.ok(v >= 0 && v <= 3);
-});
-
-test('buildRound(2차): 항목마다 4지선다, answers 가 정답 칸을 가리킨다', () => {
-  for (let seed = 0; seed < 50; seed++) {
-    const r = buildRound(GAME_DIGIT, 5, { rng: makeRng(seed) });
-    assert.equal(r.sequence.length, 5);
-    assert.equal(r.choices.length, 5);
-    r.choices.forEach((choice, k) => {
-      assert.equal(choice.length, 4);
-      assert.equal(new Set(choice).size, 4);
-      // 핵심 불변식: answers[k] 칸의 보기 == 외웠던 숫자
-      assert.equal(choice[r.answers[k]], r.sequence[k]);
-      assert.ok(r.answers[k] >= 0 && r.answers[k] <= 3);
-    });
-    assert.equal(r.presentColors, null, '숫자게임 제시는 흰색 고정이라 색이 없다');
+  assert.equal(r.items.length, 4);
+  for (const it of r.items) {
+    assert.equal(it.kind, GAME_COLOR);
+    assert.equal(it.choices, null);
+    assert.equal(it.answer, it.value);
+    assert.ok(it.value >= 0 && it.value <= 3);
   }
 });
 
-test('buildRound(3차): 모양 4지선다 + 교란용 제시 색', () => {
-  const r = buildRound(GAME_SHAPE, 3, { shapes: SHAPES, rng: makeRng(5) });
-  assert.equal(r.sequence.length, 3);
-  assert.equal(r.presentColors.length, 3);
-  for (const c of r.presentColors) assert.ok(c >= 0 && c <= 3);
-  r.choices.forEach((choice, k) => {
-    assert.equal(choice[r.answers[k]], r.sequence[k]);
-    for (const s of choice) assert.ok(SHAPES.includes(s));
-  });
+test('buildRound(숫자): 항목마다 4지선다, answer 가 정답 칸을 가리킨다', () => {
+  for (let seed = 0; seed < 50; seed++) {
+    const r = buildRound(GAME_DIGIT, 4, { rng: makeRng(seed) });
+    assert.equal(r.items.length, 4);
+    for (const it of r.items) {
+      assert.equal(it.kind, GAME_DIGIT);
+      assert.equal(it.choices.length, 4);
+      assert.equal(new Set(it.choices).size, 4);
+      // 핵심 불변식: answer 칸의 보기 == 외웠던 숫자
+      assert.equal(it.choices[it.answer], it.value);
+      assert.ok(it.answer >= 0 && it.answer <= 3);
+      assert.equal(it.presentColor, null, '숫자 제시는 흰색 고정이라 색이 없다');
+    }
+  }
 });
 
-test('buildRound: 같은 단계를 다시 만들면 새 시퀀스가 나온다 (오답 재도전)', () => {
+test('buildRound(모양): 4지선다 + 교란용 제시 색', () => {
+  const r = buildRound(GAME_SHAPE, 3, { shapes: SHAPES, rng: makeRng(5) });
+  assert.equal(r.items.length, 3);
+  for (const it of r.items) {
+    assert.ok(it.presentColor >= 0 && it.presentColor <= 3);
+    assert.equal(it.choices[it.answer], it.value);
+    for (const s of it.choices) assert.ok(SHAPES.includes(s));
+  }
+});
+
+test('buildRound(혼합): 항목마다 종류가 랜덤이고, 종류별 규칙을 그대로 따른다', () => {
+  const seenKinds = new Set();
+  for (let seed = 0; seed < 80; seed++) {
+    const r = buildRound(GAME_MIXED, 4, { shapes: SHAPES, rng: makeRng(seed) });
+    assert.equal(r.items.length, 4);
+    for (const it of r.items) {
+      seenKinds.add(it.kind);
+      assert.ok(MIXED_KINDS.includes(it.kind), '항목 종류는 색상·숫자·모양 중 하나');
+      if (it.kind === GAME_COLOR) {
+        assert.equal(it.choices, null);
+        assert.equal(it.answer, it.value);
+      } else {
+        assert.equal(it.choices[it.answer], it.value);
+        assert.equal(new Set(it.choices).size, 4);
+      }
+      if (it.kind === GAME_SHAPE) {
+        assert.ok(it.presentColor >= 0 && it.presentColor <= 3);
+      } else {
+        assert.equal(it.presentColor, null);
+      }
+    }
+  }
+  assert.equal(seenKinds.size, 3, '충분히 돌리면 세 종류가 모두 나와야 한다');
+});
+
+test('buildRound: 같은 판을 다시 만들면 새 시퀀스가 나온다 (오답 재도전)', () => {
   // 오답 시 "새로운" 시퀀스로 재출제되는지 — 수용 기준 체크리스트 항목
   const rng = makeRng(2024);
-  const a = buildRound(GAME_DIGIT, 5, { rng });
-  const b = buildRound(GAME_DIGIT, 5, { rng });
-  assert.notDeepEqual(a.sequence, b.sequence);
+  const a = buildRound(GAME_DIGIT, 4, { rng });
+  const b = buildRound(GAME_DIGIT, 4, { rng });
+  assert.notDeepEqual(a.items.map((i) => i.value), b.items.map((i) => i.value));
 });
 
-test('상태 전이 시나리오: 1차1단계 → 올클리어 완주 경로', () => {
-  let game = 1, level = 1;
+test('상태 전이 시나리오: 1개 기억 1라운드 → 완주 경로', () => {
+  let level = 1, round = 1;
   const path = [];
   for (let i = 0; i < 100; i++) {
-    path.push(`${game}-${level}`);
-    const nx = nextAfterClear(game, level);
+    path.push(`${level}-${round}`);
+    const nx = nextAfterClear(level, round);
     if (nx.kind === 'allClear') break;
-    game = nx.game; level = nx.level;
+    level = nx.level; round = nx.round;
   }
-  assert.equal(path.length, 15, '3차수 × 5단계 = 15단계를 지나야 한다');
+  assert.equal(path.length, 20, '4단계 × 5라운드 = 20판을 지나야 한다');
   assert.equal(path[0], '1-1');
   assert.equal(path[5], '2-1');
-  assert.equal(path[14], '3-5');
+  assert.equal(path[19], '4-5');
 });
 
-test('상태 전이 시나리오: 목숨은 차수를 넘어 유지된다', () => {
-  // 1차에서 1개 잃고 2차로 넘어가도 목숨이 회복되지 않아야 한다.
+test('상태 전이 시나리오: 목숨은 단계를 넘어 유지된다', () => {
+  // 1단계에서 1개 잃고 2단계로 넘어가도 목숨이 회복되지 않아야 한다.
   let lives = 3;
-  lives = nextAfterMiss(lives).lives;          // 1차에서 실수 → 2
-  const nx = nextAfterClear(1, 5);             // 1차 완료 → 2차
-  assert.equal(nx.kind, 'nextGame');
-  assert.equal(lives, 2, '차수 전환은 목숨을 건드리지 않는다');
-  lives = nextAfterMiss(lives).lives;          // 2차에서 실수 → 1
+  lives = nextAfterMiss(lives).lives;          // 실수 → 2
+  const nx = nextAfterClear(1, 5);             // 1단계 완료 → 2단계
+  assert.equal(nx.kind, 'nextLevel');
+  assert.equal(lives, 2, '단계 전환은 목숨을 건드리지 않는다');
+  lives = nextAfterMiss(lives).lives;          // 실수 → 1
   const last = nextAfterMiss(lives);           // 한 번 더 → 게임오버
   assert.deepEqual(last, { kind: 'gameOver', lives: 0 });
 });

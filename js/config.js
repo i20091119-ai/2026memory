@@ -4,8 +4,9 @@
  */
 
 export const CONFIG = {
-  LEVELS_PER_GAME: 5,        // 차수당 단계 수
-  TOTAL_GAMES: 3,            // 코스 전체 차수 수
+  GAME_TYPES: 4,             // 고를 수 있는 게임 종류 (색상·숫자·모양·혼합)
+  LEVELS: 4,                 // 단계 수 = 기억할 항목 수 (1개→…→4개)
+  ROUNDS_PER_LEVEL: 5,       // 단계마다 반복하는 라운드 수
   LIVES: 3,
   PRESENT_MS: 900,           // 항목 표시 시간
   GAP_MS: 350,               // 항목 간 공백
@@ -55,7 +56,7 @@ if (FAST) {
 }
 
 /**
- * ?game=3&level=4 → 해당 차수·단계에서 바로 시작 (목숨은 기본값).
+ * ?game=4&level=3&round=2 → 해당 게임·단계·라운드에서 바로 시작 (목숨은 기본값).
  * 범위를 벗어난 값은 무시하고 정상 시작한다.
  */
 function readCheat() {
@@ -63,10 +64,11 @@ function readCheat() {
     const n = Number.parseInt(raw ?? '', 10);
     return Number.isFinite(n) && n >= min && n <= max ? n : null;
   };
-  const game = clamp(params.get('game'), 1, CONFIG.TOTAL_GAMES);
-  const level = clamp(params.get('level'), 1, CONFIG.LEVELS_PER_GAME);
-  if (game === null && level === null) return null;
-  return { game: game ?? 1, level: level ?? 1 };
+  const game = clamp(params.get('game'), 1, CONFIG.GAME_TYPES);
+  const level = clamp(params.get('level'), 1, CONFIG.LEVELS);
+  const round = clamp(params.get('round'), 1, CONFIG.ROUNDS_PER_LEVEL);
+  if (game === null && level === null && round === null) return null;
+  return { game: game ?? 1, level: level ?? 1, round: round ?? 1 };
 }
 
 export const CHEAT = readCheat();

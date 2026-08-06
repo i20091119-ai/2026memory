@@ -10,13 +10,19 @@ import { el, isExit, sleep } from '../util.js';
 import { STR } from '../strings.js';
 import { CONFIG } from '../config.js';
 import { createTorus } from '../torus.js';
-import { buildRound, GAME_COLOR } from '../games.js';
+import { buildRound, GAME_COLOR, GAME_MIXED } from '../games.js';
 import { presentScene } from './present.js';
 import { recallScene } from './recall.js';
-import { levelClearScene } from './feedback.js';
+import { roundClearScene } from './feedback.js';
 
-/** 데모가 시연할 단계들 — 2단계, 3단계를 번갈아 보여 준다 */
-const DEMO_LEVELS = [2, 3];
+/**
+ * 데모가 시연할 판들 — 색상 2개, 혼합 3개를 번갈아 보여 준다.
+ * 혼합을 넣는 이유: 이 게임의 제일 화려한 모드라 구경꾼을 끌기에 좋다.
+ */
+const DEMO_PLAYS = [
+  { game: GAME_COLOR, level: 2 },
+  { game: GAME_MIXED, level: 3 },
+];
 
 /** 유령 입력이 "생각하는" 시간 */
 const GHOST_DELAY_MS = 620;
@@ -61,15 +67,15 @@ export async function attractScene(ctx) {
   try {
     let i = 0;
     while (!ac.signal.aborted) {
-      const level = DEMO_LEVELS[i % DEMO_LEVELS.length];
+      const play = DEMO_PLAYS[i % DEMO_PLAYS.length];
       i++;
 
-      const state = { game: GAME_COLOR, level, lives: CONFIG.LIVES };
-      const round = buildRound(GAME_COLOR, level);
+      const state = { game: play.game, level: play.level, round: 1, lives: CONFIG.LIVES };
+      const round = buildRound(play.game, play.level, { shapes: CONFIG.SHAPES });
 
       await presentScene(demoCtx, state, round);
       const result = await recallScene(demoCtx, state, round, { onReady: ghost });
-      if (result.cleared) await levelClearScene(demoCtx, state);
+      if (result.cleared) await roundClearScene(demoCtx, state);
       await sleep(600, ac.signal);
     }
   } catch (err) {
