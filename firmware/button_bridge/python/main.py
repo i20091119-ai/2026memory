@@ -35,6 +35,24 @@ HOST = "localhost"
 PORT = 8765
 NUM_BUTTONS = 4
 
+
+def in_app_lab() -> bool:
+    """App Lab 런타임(컨테이너) 안에서 돌고 있는가."""
+    try:
+        import arduino.app_utils  # type: ignore  # noqa: F401
+        return True
+    except Exception:
+        return False
+
+
+def default_host() -> str:
+    """
+    App Lab 앱으로 돌면 컨테이너 안이므로 0.0.0.0 에 묶어야 호스트의
+    키오스크 브라우저가 붙을 수 있다 (app.yaml 의 ports 로 게시됨).
+    그 밖에서는 같은 기계에서만 쓰므로 localhost 로 닫아 둔다.
+    """
+    return "0.0.0.0" if in_app_lab() else HOST
+
 # 연결된 웹앱들 (보통 키오스크 크로미움 하나뿐)
 CLIENTS: set = set()
 
@@ -159,9 +177,14 @@ async def run_bridge() -> None:
 # --------------------------------------------------------------------- #
 
 async def main_async(args) -> None:
+    source = args.source
+    if source == "auto":
+        source = "bridge" if in_app_lab() else "serial"
+        LOG.info("입력 소스 자동 선택: %s", source)
+
     async with websockets.serve(handle_client, args.host, PORT):
         LOG.info("WebSocket 서버 시작: ws://%s:%d", args.host, PORT)
-        if args.source == "bridge":
+        if source == "bridge":
             await run_bridge()
         else:
             await run_serial(args.port, args.baud)
@@ -169,15 +192,19 @@ async def main_async(args) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="우노 Q 버튼 → WebSocket 브리지")
-    parser.add_argument("--source", choices=("serial", "bridge"), default="serial",
-                        help="스케치의 USE_BRIDGE 설정과 맞출 것 (기본: serial)")
+    # 우노 Q 는 STM32 가 보드에 내장돼 USB 시리얼(/dev/ttyACM*)로 잡히지 않는다.
+    # 그 보드에서는 App Lab Bridge RPC 가 유일한 통로다. 그래서 기본값을 auto 로 두고
+    # App Lab 안이면 bridge, 밖이면 serial 로 저절로 갈리게 한다.
+    parser.add_argument("--source", choices=("auto", "serial", "bridge"), default="auto",
+                        help="스케치의 USE_BRIDGE 설정과 맞출 것 (기본: auto)")
     parser.add_argument("--port", default="/dev/ttyACM0", help="시리얼 포트")
     parser.add_argument("--baud", type=int, default=115200, help="시리얼 속도")
     # 기본은 localhost — 같은 기계의 키오스크 브라우저만 붙으면 되므로 밖으로 열 이유가 없다.
-    # App Lab 앱으로 돌릴 때만 예외다. 그때는 파이썬이 컨테이너 안에서 돌아서
+    # App Lab 앱으로 돌 때만 예외다. 그때는 파이썬이 컨테이너 안에서 돌아서
     # localhost 에 묶으면 호스트의 브라우저가 못 붙는다 → 0.0.0.0 이 필요하다.
-    parser.add_argument("--host", default=os.environ.get("TORUS_BRIDGE_HOST", HOST),
-                        help="바인드 주소 (기본 localhost, App Lab 컨테이너면 0.0.0.0)")
+    # 어느 쪽인지는 app_utils 임포트 가능 여부로 저절로 갈리므로 손댈 일이 없다.
+    parser.add_argument("--host", default=os.environ.get("TORUS_BRIDGE_HOST", default_host()),
+                        help="바인드 주소 (기본: App Lab 안이면 0.0.0.0, 밖이면 localhost)")
     parser.add_argument("-v", "--verbose", action="store_true")
     args = parser.parse_args()
 
