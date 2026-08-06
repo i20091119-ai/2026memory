@@ -536,8 +536,9 @@ body.show-cursor, body.show-cursor button { cursor: default; }
 }
 
 /* 카드 색 = 버튼 색. "저 색 버튼을 누르면 저걸 고른다"가 한눈에 보여야 한다. */
-/* 제목·카드를 화면 가운데 쪽으로. 왼쪽 아래 토러스와는 안 겹칠 만큼만 내린다 */
-.select-body { justify-content: flex-start; padding-top: 8vh; gap: 3.5vh; }
+/* 제목은 위에 두고, 카드만 제목과 토러스 말풍선 사이로 내린다 */
+.select-body { justify-content: flex-start; padding-top: 5vh; gap: 0; }
+.select-grid { margin-top: 8.5vh; }
 
 .select-grid {
   display: grid;
