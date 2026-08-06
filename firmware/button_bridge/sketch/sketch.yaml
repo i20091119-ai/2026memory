@@ -1,0 +1,17 @@
+# 우노 Q 의 STM32 쪽 빌드 설정. FQBN 은 보드에 설치된 App Lab 예제에서 확인한 값이다.
+#
+# 라이브러리 4종은 App Lab 의 Bridge RPC(MsgPack 기반)가 쓰는 것들이다.
+# 이 스케치는 기본값이 시리얼(USE_BRIDGE 0)이라 지금은 필요 없지만,
+# sketch.ino 의 USE_BRIDGE 를 1 로 바꿔 Bridge 방식으로 갈 때 그대로 필요하므로 남겨 둔다.
+profiles:
+  default:
+    fqbn: arduino:zephyr:unoq
+    platforms:
+      - platform: arduino:zephyr
+    libraries:
+      - MsgPack (0.4.2)
+      - DebugLog (0.8.4)
+      - ArxContainer (0.7.0)
+      - ArxTypeTraits (0.3.1)
+
+default_profile: default

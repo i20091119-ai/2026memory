@@ -57,10 +57,38 @@ B0 D    ← 0번(빨강) 눌림
 B3 U    ← 3번(파랑) 뗌
 ```
 
+## 스케치 올리기 (App Lab)
+
+`firmware/button_bridge` 자체가 App Lab 앱 폴더다 (`app.yaml` + `sketch/` + `python/`).
+보드 설정은 `sketch/sketch.yaml` 에 있다 — FQBN 은 **`arduino:zephyr:unoq`**.
+
+App Lab 이 이 폴더를 목록에 안 띄우면, **이미 등록된 앱을 Duplicate 해서**
+그 폴더의 `sketch/sketch.ino` 만 이 저장소 것으로 덮어쓰는 방법이 확실하다.
+App Lab 이 만든 앱 폴더는 이렇게 찾는다.
+
+```bash
+find ~ -maxdepth 6 -name "app.yaml" -newermt "-10 minutes" 2>/dev/null
+```
+
+arduino-cli 가 있으면 App Lab 없이도 된다.
+
+```bash
+arduino-cli compile --fqbn arduino:zephyr:unoq sketch
+arduino-cli upload -p /dev/ttyACM0 --fqbn arduino:zephyr:unoq sketch
+```
+
+> **파이썬 쪽은 App Lab 에서 돌리지 않는 것을 권한다.** App Lab 은 파이썬을
+> 컨테이너에서 실행하므로 포트 노출·바인드 주소를 신경 써야 한다
+> (그 경우 `--host 0.0.0.0` 또는 `TORUS_BRIDGE_HOST=0.0.0.0` 이 필요하다).
+> `scripts/install-kiosk.sh` 가 브리지를 systemd 서비스로 직접 돌리므로
+> App Lab 은 **스케치를 STM32 에 굽는 용도로만** 쓰면 된다.
+
 ## 실행
 
 ```bash
 # 의존성 (우노 Q 리눅스에서 1회)
+sudo apt install -y python3-websockets python3-serial
+# 또는
 pip3 install websockets pyserial
 
 # 시리얼 방식

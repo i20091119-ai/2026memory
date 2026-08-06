@@ -21,6 +21,7 @@ import argparse
 import asyncio
 import json
 import logging
+import os
 import sys
 
 try:
@@ -158,8 +159,8 @@ async def run_bridge() -> None:
 # --------------------------------------------------------------------- #
 
 async def main_async(args) -> None:
-    async with websockets.serve(handle_client, HOST, PORT):
-        LOG.info("WebSocket 서버 시작: ws://%s:%d", HOST, PORT)
+    async with websockets.serve(handle_client, args.host, PORT):
+        LOG.info("WebSocket 서버 시작: ws://%s:%d", args.host, PORT)
         if args.source == "bridge":
             await run_bridge()
         else:
@@ -172,6 +173,11 @@ def main() -> None:
                         help="스케치의 USE_BRIDGE 설정과 맞출 것 (기본: serial)")
     parser.add_argument("--port", default="/dev/ttyACM0", help="시리얼 포트")
     parser.add_argument("--baud", type=int, default=115200, help="시리얼 속도")
+    # 기본은 localhost — 같은 기계의 키오스크 브라우저만 붙으면 되므로 밖으로 열 이유가 없다.
+    # App Lab 앱으로 돌릴 때만 예외다. 그때는 파이썬이 컨테이너 안에서 돌아서
+    # localhost 에 묶으면 호스트의 브라우저가 못 붙는다 → 0.0.0.0 이 필요하다.
+    parser.add_argument("--host", default=os.environ.get("TORUS_BRIDGE_HOST", HOST),
+                        help="바인드 주소 (기본 localhost, App Lab 컨테이너면 0.0.0.0)")
     parser.add_argument("-v", "--verbose", action="store_true")
     args = parser.parse_args()
 

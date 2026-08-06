@@ -102,9 +102,13 @@ bash scripts/disable-autostart.sh --list      # 무엇을 껐는지
 bash scripts/disable-autostart.sh --restore   # 전부 되돌리기
 ```
 
-> **App Lab 으로 등록한 앱이면** systemd·crontab 이 아니라 App Lab 자체가 띄운다.
-> 이때는 위 스크립트에 안 잡히므로 **App Lab 화면에서 그 앱의 "부팅 시 실행"을
-> 끄는 것이 정답**이다. `survey.sh` 의 7번 항목에 App Lab 앱 디렉터리가 나온다.
+> **App Lab 으로 등록한 앱이면** systemd·crontab 이 아니라 App Lab 자체가 띄우므로
+> 위 스크립트에 안 잡힌다. App Lab 화면에서 그 앱 카드의 **`⋯` 메뉴 → `Run at startup`
+> 토글을 끄면** 된다 (같은 메뉴의 `Delete` 는 앱을 지운다 — 끄기만 할 거면 토글만 내린다).
+> 지금 돌고 있다면 화면 아래 **`Stop`** 도 함께 누른다.
+>
+> 실제 사례: 이 보드의 모스부호 앱은 `~/mosbuho/booth-app/arduino` 에 있고
+> App Lab 의 `Run at startup` 으로 켜지고 있었다.
 
 스케치(STM32)는 앱 하나만 올라간다. 다음 절에서 버튼 브리지 스케치를 올리면
 모스부호 스케치는 자연히 지워진다.

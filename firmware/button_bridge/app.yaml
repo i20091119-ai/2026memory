@@ -1,0 +1,12 @@
+name: Torus Button Bridge
+description: "토러스 메모리 게임 — 아케이드 버튼 4개(빨·노·초·파)를 웹앱으로 나르는 브리지 (STM32 MCU → 시리얼 → Python). 웹앱이 ws://localhost:8765 로 붙는다."
+icon: 🎮
+version: "1.0.0"
+
+# 브라우저(키오스크 웹앱)가 컨테이너 안의 WebSocket 브리지에 닿도록 8765 를 호스트로 노출.
+# (App Lab 의 ports 는 "정수 리스트" — 같은 번호로 호스트에 게시됨. "8765:8765" 문자열 금지)
+ports:
+  - 8765
+
+# 사전 제작 Brick 미사용 (직접 시리얼 읽기 + WebSocket 서버).
+bricks: []
