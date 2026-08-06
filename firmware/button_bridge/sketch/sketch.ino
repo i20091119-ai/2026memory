@@ -11,17 +11,20 @@
  * 감지하려면 뗌 이벤트가 반드시 필요하다 (§5.2).
  *
  * 전송 방식이 두 가지다:
- *   USE_BRIDGE 1 → App Lab Bridge RPC 로 파이썬에 직접 통지 (권장)
- *   USE_BRIDGE 0 → 시리얼로 한 줄씩 출력 (어느 보드에서나 동작, 디버깅 쉬움)
+ *   USE_BRIDGE 1 → App Lab Bridge RPC 로 파이썬에 직접 통지 (우노 Q 는 이것만 된다)
+ *   USE_BRIDGE 0 → 시리얼로 한 줄씩 출력 (USB 시리얼이 잡히는 보드용, 디버깅 쉬움)
  * 두 경우 모두 python/main.py 가 받아 처리한다. firmware/README.md 참조.
+ *
+ * 우노 Q 는 STM32 가 보드에 내장되어 USB 시리얼(/dev/ttyACM*)로 잡히지 않는다.
+ * 그래서 이 보드에서는 Bridge 방식이 유일한 통로이고, 기본값을 1 로 둔다.
  */
 
-#define USE_BRIDGE 0   // 1 로 바꾸면 Bridge RPC 사용 (README 의 확인 절차를 먼저 볼 것)
+#define USE_BRIDGE 1   // 우노 Q 기본값. USB 시리얼이 잡히는 보드에서만 0 으로.
 
 #if USE_BRIDGE
-  // NOTE: 헤더 이름과 네임스페이스는 설치된 App Lab 버전에 따라 다를 수 있다.
-  //       App Lab 의 "Bridge" 예제를 열어 실제 API 를 확인한 뒤 맞춰 넣을 것.
-  #include <Bridge.h>
+  // 우노 Q 의 App Lab 이 제공하는 MPU↔MCU RPC. 플랫폼(arduino:zephyr)에 들어 있어
+  // sketch.yaml 의 libraries 에 따로 적지 않는다.
+  #include <Arduino_RouterBridge.h>
 #endif
 
 static const uint8_t PINS[4]   = { 2, 3, 4, 5 };   // 0=빨 1=노 2=초 3=파
@@ -63,6 +66,11 @@ void setup() {
 }
 
 void loop() {
+#if USE_BRIDGE
+  // 들어온 RPC 를 처리한다. 이 호출이 빠지면 Bridge 가 동작하지 않는다.
+  Bridge.update();
+#endif
+
   const uint32_t now = millis();
 
   for (uint8_t i = 0; i < NUM_BTN; i++) {

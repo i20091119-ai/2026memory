@@ -76,15 +76,29 @@ done
 [ -n "$BROWSER" ] || die "크로미움이 없습니다: sudo apt install chromium"
 ok "브라우저: $BROWSER"
 
-# 브리지는 없어도 게임은 돈다(키보드 모드). 없으면 알리기만 하고 넘어간다.
+# 버튼 브리지를 systemd 로 돌릴 수 있는지 판단한다.
+#
+# 우노 Q 는 STM32 가 내장이라 USB 시리얼(/dev/ttyACM*)로 잡히지 않는다. 그 보드에서
+# MCU 와 말하는 방법은 App Lab 의 Bridge RPC 뿐인데, 그건 App Lab 런타임 안에서만
+# 임포트되므로 systemd 로는 띄울 수 없다. 그때는 브리지를 건너뛰고 App Lab 으로
+# 안내한다 — 브리지가 없어도 게임은 키보드로 정상 동작한다.
 BRIDGE="$REPO/firmware/button_bridge/python/main.py"
 BRIDGE_OK=0
-if [ -f "$BRIDGE" ] && python3 -c 'import websockets' 2>/dev/null; then
-  BRIDGE_OK=1
-  ok "버튼 브리지 준비됨"
-else
-  warn "버튼 브리지를 못 씁니다 — pip3 install websockets pyserial 후 다시 실행하세요"
+SERIAL_DEV="$(ls /dev/ttyACM* /dev/ttyUSB* 2>/dev/null | head -1 || true)"
+
+if [ ! -f "$BRIDGE" ]; then
+  warn "브리지 파일이 없습니다: $BRIDGE"
+elif ! python3 -c 'import websockets' 2>/dev/null; then
+  warn "websockets 가 없습니다 — sudo apt install -y python3-websockets python3-serial"
   warn "(그래도 게임은 설치됩니다. 키보드 1234 로는 플레이됩니다)"
+elif [ -z "$SERIAL_DEV" ]; then
+  warn "USB 시리얼 장치가 없습니다 (우노 Q 는 STM32 가 내장이라 정상입니다)"
+  warn "→ 버튼 브리지는 systemd 가 아니라 App Lab 앱으로 돌려야 합니다"
+  warn "   firmware/button_bridge 를 App Lab 앱으로 등록하고 'Run at startup' 을 켜세요"
+  warn "   (자세한 절차는 firmware/README.md)"
+else
+  BRIDGE_OK=1
+  ok "버튼 브리지 준비됨 (시리얼: $SERIAL_DEV)"
 fi
 
 # systemd 사용자 인스턴스에 말을 걸 수 있는지 확인한다.
@@ -141,7 +155,7 @@ After=torus-web.service
 
 [Service]
 # 보드가 켜질 때 /dev/ttyACM0 이 늦게 잡히는 일이 있어 항상 재시작하게 둔다.
-ExecStart=/usr/bin/env python3 $BRIDGE --source serial --port /dev/ttyACM0
+ExecStart=/usr/bin/env python3 $BRIDGE --source serial --port ${SERIAL_DEV:-/dev/ttyACM0}
 Restart=always
 RestartSec=3
 

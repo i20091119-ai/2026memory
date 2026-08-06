@@ -12,30 +12,58 @@
                        웹앱 (저장소 루트)
 ```
 
-## 전송 방식 두 가지
+## 전송 방식 — 우노 Q 는 Bridge RPC 뿐이다
 
-우노 Q 는 App Lab 의 **Bridge RPC** 로 스케치와 파이썬을 잇는 것이 정석이지만,
-App Lab 버전에 따라 헤더 이름·임포트 경로·콜백 등록 API 가 달라진다.
-그래서 이 저장소는 **어디서나 확실히 동작하는 시리얼 방식을 기본값**으로 두고,
-Bridge 방식을 선택지로 함께 넣어 두었다. 웹소켓 메시지 형식은 둘 다 똑같으므로
-어느 쪽을 쓰든 웹앱은 손댈 필요가 없다.
+**우노 Q 는 STM32 가 보드에 내장되어 USB 시리얼로 잡히지 않는다.**
+실물에서 확인한 결과 `/dev/ttyACM*` · `/dev/ttyUSB*` 가 아예 없고
+`ttyS0~S3` 만 있는데 그건 STM32 와 무관하다. 즉 이 보드에서 MCU 와 말할 방법은
+App Lab 의 **Bridge RPC** 하나뿐이다.
 
-| | 스케치 | 파이썬 | 비고 |
+| | 스케치 | 파이썬 | 쓰는 곳 |
 |---|---|---|---|
-| 시리얼 (기본) | `#define USE_BRIDGE 0` | `--source serial` | 어느 보드에서나 동작, 디버깅 쉬움 |
-| Bridge RPC | `#define USE_BRIDGE 1` | `--source bridge` | App Lab 정석. 아래 확인 절차 필요 |
+| **Bridge RPC** (기본) | `#define USE_BRIDGE 1` | `--source bridge` | **우노 Q** |
+| 시리얼 | `#define USE_BRIDGE 0` | `--source serial` | USB 시리얼이 잡히는 보드 |
 
-### Bridge 방식을 쓰려면
+파이썬의 `--source` 기본값은 `auto` 다. `arduino.app_utils` 임포트가 되면
+(= App Lab 런타임 안이면) `bridge`, 아니면 `serial` 로 저절로 갈린다.
+바인드 주소(`--host`)도 같은 기준으로 정해진다 — 아래 참조.
 
-App Lab 의 API 이름이 버전마다 다르므로, 켜기 전에 두 곳만 확인하면 된다.
+### API (실물 보드에서 확인한 것)
 
-1. App Lab 에서 **Bridge 예제**를 연다.
-2. 스케치 쪽: 예제의 `#include` 줄과 통지 함수 이름을 확인해
-   `sketch/sketch.ino` 의 `report()` 안 `Bridge.notify(...)` 를 맞춘다.
-3. 파이썬 쪽: 예제의 임포트 경로와 콜백 등록 방식을 확인해
-   `python/main.py` 의 `run_bridge()` 함수를 맞춘다.
+스케치 쪽:
 
-`run_bridge()` 외의 코드(웹소켓 서버, 메시지 형식, 브로드캐스트)는 그대로 쓸 수 있다.
+```cpp
+#include <Arduino_RouterBridge.h>   // 플랫폼 내장, sketch.yaml 에 안 적어도 된다
+
+Bridge.begin();                              // setup()
+Bridge.update();                             // loop() 마다 — 빠뜨리면 동작 안 함
+Bridge.notify("button_event", id, state);    // MCU → 파이썬
+```
+
+파이썬 쪽:
+
+```python
+from arduino.app_utils import Bridge         # App Lab 런타임 안에서만 임포트된다
+Bridge.provide("button_event", handler)      # MCU 의 통지를 받는 콜백 등록
+```
+
+이름(`button_event`)만 양쪽이 같으면 되고, 인자는 여러 개를 넘길 수 있다.
+
+### 그래서 파이썬 브리지는 App Lab 앱으로 돌려야 한다
+
+`arduino.app_utils` 는 App Lab 런타임(컨테이너) 안에서만 존재한다.
+systemd 로 직접 띄우면 임포트가 안 되므로, 브리지는 **App Lab 앱으로 등록하고
+`Run at startup` 을 켜서** 돌린다. 웹서버와 크로미움 키오스크만
+`scripts/install-kiosk.sh` 가 systemd 로 맡는다.
+
+| | 담당 | 자동시작 |
+|---|---|---|
+| 스케치 + 버튼 브리지 | App Lab 앱 (8765 노출) | App Lab 의 `Run at startup` |
+| 웹서버 + 크로미움 | systemd | `install-kiosk.sh` |
+
+컨테이너 안에서는 `localhost` 에 묶으면 호스트의 브라우저가 못 붙으므로
+`0.0.0.0` 에 묶어야 하는데, 이것도 `--host` 기본값이 알아서 판단한다
+(`app.yaml` 의 `ports: [8765]` 가 호스트로 게시해 준다).
 
 ## 프로토콜
 
