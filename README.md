@@ -126,7 +126,9 @@ test/games.test.js      # node --test
 외부 라이브러리도 CDN 링크도 쓰지 않아 오프라인 키오스크에서 완전히 동작한다.
 
 - 렌더링: DOM + CSS 애니메이션, 필요한 곳만 인라인 SVG
-- 저장: localStorage (`torus-memory.best.v2`, 게임 종류별 기록) — 접근이 막힌 환경에서도 게임은 정상 진행
+- 저장: localStorage (`torus-memory.clears.v2`) — **게임별 완주 횟수만** 저장한다.
+  부스라 매번 다른 사람이 오고 게임에 끝이 있어, 하이스코어는 의미가 없다.
+  접근이 막힌 환경에서도 게임은 정상 진행
 - 사운드: Web Audio 합성 효과음만 (배경음악 없음, 음원 파일 없음)
 
 ### 폰트

@@ -11,7 +11,7 @@
 import { CONFIG, CHEAT } from './config.js';
 import { buildRound, nextAfterClear, nextAfterMiss, compareRecord } from './games.js';
 import { isExit } from './util.js';
-import { submitRecord, bumpAllClear } from './storage.js';
+import { bumpAllClear } from './storage.js';
 
 import { titleScene } from './scenes/title.js';
 import { selectScene } from './scenes/select.js';
@@ -84,7 +84,8 @@ async function playCourse(base, start) {
   let level = start.level;
   let round = start.round;
   let lives = CONFIG.LIVES;
-  /** 이번 판에서 도달한 가장 좋은 지점 */
+  /** 이번 판에서 도달한 가장 좋은 지점 — 게임오버 화면 표시용.
+      저장하지는 않는다 (부스에 남길 숫자는 완주 횟수뿐이다). */
   let reached = { level, round };
 
   for (;;) {
@@ -99,9 +100,7 @@ async function playCourse(base, start) {
       outcome = await runFrom(ctx, { game, level, round, lives, reached });
     } catch (err) {
       if (!isExit(err)) throw err;
-      // 중도 이탈 — 기록만 남기고 타이틀로
-      submitRecord(game, reached);
-      return 'title';
+      return 'title'; // 중도 이탈 — 완주가 아니니 남길 것이 없다
     } finally {
       offExit();
       ctx.input.exitComboEnabled = false;
@@ -111,17 +110,14 @@ async function playCourse(base, start) {
     reached = outcome.reached;
 
     if (outcome.kind === 'allClear') {
-      const record = submitRecord(game, reached);
-      const best = bumpAllClear(game);
-      await safeScene(base, (ctx2) =>
-        allClearScene(ctx2, { game, updated: record.updated, clearCount: best.clearCount }));
+      const clearCount = bumpAllClear(game);
+      await safeScene(base, (ctx2) => allClearScene(ctx2, { game, clearCount }));
       return 'title';
     }
 
     // 게임 오버 → 컨티뉴 선택
-    const record = submitRecord(game, reached);
     const choice = await safeScene(base, (ctx2) =>
-      gameOverScene(ctx2, { game, ...reached }, record));
+      gameOverScene(ctx2, { game, ...reached }));
 
     if (choice === 'continue') {
       // 죽은 단계의 1라운드부터, 목숨 3 회복

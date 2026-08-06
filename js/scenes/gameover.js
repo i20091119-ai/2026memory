@@ -13,11 +13,10 @@ import { GREEN, RED } from '../games.js';
 
 /**
  * @param {import('../state.js').Ctx} ctx
- * @param {{game: number, level: number, round: number}} reached 이번 판 도달 기록
- * @param {{updated: boolean, best: object}} record submitRecord 결과
+ * @param {{game: number, level: number, round: number}} reached 이번 판 도달 지점
  * @returns {Promise<'continue'|'select'|'title'>}
  */
-export async function gameOverScene(ctx, reached, record) {
+export async function gameOverScene(ctx, reached) {
   const torus = createTorus({ mood: 'sad' });
   torus.say(STR.GAME_OVER_SAD);
 
@@ -28,16 +27,13 @@ export async function gameOverScene(ctx, reached, record) {
     el('span.continue-text', { text }),
   );
 
+  // 부스라 "최고 기록과 비교" 같은 건 없다 — 이번 도전이 어디까지 갔는지만.
   const node = el('section.scene.scene-gameover', {},
     el('div.gameover-body', {},
       el('h2.gameover-title', { text: STR.GAME_OVER }),
-      record.updated ? el('div.new-record.pop-in', { text: STR.NEW_RECORD }) : null,
       el('div.gameover-record', {},
         el('div.record-line', {
           text: STR.GAME_OVER_REACHED(reached.game, reached.level, reached.round),
-        }),
-        el('div.record-sub', {
-          text: STR.GAME_OVER_BEST(record.best.level, record.best.round),
         }),
       ),
       el('div.gameover-torus', {}, torus),
@@ -52,7 +48,6 @@ export async function gameOverScene(ctx, reached, record) {
   mount(ctx.root, node);
 
   ctx.audio.gameOver();
-  if (record.updated) setTimeout(() => ctx.audio.newRecord(), 900);
 
   // 남은 시간을 1초 단위로 보여 준다 — "갑자기 타이틀로 튕겼다"는 인상을 없앤다.
   const deadline = performance.now() + CONFIG.GAMEOVER_IDLE_MS;

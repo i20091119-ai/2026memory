@@ -26,7 +26,7 @@ function confetti(count = 60) {
 
 /**
  * @param {import('../state.js').Ctx} ctx
- * @param {{game: number, updated: boolean, clearCount: number}} record
+ * @param {{game: number, clearCount: number}} record
  */
 export async function allClearScene(ctx, record) {
   // 기쁜 표정은 라운드 클리어와 같은 'cheer' 하나를 쓴다.
@@ -40,7 +40,6 @@ export async function allClearScene(ctx, record) {
       el('h2.allclear-title.pop-in', { text: STR.ALL_CLEAR }),
       el('div.allclear-sub', { text: STR.ALL_CLEAR_SUB(record.game) }),
       el('div.allclear-torus', {}, torus),
-      record.updated ? el('div.new-record.pop-in', { text: STR.NEW_RECORD }) : null,
       el('div.record-sub', {
         text: STR.TITLE_ALL_CLEAR_COUNT(record.clearCount),
       }),

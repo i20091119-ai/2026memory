@@ -7,8 +7,12 @@ export const STR = {
   /* 게임 정체성 */
   TITLE: '토러스와 즐기는\n랜덤 메모리 게임',
   TITLE_START: '아무 버튼이나 눌러 시작',
-  TITLE_NO_RECORD: '아직 기록이 없어요',
-  TITLE_ALL_CLEAR_COUNT: (n) => `완주 ${n}회`,
+  /* 부스라서 매번 다른 사람이 오고, 게임에는 끝(완주)이 있다.
+     그래서 "최고 기록" 같은 하이스코어는 의미가 없다 — 며칠이면 만점에 닿아
+     영영 안 바뀐다. 계속 쌓이는 숫자는 "완주가 몇 번 나왔나" 하나뿐이라
+     그것만 보여 준다. */
+  TITLE_NO_RECORD: '완주에 도전해 봐!',
+  TITLE_ALL_CLEAR_COUNT: (n) => `지금까지 완주 ${n}번 나왔어요!`,
   TITLE_GREETING: '안녕! 나는 토러스야. 같이 기억력 대결 해볼래?',
 
   /* 게임 선택 */
@@ -20,9 +24,8 @@ export const STR = {
     3: '모양만 기억 — 색은 함정!',
     4: '색깔·숫자·모양이 마구 섞여서!',
   },
-  SELECT_BEST: (level, round) => `최고 ${level}개 ${round}/5`,
-  SELECT_CLEARED: (n) => `완주 ${n}회`,
-  SELECT_NO_RECORD: '도전해 봐!',
+  SELECT_CLEARED: (n) => `지금까지 완주 ${n}번!`,
+  SELECT_NO_RECORD: '첫 완주에 도전해 봐!',
 
   /* 게임 안내 (GAME_INTRO) */
   GAME_NAME: {
@@ -93,9 +96,7 @@ export const STR = {
   /* 게임 오버 */
   GAME_OVER: '게임 오버',
   GAME_OVER_REACHED: (game, level, round) =>
-    `도달 기록: ${STR.GAME_SHORT[game]} ${level}개 기억 ${round}/5`,
-  GAME_OVER_BEST: (level, round) => `이 게임 최고: ${level}개 기억 ${round}/5`,
-  NEW_RECORD: '신기록!',
+    `이번 도전: ${STR.GAME_SHORT[game]} ${level}개 기억 ${round}/5`,
   CONTINUE_TITLE: '계속할래?',
   CONTINUE_GREEN: '초록 · 이번 단계부터 이어하기',
   CONTINUE_RED: '빨강 · 다른 게임 고르기',

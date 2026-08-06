@@ -11,7 +11,7 @@ import { STR } from '../strings.js';
 import { CONFIG, COLORS } from '../config.js';
 import { createTorus } from '../torus.js';
 import { createShape } from '../shapes.js';
-import { bestFor, hasRecord } from '../storage.js';
+import { clearCountFor } from '../storage.js';
 
 /** 화면 요소를 직접 탭해도 실제 버튼처럼 동작시킨다 (모바일 테스트용) */
 function makeTappable(node, id, input) {
@@ -25,12 +25,10 @@ function makeTappable(node, id, input) {
   return node;
 }
 
-/** 종류 하나의 기록 요약 한 줄 */
+/** 종류 하나의 기록 한 줄 — 부스에 의미 있는 숫자는 완주 횟수뿐이다 */
 function recordLine(game) {
-  const best = bestFor(game);
-  if (best.clearCount > 0) return STR.SELECT_CLEARED(best.clearCount);
-  if (hasRecord(best)) return STR.SELECT_BEST(best.level, best.round);
-  return STR.SELECT_NO_RECORD;
+  const n = clearCountFor(game);
+  return n > 0 ? STR.SELECT_CLEARED(n) : STR.SELECT_NO_RECORD;
 }
 
 /**
