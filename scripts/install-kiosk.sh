@@ -115,12 +115,21 @@ fi
 
 if [ "$USERCTL" -eq 1 ]; then
   ok "systemd 사용자 서비스 사용 가능"
-  # 그래픽 세션 타깃이 있으면 키오스크도 서비스로, 없으면 데스크톱 자동시작으로.
-  if systemctl --user list-unit-files --no-legend --no-pager 2>/dev/null \
-      | grep -q '^graphical-session.target'; then
+  # 키오스크를 서비스로 걸지, 데스크톱 자동시작으로 걸지 정한다.
+  #
+  # 유닛 파일이 "있는지"만 보면 안 된다. graphical-session.target 은 어느 배포판에나
+  # 있지만, 세션 관리자가 systemd 와 연동되지 않으면 부팅해도 활성화되지 않는다.
+  # (XFCE 처럼 연동이 없는 환경이 흔하다. 그러면 서비스가 영영 안 뜬다.)
+  # 실제로 활성 상태인지를 봐야 한다.
+  if [ "${TORUS_KIOSK_MODE:-}" = "service" ] || [ "${TORUS_KIOSK_MODE:-}" = "autostart" ]; then
+    KIOSK_MODE="$TORUS_KIOSK_MODE"
+    ok "키오스크 방식을 지정받음: $KIOSK_MODE"
+  elif systemctl --user is-active --quiet graphical-session.target 2>/dev/null; then
     KIOSK_MODE="service"
   else
     KIOSK_MODE="autostart"
+    warn "graphical-session.target 이 활성화되지 않는 환경입니다"
+    warn "→ 키오스크는 데스크톱 자동시작(.desktop)으로 겁니다"
   fi
 else
   warn "systemd 사용자 인스턴스에 붙지 못했습니다"
@@ -206,9 +215,14 @@ EOF
   ok "자동시작 등록: ~/.config/autostart/torus-kiosk.desktop"
 }
 
+# 자동시작으로 걸 때도 웹서버가 뜬 뒤에 브라우저를 띄워야 한다.
+# 먼저 뜨면 "연결할 수 없음" 화면이 그대로 남는다.
+WAIT_THEN_KIOSK="/usr/bin/env bash -c 'until curl -sf http://localhost:$PORT/ >/dev/null; do sleep 1; done; exec $KIOSK_CMD'"
+
 case "$KIOSK_MODE" in
-  autostart)     write_desktop "$KIOSK_CMD" ;;
+  autostart)     write_desktop "$WAIT_THEN_KIOSK" ;;
   autostart-all) write_desktop "/usr/bin/env bash $REPO/scripts/start-all.sh" ;;
+  service)       rm -f "$HOME/.config/autostart/torus-kiosk.desktop" ;;
 esac
 
 # ------------------------------------------------------------------ 켜기
@@ -244,6 +258,13 @@ if [ "$KIOSK_MODE" = "service" ]; then
   systemctl --user enable torus-kiosk 2>/dev/null && ok "torus-kiosk 자동시작 등록" || \
     warn "torus-kiosk 자동시작 등록 실패 — 화면 세션이 없을 수 있습니다"
   systemctl --user start torus-kiosk 2>/dev/null || warn "지금은 화면이 없어 못 띄웠습니다 (재부팅 후 확인)"
+else
+  # 자동시작(.desktop)으로 거는 경우, 예전 실행에서 켜 둔 서비스가 남아 있으면
+  # 크로미움이 두 번 뜬다. 확실히 꺼 둔다.
+  if systemctl --user is-enabled torus-kiosk >/dev/null 2>&1; then
+    systemctl --user disable --now torus-kiosk 2>/dev/null || true
+    ok "torus-kiosk 서비스는 껐습니다 (.desktop 으로 대신 겁니다)"
+  fi
 fi
 
 # 로그인 없이도 부팅 직후 웹서버·브리지가 뜨게
