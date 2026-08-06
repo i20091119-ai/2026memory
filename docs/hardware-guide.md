@@ -113,12 +113,23 @@ bash scripts/disable-autostart.sh --restore   # 전부 되돌리기
 스케치(STM32)는 앱 하나만 올라간다. 다음 절에서 버튼 브리지 스케치를 올리면
 모스부호 스케치는 자연히 지워진다.
 
-### 5.1 설치
+### 5.1 역할 분담 (우노 Q 실물에서 확인한 구성)
+
+부팅 시 뜨는 것이 **두 군데로 나뉜다.** 우노 Q 는 STM32 가 내장이라 버튼을
+읽으려면 App Lab 의 Bridge RPC 를 써야 하는데, 그 API 는 App Lab 런타임 안에서만
+임포트되므로 systemd 로는 띄울 수 없다.
+
+| 무엇 | 어디서 | 자동시작 |
+|---|---|---|
+| 스케치 + **버튼 브리지** (8765) | **App Lab 앱** | App Lab 카드 `⋯` → `Run at startup` |
+| 웹서버 (8000) + **크로미움 키오스크** | systemd / `.desktop` | `install-kiosk.sh` |
+
+### 5.2 설치
 
 ```bash
 git clone https://github.com/i20091119-ai/2026memory.git ~/torus-memory-game
 cd ~/torus-memory-game
-pip3 install websockets pyserial      # 버튼 브리지용
+sudo apt install -y python3-websockets python3-serial
 bash scripts/install-kiosk.sh
 ```
 
@@ -127,10 +138,19 @@ bash scripts/install-kiosk.sh
 | | |
 |---|---|
 | `torus-web` | 정적 웹서버 (`python3 -m http.server 8000`, localhost 전용) |
-| `torus-bridge` | 버튼 → WebSocket 브리지 |
-| `torus-kiosk` | 크로미움 전체화면 |
+| `torus-bridge` | 버튼 브리지. **USB 시리얼이 없으면 등록하지 않고** App Lab 으로 안내한다 |
+| `torus-kiosk` | 크로미움 전체화면. 전용 프로필(`~/.torus-kiosk-profile`)을 쓴다 |
 | linger | 로그인 없이도 부팅 시 뜨게 |
 | 절전 | 화면 블랭킹·자동 잠금 해제 시도 |
+
+키오스크를 서비스로 걸지 `.desktop` 자동시작으로 걸지는 `graphical-session.target`
+이 **실제로 활성화되는 환경인지** 보고 정한다. XFCE 처럼 systemd 세션 연동이 없으면
+서비스로 걸어도 영영 안 뜨므로 `.desktop` 으로 건다.
+`TORUS_KIOSK_MODE=service|autostart` 로 직접 지정할 수도 있다.
+
+> **크로미움 프로필을 갈라 쓰는 이유**: 공용 프로필을 쓰면 예전에 이 기계에서
+> 돌던 다른 키오스크의 "이전 세션 복원"이 살아나 그 페이지가 대신 뜬다.
+> 실제로 이 보드에서 겪은 문제다.
 
 확인·해제:
 
@@ -146,7 +166,7 @@ bash scripts/start-all.sh              # 웹서버+브리지+전체화면 한 �
 bash scripts/start-all.sh --windowed   # 창 모드 (디버깅)
 ```
 
-### 5.2 스케치 올리기
+### 5.3 스케치 올리기
 
 버튼을 읽는 쪽은 App Lab 으로 올려야 한다. `firmware/button_bridge/sketch` 를
 App Lab 에서 열어 우노 Q 에 업로드한다. 전송 방식(시리얼/Bridge RPC) 선택과
@@ -158,14 +178,14 @@ App Lab 에서 열어 우노 Q 에 업로드한다. 전송 방식(시리얼/Brid
 python3 firmware/button_bridge/python/main.py -v   # 버튼을 누르면 로그가 뜬다
 ```
 
-### 5.3 업데이트
+### 5.4 업데이트
 
 ```bash
 cd ~/torus-memory-game && git pull
 systemctl --user restart torus-web torus-kiosk
 ```
 
-### 5.4 장시간 구동 설정 (필수)
+### 5.5 장시간 구동 설정 (필수)
 
 전시·상시 운영이므로 아래를 반드시 적용한다.
 
@@ -177,7 +197,7 @@ systemctl --user restart torus-web torus-kiosk
 - **팝업 차단**: 위 서비스의 `--noerrdialogs --disable-session-crashed-bubble` 플래그가 담당한다.
 - **자동 업데이트 알림 끄기**: 배포판의 업데이트 알림 데몬을 비활성화한다.
 
-### 5.5 확인
+### 5.6 확인
 
 재부팅 → 자동으로 타이틀 화면이 뜨면 완료. 버튼을 눌러 동작을 확인한다.
 화면 오른쪽 아래 점이 **초록**이면 브리지 연결 성공이다(회색이면 미연결 —
