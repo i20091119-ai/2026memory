@@ -544,7 +544,7 @@ body.show-cursor, body.show-cursor button { cursor: default; }
   grid-template-columns: repeat(4, 1fr);
   gap: clamp(10px, 1.8vw, 34px);
   width: min(92vw, 1500px);
-  height: min(48vh, 560px);
+  height: min(42vh, 500px);
 }
 
 .select-card {
@@ -565,7 +565,7 @@ body.show-cursor, body.show-cursor button { cursor: default; }
 
 .select-name {
   font-family: var(--display);
-  font-size: clamp(17px, 3vh, 40px);
+  font-size: clamp(20px, 4.2vh, 54px);
   color: #fff;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   line-height: 1.2;
@@ -576,17 +576,44 @@ body.show-cursor, body.show-cursor button { cursor: default; }
 .select-card:nth-child(2) .select-record { color: rgba(74, 63, 0, 0.85); }
 
 .select-desc {
-  font-size: clamp(12px, 2vh, 26px);
+  font-size: clamp(14px, 2.5vh, 32px);
   color: rgba(255, 255, 255, 0.92);
   line-height: 1.3;
 }
 
+/* 대표 이미지 — 그 게임에서 실제로 나오는 것들의 미리보기 */
+.select-preview {
+  display: flex;
+  gap: clamp(6px, 0.8vw, 16px);
+  margin-top: 0.6vh;
+}
+.select-chip {
+  width: clamp(34px, 6.4vh, 76px);
+  height: clamp(34px, 6.4vh, 76px);
+  border-radius: 22%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* 카드와 같은 색의 색칩(빨강 카드 위 빨강 칩)도 보이도록 흰 테를 두른다 */
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.85),
+              0 4px 10px rgba(0, 0, 0, 0.18);
+}
+.select-chip-digit, .select-chip-shape {
+  background: var(--stage);
+}
+.select-chip-digit {
+  font-family: var(--display);
+  font-size: clamp(19px, 3.6vh, 44px);
+  color: #fff;
+}
+
 .select-record {
-  font-size: clamp(11px, 1.7vh, 22px);
-  color: rgba(255, 255, 255, 0.85);
+  font-size: clamp(12px, 2vh, 26px);
+  color: rgba(255, 255, 255, 0.9);
   background: rgba(0, 0, 0, 0.16);
   border-radius: 999px;
-  padding: 0.5vh 1.4vw;
+  padding: 0.6vh 1.6vw;
+  margin-top: 0.4vh;
 }
 
 .select-torus {

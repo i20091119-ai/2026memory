@@ -10,6 +10,7 @@ import { el, mount, waitButton } from '../util.js';
 import { STR } from '../strings.js';
 import { CONFIG, COLORS } from '../config.js';
 import { createTorus } from '../torus.js';
+import { createShape } from '../shapes.js';
 import { bestFor, hasRecord } from '../storage.js';
 
 /** 화면 요소를 직접 탭해도 실제 버튼처럼 동작시킨다 (모바일 테스트용) */
@@ -33,6 +34,23 @@ function recordLine(game) {
 }
 
 /**
+ * 카드 아래쪽에 넣는 대표 이미지 — 그 게임에서 실제로 나오는 것들의 미리보기.
+ * 글자만으로는 "모양 게임이 뭐지?"가 안 와닿는다. 미리 보여 주면 설명이 필요 없다.
+ */
+function previewIcon(game) {
+  const chip = (c) => el('span.select-chip', { style: { background: COLORS[c] } });
+  const digit = (d) => el('span.select-chip.select-chip-digit', { text: d });
+  const shape = (s) => el('span.select-chip.select-chip-shape', {},
+    createShape(s, { size: '72%', color: '#fff' }));
+
+  if (game === 1) return el('span.select-preview', {}, chip(2), chip(0), chip(3), chip(1));
+  if (game === 2) return el('span.select-preview', {}, digit('4'), digit('9'), digit('2'), digit('7'));
+  if (game === 3) return el('span.select-preview', {},
+    shape('star'), shape('heart'), shape('moon'), shape('triangle'));
+  return el('span.select-preview', {}, chip(0), digit('7'), shape('star'), chip(2));
+}
+
+/**
  * @param {import('../state.js').Ctx} ctx
  * @returns {Promise<number|'title'>} 고른 게임 종류(1..4), 방치하면 'title'
  */
@@ -49,6 +67,7 @@ export async function selectScene(ctx) {
     },
       el('span.select-name', { text: STR.GAME_NAME[game] }),
       el('span.select-desc', { text: STR.SELECT_DESC[game] }),
+      previewIcon(game),
       el('span.select-record', { text: recordLine(game) }),
     );
     return makeTappable(card, i, ctx.input);
