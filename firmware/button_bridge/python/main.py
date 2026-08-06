@@ -72,7 +72,21 @@ async def broadcast(payload: dict) -> None:
         CLIENTS.discard(ws)
 
 
+BUTTON_NAMES = ("빨강", "노랑", "초록", "파랑")
+
+# 설치 직후 "버튼이 제대로 잡히나"를 로그만 보고 알 수 있어야 한다.
+# 그렇다고 상시 운영 중 수만 줄을 남길 이유는 없으므로, 처음 몇 번만 INFO 로
+# 남기고 그 뒤로는 DEBUG 로 내린다. -v 를 붙이면 계속 다 보인다.
+_LOUD_EVENTS = 12
+_seen_events = 0
+
+
 def button_payload(button_id: int, pressed: bool) -> dict:
+    global _seen_events
+    _seen_events += 1
+    name = BUTTON_NAMES[button_id] if 0 <= button_id < len(BUTTON_NAMES) else "?"
+    level = logging.INFO if _seen_events <= _LOUD_EVENTS else logging.DEBUG
+    LOG.log(level, "버튼 %d(%s) %s", button_id, name, "눌림" if pressed else "뗌")
     return {"type": "button", "id": int(button_id), "state": "down" if pressed else "up"}
 
 
