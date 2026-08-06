@@ -43,14 +43,29 @@ else
 fi
 
 # ------------------------------------------------------------------ 브리지
+#
+# 우노 Q 는 STM32 가 내장이라 USB 시리얼이 없고, 브리지는 App Lab 앱으로 돌아야 한다.
+# 그 경우 8765 는 App Lab 이 이미 잡고 있으므로 여기서 또 띄우면 충돌한다.
 BRIDGE="$REPO/firmware/button_bridge/python/main.py"
-if [ -f "$BRIDGE" ] && python3 -c 'import websockets' 2>/dev/null; then
-  python3 "$BRIDGE" --source serial --port "${TORUS_SERIAL:-/dev/ttyACM0}" >/dev/null 2>&1 &
+SERIAL_DEV="$(ls /dev/ttyACM* /dev/ttyUSB* 2>/dev/null | head -1 || true)"
+
+if python3 - <<'PY' 2>/dev/null
+import socket, sys
+s = socket.socket(); s.settimeout(1)
+sys.exit(0 if s.connect_ex(("127.0.0.1", 8765)) == 0 else 1)
+PY
+then
+  echo "브리지가 이미 8765 에서 돌고 있습니다 (App Lab 앱으로 보입니다) — 새로 띄우지 않습니다."
+elif [ -z "$SERIAL_DEV" ]; then
+  echo "USB 시리얼 장치가 없습니다 — 브리지는 App Lab 앱으로 돌려야 합니다."
+  echo "  (firmware/README.md 참조. 그동안 키보드 1234 로 플레이됩니다)"
+elif [ -f "$BRIDGE" ] && python3 -c 'import websockets' 2>/dev/null; then
+  python3 "$BRIDGE" --port "${TORUS_SERIAL:-$SERIAL_DEV}" >/dev/null 2>&1 &
   PIDS+=("$!")
-  echo "버튼 브리지 시작 (ws://localhost:8765)"
+  echo "버튼 브리지 시작 (ws://localhost:8765, $SERIAL_DEV)"
 else
   echo "버튼 브리지를 건너뜁니다 — 키보드 1234 로 플레이됩니다."
-  echo "  버튼을 쓰려면: pip3 install websockets pyserial"
+  echo "  버튼을 쓰려면: sudo apt install -y python3-websockets python3-serial"
 fi
 
 # 웹서버가 응답할 때까지 잠깐 기다린다 (브라우저가 먼저 뜨면 빈 화면이 뜬다)
