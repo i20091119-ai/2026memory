@@ -178,11 +178,17 @@ ok "torus-bridge.service"
 #   --noerrdialogs 등           오류 팝업·복구 풍선 차단 (전시물에 뜨면 안 된다)
 #   --autoplay-policy           첫 입력 전에도 효과음이 나게
 #   --check-for-update-interval 업데이트 알림 억제
+#   --user-data-dir             전용 프로필. 이게 없으면 예전에 쓰던 프로필의
+#                               "이전 세션 복원"이 살아나 엉뚱한 페이지가 같이 뜬다.
+#                               (이 보드처럼 다른 키오스크를 돌린 적이 있으면 반드시 필요)
+KIOSK_PROFILE="$HOME/.torus-kiosk-profile"
 KIOSK_CMD="$BROWSER --kiosk --noerrdialogs --disable-infobars \
 --disable-session-crashed-bubble --disable-features=Translate \
 --autoplay-policy=no-user-gesture-required \
 --check-for-update-interval=31536000 \
 --disable-pinch --overscroll-history-navigation=0 \
+--user-data-dir=$KIOSK_PROFILE --no-first-run --no-default-browser-check \
+--disable-session-crashed-bubble --restore-last-session=false \
 http://localhost:$PORT/"
 
 cat > "$UNITS/torus-kiosk.service" <<EOF
