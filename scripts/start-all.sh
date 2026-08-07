@@ -96,7 +96,7 @@ fi
 # 전용 프로필을 쓴다. 공용 프로필이면 예전에 쓰던 키오스크의 "이전 세션 복원"이
 # 살아나 엉뚱한 페이지가 같이 뜬다.
 FLAGS=(--noerrdialogs --disable-infobars --disable-session-crashed-bubble
-       --disable-features=Translate --autoplay-policy=no-user-gesture-required
+       --disable-features=Translate,TranslateUI --autoplay-policy=no-user-gesture-required
        --check-for-update-interval=31536000
        --disable-pinch --overscroll-history-navigation=0
        --user-data-dir="$HOME/.torus-kiosk-profile"

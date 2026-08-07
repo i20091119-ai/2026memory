@@ -182,8 +182,29 @@ ok "torus-bridge.service"
 #                               "이전 세션 복원"이 살아나 엉뚱한 페이지가 같이 뜬다.
 #                               (이 보드처럼 다른 키오스크를 돌린 적이 있으면 반드시 필요)
 KIOSK_PROFILE="$HOME/.torus-kiosk-profile"
+
+# 번역 팝업 차단. 게임이 한국어 페이지라 브라우저 언어가 영어면 켤 때마다
+# "Korean → English?" 막대가 뜬다. 플래그만으로 안 막히는 버전이 있어서
+# 프로필 설정에도 못을 박는다 (이미 있으면 값만 고쳐 넣는다).
+mkdir -p "$KIOSK_PROFILE/Default"
+python3 - "$KIOSK_PROFILE/Default/Preferences" <<'PYEOF'
+import json, sys, os
+path = sys.argv[1]
+prefs = {}
+if os.path.exists(path):
+    try:
+        prefs = json.load(open(path))
+    except Exception:
+        prefs = {}
+prefs.setdefault("translate", {})["enabled"] = False
+blocked = set(prefs.get("translate_blocked_languages", []))
+blocked.add("ko")
+prefs["translate_blocked_languages"] = sorted(blocked)
+json.dump(prefs, open(path, "w"))
+PYEOF
+ok "번역 팝업 차단 설정"
 KIOSK_CMD="$BROWSER --kiosk --noerrdialogs --disable-infobars \
---disable-session-crashed-bubble --disable-features=Translate \
+--disable-session-crashed-bubble --disable-features=Translate,TranslateUI \
 --autoplay-policy=no-user-gesture-required \
 --check-for-update-interval=31536000 \
 --disable-pinch --overscroll-history-navigation=0 \
