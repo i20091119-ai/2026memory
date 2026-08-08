@@ -32,7 +32,9 @@ export async function roundClearScene(ctx, state, opts = {}) {
     ),
   );
   mount(ctx.root, node);
-  ctx.audio.levelClear();
+  // 승급이면 더 큰 팡파레, 아니면 라운드마다 돌아가며 바뀌는 짧은 팡파레
+  if (opts.levelUp) ctx.audio.levelUp(opts.levelUp);
+  else ctx.audio.levelClear(state.round ?? 1);
 
   await sleep(CONFIG.LEVEL_CLEAR_MS, ctx.signal);
 }
@@ -72,7 +74,9 @@ export async function missScene(ctx, state, miss) {
 
   ctx.audio.wrong();
   // 하트가 깨지는 연출 — 차감 후 남는 개수를 넘긴다.
+  // 깨지는 소리는 화면의 하트 애니메이션과 같은 박자에 낸다.
   hud.breakHeart(Math.max(0, state.lives - 1));
+  setTimeout(() => ctx.audio.heartBreak(), CONFIG.HEART_BREAK_DELAY_MS);
 
   await sleep(CONFIG.MISS_MS, ctx.signal);
 }

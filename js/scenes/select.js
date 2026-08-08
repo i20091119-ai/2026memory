@@ -86,7 +86,8 @@ export async function selectScene(ctx) {
   });
   if (ev === null) return 'title';
 
-  ctx.audio.blip();
+  // 게임마다 시그니처 소리가 다르다 — "골랐다"는 확인이자 그 게임의 첫인상
+  ctx.audio.gamePick(ev.id + 1);
   cards[ev.id].classList.add('press');
   return ev.id + 1;
 }

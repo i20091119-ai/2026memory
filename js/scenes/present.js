@@ -124,8 +124,12 @@ export async function presentScene(ctx, state, round) {
     strip.setCurrent(i);
     strip.setLabel(STR.STRIP_RECALL(i + 1, total));
     stage.replaceChildren(renderItem(item));
-    // 색상 항목은 색마다 음이 다르다 (도·미·솔·도′) — 혼합에서도 똑같이.
-    ctx.audio.present(item.kind, item.kind === GAME_COLOR ? item.value : i);
+    // 항목마다 음이 다르다 — 색은 색대로, 숫자는 값대로, 모양은 종류대로.
+    // 귀로도 외울 수 있게 하기 위한 것 (다감각 기억 보조).
+    const pitchIndex = item.kind === GAME_COLOR ? item.value
+      : item.kind === GAME_DIGIT ? item.value
+      : Math.max(0, CONFIG.SHAPES.indexOf(item.value));
+    ctx.audio.present(item.kind, pitchIndex);
 
     await sleep(CONFIG.PRESENT_MS, ctx.signal);
 
