@@ -1208,20 +1208,44 @@ body.show-cursor, body.show-cursor button { cursor: default; }
 
 /* 브리지 접속 상태 — 화면 구석의 작은 점 하나로만 표시 (에러 화면 금지).
    오른쪽 아래는 로고 자리가 되었으므로 왼쪽 위 구석으로 옮겼다. */
+/* 버튼 연결 표시등 — 운영자가 팔 길이에서 색을 구분할 수 있어야 한다.
+   예전엔 9px 이라 사실상 안 보였고, 정작 버튼이 안 먹을 때 확인할 수단이 없었다. */
 .ws-status {
   position: absolute;
-  left: 8px;
-  top: 8px;
-  width: 9px;
-  height: 9px;
+  left: 1vw;
+  top: 1vh;
+  display: flex;
+  align-items: center;
+  gap: 0.5vw;
+}
+
+.ws-dot {
+  width: clamp(11px, 1.6vh, 20px);
+  height: clamp(11px, 1.6vh, 20px);
   border-radius: 50%;
-  background: #d8cfe2;
+  background: #cbbfd8;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.7);
   transition: background 300ms, box-shadow 300ms;
+  flex: 0 0 auto;
 }
-.ws-status.on {
+.ws-status.on .ws-dot {
   background: var(--mint);
-  box-shadow: 0 0 8px rgba(111, 216, 193, 0.9);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.7), 0 0 10px rgba(111, 216, 193, 0.9);
 }
+
+/* 글자는 실물 키오스크에서 '끊긴 동안에만' 보인다 (main.js 의 .kiosk).
+   공개 웹 주소에서는 브리지가 원래 없으므로 띄우지 않는다. */
+.ws-label {
+  display: none;
+  font-size: clamp(11px, 1.5vh, 18px);
+  color: var(--c-red);
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 999px;
+  padding: 0.3vh 0.8vw;
+  white-space: nowrap;
+}
+.ws-status.kiosk:not(.on) .ws-label { display: block; }
+.ws-status.kiosk:not(.on) .ws-dot { background: var(--c-red); }
 
 /* 홈으로 나가기 홀드 게이지 (빨+파 2초) */
 .hold-gauge {

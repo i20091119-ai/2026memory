@@ -105,11 +105,11 @@ arduino-cli compile --fqbn arduino:zephyr:unoq sketch
 arduino-cli upload -p /dev/ttyACM0 --fqbn arduino:zephyr:unoq sketch
 ```
 
-> **파이썬 쪽은 App Lab 에서 돌리지 않는 것을 권한다.** App Lab 은 파이썬을
-> 컨테이너에서 실행하므로 포트 노출·바인드 주소를 신경 써야 한다
-> (그 경우 `--host 0.0.0.0` 또는 `TORUS_BRIDGE_HOST=0.0.0.0` 이 필요하다).
-> `scripts/install-kiosk.sh` 가 브리지를 systemd 서비스로 직접 돌리므로
-> App Lab 은 **스케치를 STM32 에 굽는 용도로만** 쓰면 된다.
+> **파이썬 브리지도 App Lab 앱으로 돌린다** (§위 "그래서 파이썬 브리지는…" 참조).
+> `arduino.app_utils` 가 App Lab 런타임 안에서만 임포트되기 때문이다.
+> App Lab 이 파이썬을 컨테이너에서 실행하므로 바인드 주소는 `0.0.0.0` 이어야 하고
+> `app.yaml` 의 `ports: [8765]` 로 호스트에 노출해야 하는데, 둘 다 기본값이
+> 알아서 판단한다. 앱 카드의 **`Run at startup` 을 켜야** 부팅 시 뜬다.
 
 ## 실행
 
@@ -135,6 +135,6 @@ python3 python/main.py --source bridge
 1. **스위치**: 멀티미터 도통 모드로 COM–NO 가 눌렀을 때만 붙는지 확인 (NC 단자를 쓰면 반대로 동작한다).
 2. **스케치**: 시리얼 모니터(115200)를 열고 버튼을 눌러 `B0 D` / `B0 U` 가 뜨는지 확인.
 3. **브리지**: `python3 python/main.py -v` 로 띄우고 버튼을 눌러 로그를 확인.
-4. **웹앱**: 화면 오른쪽 아래 점이 **초록**이면 브리지에 붙은 것이다 (회색이면 미연결 — 이때도 키보드로는 플레이된다).
+4. **웹앱**: 화면 **왼쪽 위 점**이 **초록**이면 브리지에 붙은 것이다. 끊겨 있으면 점이 빨갛게 바뀌고 "버튼 미연결" 글자가 뜬다 (이때도 키보드로는 플레이된다).
 
 자세한 배선표와 전원 구성은 [`../docs/hardware-guide.md`](../docs/hardware-guide.md) 참조.

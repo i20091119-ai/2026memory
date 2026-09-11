@@ -114,9 +114,11 @@ export const STR = {
   ATTRACT_SPEECH: '이렇게 하는 거야!',
   ATTRACT_PRESS: '아무 버튼이나 눌러 시작',
 
-  /* 접속 상태 아이콘 툴팁 */
+  /* 버튼 연결 표시등 */
   WS_CONNECTED: '아케이드 버튼 연결됨',
   WS_OFFLINE: '키보드 모드 (1·2·3·4)',
+  /** 실물 키오스크에서 브리지가 끊겼을 때 화면에 띄우는 짧은 경고 */
+  WS_OFFLINE_SHORT: '버튼 미연결',
 
   /* 모양 이름 — 화면에는 쓰지 않지만 접근성 라벨용 */
   SHAPE_NAME: {

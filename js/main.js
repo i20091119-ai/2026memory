@@ -34,8 +34,23 @@ new KeyboardInput(input, CONFIG).attach(window);
 // WebSocket 브리지: 없어도 조용히 키보드 모드로만 동작한다 (§2).
 const socket = new SocketInput(input, CONFIG);
 
-const statusIcon = el('div.ws-status', { title: STR.WS_OFFLINE });
+// 버튼 연결 표시등 — 화면 왼쪽 위.
+//
+// 운영자가 "버튼이 왜 안 먹지?" 할 때 제일 먼저 볼 곳이라, 팔 길이에서 색이
+// 구분될 만큼은 커야 한다. 예전엔 9px 이라 사실상 안 보였다.
+//
+// 실물 키오스크(localhost)에서 **끊긴 동안에만** 글자까지 띄운다. 그 상황에선
+// 버튼이 안 먹으니 손님도 알아야 하고, 운영자는 원인을 바로 안다.
+// github.io 같은 공개 주소에서는 브리지가 원래 없으므로 글자를 띄우지 않는다.
+const isKiosk = globalThis.location?.hostname === 'localhost'
+  || globalThis.location?.hostname === '127.0.0.1';
+
+const statusDot = el('span.ws-dot');
+const statusLabel = el('span.ws-label', { text: STR.WS_OFFLINE_SHORT });
+const statusIcon = el('div.ws-status', { title: STR.WS_OFFLINE }, statusDot, statusLabel);
+if (isKiosk) statusIcon.classList.add('kiosk');
 overlay.append(statusIcon);
+
 socket.onStatus((connected) => {
   statusIcon.classList.toggle('on', connected);
   statusIcon.title = connected ? STR.WS_CONNECTED : STR.WS_OFFLINE;
