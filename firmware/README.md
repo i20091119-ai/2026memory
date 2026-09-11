@@ -60,6 +60,12 @@ systemd 로 직접 띄우면 임포트가 안 되므로, 브리지는 **App Lab 
 |---|---|---|
 | 스케치 + 버튼 브리지 | App Lab 앱 (8765 노출) | App Lab 의 `Run at startup` |
 | 웹서버 + 크로미움 | systemd | `install-kiosk.sh` |
+| 브리지 감시 (죽으면 되살림) | systemd | `install-kiosk.sh` |
+
+App Lab 은 **멈춘 앱을 저절로 되살리지 않는다.** 운영 중에 브리지 앱이 멈춰
+아케이드 버튼만 죽은 일이 있었으므로, `scripts/bridge-watch.sh` 가 8765 를
+지켜보다 닫히면 App Lab 앱 컨테이너를 다시 띄운다
+(`docs/hardware-guide.md` §5.8).
 
 컨테이너 안에서는 `localhost` 에 묶으면 호스트의 브라우저가 못 붙으므로
 `0.0.0.0` 에 묶어야 하는데, 이것도 `--host` 기본값이 알아서 판단한다
@@ -132,9 +138,13 @@ python3 python/main.py --source bridge
 
 문제가 생기면 위에서부터 짚어 내려가면 된다.
 
+0. **한 줄 진단 먼저**: `bash ../scripts/bridge-watch.sh --once` — 8765 가 열렸는지, 브리지 컨테이너가 살았는지를 한꺼번에 보여 준다. **닫혀 있으면 아래를 볼 필요 없이 브리지가 죽은 것**이다 (`--restart` 로 되살린다).
 1. **스위치**: 멀티미터 도통 모드로 COM–NO 가 눌렀을 때만 붙는지 확인 (NC 단자를 쓰면 반대로 동작한다).
 2. **스케치**: 시리얼 모니터(115200)를 열고 버튼을 눌러 `B0 D` / `B0 U` 가 뜨는지 확인.
-3. **브리지**: `python3 python/main.py -v` 로 띄우고 버튼을 눌러 로그를 확인.
+3. **브리지**: `python3 python/main.py -v` 로 띄우고 버튼을 눌러 로그를 확인. (App Lab 앱을 먼저 Stop 해야 8765 가 겹치지 않는다. 감시가 자동으로 되살리므로 `bash ../scripts/bridge-watch.sh --pause` 로 잠시 재워 두고, 끝나면 `--resume`.)
 4. **웹앱**: 화면 **왼쪽 위 점**이 **초록**이면 브리지에 붙은 것이다. 끊겨 있으면 점이 빨갛게 바뀌고 "버튼 미연결" 글자가 뜬다 (이때도 키보드로는 플레이된다).
+
+버튼 4개가 **동시에** 죽었는데 8765 는 열려 있으면 배선이다. **GND 데이지체인**이
+단일 고장점이므로 거기부터 본다.
 
 자세한 배선표와 전원 구성은 [`../docs/hardware-guide.md`](../docs/hardware-guide.md) 참조.

@@ -7,9 +7,10 @@
 #   bash scripts/install-kiosk.sh --status     # 지금 상태만 보기
 #
 # 서비스 세 개를 사용자 서비스로 등록한다.
-#   torus-web     정적 웹서버 (python3 -m http.server 8000)
-#   torus-bridge  버튼 → WebSocket 브리지 (firmware/button_bridge/python/main.py)
-#   torus-kiosk   크로미움 전체화면
+#   torus-web           정적 웹서버 (python3 -m http.server 8000)
+#   torus-bridge        버튼 → WebSocket 브리지 (firmware/button_bridge/python/main.py)
+#   torus-kiosk         크로미움 전체화면
+#   torus-bridge-watch  브리지가 죽으면 되살리는 감시 (scripts/bridge-watch.sh)
 #
 # 몇 번을 돌려도 같은 결과가 되게(멱등) 만들었다. 리눅스 상시 켜짐 설정이나
 # 다른 앱은 건드리지 않는다 — 그건 disable-autostart.sh 의 몫이다.
@@ -19,7 +20,7 @@ set -euo pipefail
 REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 UNITS="$HOME/.config/systemd/user"
 PORT=8000
-SERVICES=(torus-web torus-bridge torus-kiosk)
+SERVICES=(torus-web torus-bridge torus-kiosk torus-bridge-watch)
 # 서비스나 sudo 로 실행될 때는 $USER 가 비어 있을 수 있다
 WHO="${USER:-$(id -un)}"
 
@@ -301,6 +302,13 @@ else
   warn "linger 를 못 켰습니다: sudo loginctl enable-linger ${WHO}"
 fi
 
+# 브리지 감시. 운영 중에 App Lab 앱이 멈춰 아케이드 버튼만 죽은 일이 있었다.
+# App Lab 은 멈춘 앱을 되살리지 않으므로 8765 를 지켜보다 다시 띄운다.
+# 실패해도 게임 설치는 그대로 끝난다 — 감시는 덧붙이는 안전장치다.
+bash "$REPO/scripts/bridge-watch.sh" --install >/dev/null 2>&1 \
+  && ok "브리지 감시 등록 (죽으면 자동 복구)" \
+  || warn "브리지 감시를 등록하지 못했습니다 — bash scripts/bridge-watch.sh --install"
+
 # ------------------------------------------------------------------ 절전 끄기
 head_ "4. 화면 절전 끄기"
 if command -v xset >/dev/null 2>&1 && [ -n "${DISPLAY:-}" ]; then
@@ -322,7 +330,12 @@ cat <<'EOF'
   2. 스케치(버튼 읽기)는 App Lab 에서 firmware/button_bridge/sketch 를 올려야 합니다.
   3. 재부팅해서 타이틀 화면이 저절로 뜨는지 확인하세요.
 
+아케이드 버튼이 안 먹을 때 (제일 흔한 고장)
+  bash scripts/bridge-watch.sh --once      # 브리지가 살았는지 한 줄로 진단
+  bash scripts/bridge-watch.sh --restart   # 지금 당장 되살리기
+
 문제가 생기면
   journalctl --user -u torus-kiosk -n 50 --no-pager
   journalctl --user -u torus-bridge -n 50 --no-pager
+  cat ~/torus-bridge-watch.log             # 브리지가 죽은 시각 기록
 EOF

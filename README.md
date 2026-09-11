@@ -108,6 +108,7 @@ scripts/                # 실물 게임기 설치용 (우노 Q 리눅스에서 �
 ├── survey.sh           # 부팅 시 켜지는 것 훑어보기 (읽기 전용)
 ├── disable-autostart.sh#   그중 하나만 끄기 / 되돌리기
 ├── install-kiosk.sh    # 게임 설치 + 자동시작 등록
+├── bridge-watch.sh     # 버튼 브리지가 죽으면 진단·자동 복구
 └── start-all.sh        # 서버+브리지+전체화면 한 번에 띄우기
 docs/assets.html        # 에셋 시트 (새로 그릴 그림 목록·규격)
 docs/에셋시트.pdf        # 위 문서를 인쇄용으로 뽑은 것
@@ -177,6 +178,17 @@ bash scripts/install-kiosk.sh         # 게임 설치 + 부팅 자동시작
 동작한다**(에러 화면이 뜨지 않는다). 접속 여부는 화면 **왼쪽 위 점**으로 표시된다 —
 초록이면 연결됨, 회색이면 미연결. 실물 키오스크(localhost)에서 끊긴 동안에는
 점이 빨갛게 바뀌고 **"버튼 미연결"** 글자까지 함께 뜬다.
+
+부스 운영 중에 **게임은 멀쩡한데 아케이드 버튼만 조용히 죽는** 고장을 겪었다
+(App Lab 의 브리지 앱이 멈춘 것이고, App Lab 은 멈춘 앱을 되살리지 않는다).
+그래서 `install-kiosk.sh` 가 감시 서비스를 함께 등록한다 — 30초마다 8765 를
+확인해서 닫혀 있으면 브리지를 다시 띄우고, 죽은 시각을
+`~/torus-bridge-watch.log` 에 남긴다.
+
+```bash
+bash scripts/bridge-watch.sh --once      # 버튼이 안 먹을 때 한 줄 진단
+bash scripts/bridge-watch.sh --restart   # 지금 당장 되살리기
+```
 
 ## GitHub Pages 배포
 

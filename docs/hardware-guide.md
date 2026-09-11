@@ -123,6 +123,12 @@ bash scripts/disable-autostart.sh --restore   # 전부 되돌리기
 |---|---|---|
 | 스케치 + **버튼 브리지** (8765) | **App Lab 앱** | App Lab 카드 `⋯` → `Run at startup` |
 | 웹서버 (8000) + **크로미움 키오스크** | systemd / `.desktop` | `install-kiosk.sh` |
+| **브리지 감시** (죽으면 되살림) | systemd 사용자 서비스 | `install-kiosk.sh` |
+
+App Lab 은 **멈춘 앱을 저절로 되살리지 않는다.** 실제로 운영 중에 브리지 앱이
+멈춰 아케이드 버튼만 죽은 일이 있었다 — 게임은 멀쩡히 돌고 키보드도 먹으니
+해설사가 알아챌 방법이 없었다. 그래서 `install-kiosk.sh` 가 감시 서비스를
+같이 등록한다 (§5.8).
 
 ### 5.2 설치
 
@@ -140,6 +146,7 @@ bash scripts/install-kiosk.sh
 | `torus-web` | 정적 웹서버 (`python3 -m http.server 8000`, localhost 전용) |
 | `torus-bridge` | 버튼 브리지. **USB 시리얼이 없으면 등록하지 않고** App Lab 으로 안내한다 |
 | `torus-kiosk` | 크로미움 전체화면. 전용 프로필(`~/.torus-kiosk-profile`)을 쓴다 |
+| `torus-bridge-watch` | 30초마다 8765 확인 → 죽어 있으면 브리지를 다시 띄운다 (§5.8) |
 | linger | 로그인 없이도 부팅 시 뜨게 |
 | 절전 | 화면 블랭킹·자동 잠금 해제 시도 |
 
@@ -246,10 +253,10 @@ speaker-test -t wav -c 2     # "front left / right" 음성. Ctrl+C 로 종료
 화면 **왼쪽 위 점**이 **초록**이면 브리지 연결 성공이다. 끊겨 있으면 점이 빨갛게
 바뀌고 **"버튼 미연결"** 글자가 뜬다(이때도 키보드 1234 로는 플레이된다).
 
-점을 못 찾겠으면 이 한 줄로도 확인된다:
+점을 못 찾겠으면 이 한 줄이 브리지·컨테이너·감시 상태를 한꺼번에 보여 준다:
 
 ```bash
-python3 -c "import socket;s=socket.socket();s.settimeout(2);print('브리지 살아있음' if s.connect_ex(('127.0.0.1',8765))==0 else '브리지 죽음')"
+bash scripts/bridge-watch.sh --once
 ```
 
 ```bash
@@ -258,15 +265,55 @@ journalctl --user -u torus-kiosk -n 50 --no-pager     # 화면이 안 뜰 때
 journalctl --user -u torus-bridge -n 50 --no-pager    # 버튼이 안 먹을 때
 ```
 
+### 5.8 브리지 감시 (버튼이 조용히 죽는 것을 막는다)
+
+부스 운영 중에 겪은 고장이다. **게임은 멀쩡하고 키보드도 먹는데 아케이드
+버튼만 안 먹었다.** 원인은 App Lab 의 브리지 앱이 멈춘 것이었고, App Lab 은
+멈춘 앱을 되살리지 않는다. 화면에 표시도 없어서 체험객이 버튼을 눌러 보고서야
+알 수 있었다.
+
+두 가지로 막는다.
+
+1. **화면 표시** — 키오스크에서 브리지가 끊기면 왼쪽 위 점이 **빨갛게** 바뀌고
+   **"버튼 미연결"** 글자가 뜬다. 해설사가 화면만 보고 안다.
+2. **자동 복구** — `torus-bridge-watch` 가 30초마다 8765 를 확인해서, 닫혀
+   있으면 브리지를 다시 띄운다. 실제로 3초 안에 복구된다.
+
+```bash
+bash scripts/bridge-watch.sh --once       # 진단만 (아무것도 안 건드림)
+bash scripts/bridge-watch.sh --restart    # 지금 당장 되살리기
+bash scripts/bridge-watch.sh --status     # 감시 상태 + 최근 기록
+bash scripts/bridge-watch.sh --pause      # 손으로 디버깅할 때 잠시 끄기
+bash scripts/bridge-watch.sh --resume
+cat ~/torus-bridge-watch.log              # 죽은 시각·복구 시각 기록
+```
+
+되살리는 방법은 알아서 찾는다 — ① `TORUS_BRIDGE_RESTART_CMD` 환경변수(비상
+탈출구) → ② **App Lab 앱 컨테이너 재시작**(우노 Q. `docker`/`podman` 을 그냥,
+안 되면 `sudo -n` 으로 시도한다) → ③ `torus-bridge.service` 재시작(USB 시리얼이
+잡히는 보드). App Lab 앱 이름을 바꿨으면 `TORUS_BRIDGE_CONTAINER` 로
+컨테이너 이름 조각을 알려 주면 된다 (기본 `button-bridge`).
+
+감시가 문제를 만들지 않도록 이렇게 짰다.
+
+- 포트는 `ss` 로 **듣고 있는지만** 본다. 접속해 보면 브리지 로그가 더러워진다.
+- **2회 연속** 닫혀 있을 때만 손을 쓴다 (App Lab 이 스스로 재시작하는 중일 수 있다).
+- 재시작 간격은 2분에서 시작해 계속 실패하면 30분까지 늘린다 (무한 재시작 방지).
+- **정상일 때는 기록을 한 줄도 남기지 않는다.** 상태가 바뀔 때만 쓴다.
+
+> 감시 로그는 원인 추적용이기도 하다. "죽은 시각"이 남으므로
+> `journalctl -k | grep -i oom` 같은 것과 맞춰 보면 왜 죽었는지 좁힐 수 있다.
+
 ---
 
 ## 6. 문제 해결
 
 | 증상 | 확인할 것 |
 |---|---|
-| 버튼을 눌러도 반응 없음 | ① 키보드 1234 로 먹는지(먹으면 웹앱은 정상) ② 왼쪽 위 점 / 8765 포트 확인 → 끊겼으면 App Lab 앱 Stop→Run ③ 붙어 있으면 **GND 데이지체인**부터 (4개가 동시에 죽으면 여기다) |
+| 버튼을 눌러도 반응 없음 | `bash scripts/bridge-watch.sh --once` 한 줄로 갈린다. **8765 닫힘** → 브리지가 죽은 것 (`--restart` 또는 App Lab 에서 Run) / **8765 열림** → 배선이다. 4개가 동시에 죽었으면 **GND 데이지체인**이 1순위 |
 | 버튼이 계속 눌린 상태로 인식 | 스위치 NC 단자에 물렸는지 확인 (COM/NO 를 써야 한다) |
 | 특정 버튼만 안 됨 | 해당 핀(D2~D5) 점퍼선과 GND 데이지체인 접점 |
+| 잘 쓰다가 버튼이 조용히 죽음 | App Lab 앱이 멈춘 것이다. `cat ~/torus-bridge-watch.log` 로 죽은 시각을 확인하고 §5.8 의 감시가 등록돼 있는지 본다 (`bridge-watch.sh --status`) |
 | 소리가 안 남 | §5.6 스피커 절차. 첫 버튼 입력 후부터 나는 것은 정상(브라우저 정책). 다이얼(전원 겸용) → 잡음 여부 → `alsamixer` 음소거 순으로 확인 |
 | 화면이 꺼짐 | §5.4 의 절전·블랭킹 설정 |
 | LED 안 켜짐 | 12V 어댑터 극성과 병렬 결선 (우노 Q 와 무관한 회로) |
