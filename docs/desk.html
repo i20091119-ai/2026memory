@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>토러스 메모리 게임기 — 책상 제작 도면</title>
+<style>
+  @page { size: A4 portrait; margin: 12mm; }
+  * { box-sizing: border-box; }
+  body { font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif; color: #222; margin: 0; font-size: 11px; line-height: 1.45; }
+  .page { width: 186mm; min-height: 270mm; page-break-after: always; padding: 0; }
+  .page:last-child { page-break-after: auto; }
+  h1 { font-size: 18px; margin: 0 0 2px; }
+  h2 { font-size: 13px; margin: 14px 0 6px; padding-bottom: 3px; border-bottom: 2px solid #444; }
+  h3 { font-size: 11.5px; margin: 10px 0 4px; }
+  .sub { color: #666; font-size: 10px; }
+  table { border-collapse: collapse; width: 100%; font-size: 10.5px; }
+  th, td { border: 1px solid #999; padding: 3px 5px; text-align: left; vertical-align: top; }
+  th { background: #eee; }
+  .row { display: flex; gap: 8mm; align-items: flex-start; }
+  .col { flex: 1; }
+  figure { margin: 0; }
+  figcaption { font-size: 10px; color: #444; margin-top: 2px; }
+  svg { display: block; }
+  .note { background: #fff8e1; border-left: 4px solid #f4b400; padding: 5px 8px; margin: 6px 0; font-size: 10.5px; }
+  .warn { background: #fdecea; border-left: 4px solid #d93025; padding: 5px 8px; margin: 6px 0; font-size: 10.5px; }
+  ul { margin: 4px 0 4px 16px; padding: 0; }
+  li { margin: 1px 0; }
+  .small { font-size: 9.5px; color: #555; }
+</style>
+</head>
+<body>
+
+<!-- ============================================================ 1 -->
+<div class="page">
+  <h1>토러스 메모리 게임기 — 책상 제작 도면</h1>
+  <div class="sub">경남수학문화관 · 정식 제작 2대(한 쌍, 나란히 설치) · 원목 집성 · 단위 mm · 그림은 축척이 아니며 치수 숫자가 기준 · 2026-09</div>
+
+  <h2>1. 개요</h2>
+  <div class="row">
+    <div class="col">
+      <table>
+        <tr><th style="width:34%">본체 크기</th><td><b>800(W) × 600(D) × 700(H)</b> 상판 기준. 등판 포함 전체 높이 <b>1,600</b></td></tr>
+        <tr><th>재질</th><td>원목 집성(밝은 수종 — 물푸레·자작·너도밤·단풍), 함수율 8~10% 건조재, 투명 오일 마감. 스테인 없음</td></tr>
+        <tr><th>두께</th><td>상판 <b>40</b> · 다리 <b>50×50</b> 각재 · 등판 틀 50×30 각재 + 12mm 판(액자식) · 하부 박스 18mm</td></tr>
+        <tr><th>화면</th><td>27" FHD 모니터, 등판에 <b>VESA 100×100 직결</b>. 화면 중심 높이 <b>1,220</b></td></tr>
+        <tr><th>버튼</th><td>100파이 돔 LED 버튼 <b>5개</b>(빨·노·초·파·흰), 상판에 매립. 접착 없이 너트 고정</td></tr>
+        <tr><th>스피커</th><td>Britz BR-1000A2 한 짝(150×228×161)씩 등판 하부 박스 안, 천 그릴</td></tr>
+        <tr><th>제어부</th><td>라즈베리파이 5 + USB 인코더 + 멀티탭, 하부 박스 가운데 칸(뒤 도어). 책상 1에만 들어감</td></tr>
+        <tr><th>두 책상 사이</th><td>하부 박스 옆면 <b>Ø30 통로</b> 서로 마주 보게 — HDMI·버튼 신호선·스피커선·전원선</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="note"><b>설계 원칙</b> — 원목은 습도에 따라 결 직각 방향으로 움직이므로 <b>큰 사각 컷아웃을 내지 않는다</b>. 모니터는 볼트 4개, 스피커는 Ø80 원형 구멍 2개, 버튼은 Ø25 관통 + 원형 포켓만 쓴다. 상판은 수축을 허용하는 철물(테이블 버튼/장공)로 고정한다.</div>
+
+  <h2>2. 정면도 · 측면도</h2>
+  <div class="row">
+    <figure><svg id="front" width="380" height="470"></svg><figcaption>정면 (앞에서). 등판은 뒷다리와 한 몸.</figcaption></figure>
+    <figure><svg id="side" width="300" height="470"></svg><figcaption>측면 (오른쪽에서). 하부 박스만 200 깊이, 위 등판은 62.</figcaption></figure>
+  </div>
+</div>
+
+<!-- ============================================================ 2 -->
+<div class="page">
+  <h2>3. 상판 평면 — 버튼 위치</h2>
+  <div class="row">
+    <figure><svg id="top" width="440" height="320"></svg><figcaption>위에서. 버튼 5개 중심 간격 140, 앞 가장자리에서 170. 뒤 200은 하부 박스 자리.</figcaption></figure>
+    <div class="col">
+      <table>
+        <tr><th>버튼</th><th>색</th><th>중심 X<br><span class="small">왼쪽 끝 기준</span></th><th>중심 Y<br><span class="small">앞 끝 기준</span></th></tr>
+        <tr><td>1</td><td>빨강</td><td>120</td><td>170</td></tr>
+        <tr><td>2</td><td>노랑</td><td>260</td><td>170</td></tr>
+        <tr><td>3</td><td>초록</td><td>400</td><td>170</td></tr>
+        <tr><td>4</td><td>파랑</td><td>540</td><td>170</td></tr>
+        <tr><td>5</td><td><b>흰색</b></td><td>680</td><td>170</td></tr>
+      </table>
+      <p class="small">플랜지 Ø98 사이 간격 42. 양끝 여유 71. 흰색은 "도전" 전용이라 색 4개와 같은 줄, 오른쪽 끝.</p>
+      <div class="note">버튼 실물의 <b>스템 지름(M24 → Ø25 관통)</b>과 <b>플랜지 지름(Ø98 → Ø100 매립)</b>은 실물을 한 번 재서 확정. 판매 도면 기준 값이다.</div>
+    </div>
+  </div>
+
+  <h2>4. 버튼 구멍 단면 — 접착 없이 너트로</h2>
+  <div class="row">
+    <figure><svg id="hole" width="400" height="150"></svg><figcaption>상판 40 기준. 위 Ø100×8 매립 → 아래 Ø70×26 포켓 → 가운데 Ø25 관통. 남는 살 6.</figcaption></figure>
+    <div class="col">
+      <ol style="margin:4px 0 0 16px;padding:0">
+        <li><b>윗면에서 Ø100, 깊이 8</b> — 플랜지가 쏙 들어가 윗면과 평평. 아이가 가장자리를 못 들춘다.</li>
+        <li><b>아랫면에서 Ø70, 깊이 26</b> — 너트와 스위치 홀더 자리. 라우터 원형 지그.</li>
+        <li><b>가운데 Ø25 관통</b> — M24 스템.</li>
+      </ol>
+      <p class="small">남는 살 6mm 는 너트가 조이는 자리일 뿐, 돔을 내리치는 힘은 Ø98 플랜지 바깥 링이 두꺼운 원목에 얹혀 받는다. 상판이 50이면 포켓 깊이를 36으로.</p>
+      <div class="warn">플랜지 허브 둘레의 작은 구멍 4개가 나사 구멍이면 나사 4개(Ø3, 길이 12)로 직접 고정해도 된다. 실물 확인 후 사장님과 결정.</div>
+    </div>
+  </div>
+
+  <h2>5. 등판 정면 — 모니터 · 스피커 · 안내판</h2>
+  <div class="row">
+    <figure><svg id="back" width="420" height="450"></svg><figcaption>앞에서 본 등판. 상판 윗면(700)부터 1,600까지 900.</figcaption></figure>
+    <div class="col">
+      <table>
+        <tr><th>구역 (높이)</th><th>내용</th></tr>
+        <tr><td>1,430 ~ 1,600</td><td><b>헤더 사인</b> 자리 (800×170 인쇄 패널을 판 위에 부착). 문화관 다른 교구의 제목 패널과 같은 형식</td></tr>
+        <tr><td>1,037 ~ 1,403</td><td><b>27" 모니터</b>(약 615×366). VESA 100×100 볼트 구멍 4개, 중심 (400, 1,220)</td></tr>
+        <tr><td>960 ~ 1,020</td><td><b>체험방법 · 체험미션</b> 인쇄 패널 (2장, 각 380×60) 또는 모니터 바로 아래 한 장</td></tr>
+        <tr><td>700 ~ 950</td><td><b>하부 박스</b> (800×250, 깊이 200). 좌우 <b>스피커 그릴 Ø80×2 (천 마감)</b>, 가운데 400은 제어부 칸 (앞은 막힌 판)</td></tr>
+      </table>
+      <p class="small">모니터는 판 위에 얹혀 튀어나온다(베젤 얇아 깔끔). 모니터 뒤 케이블은 VESA 구멍 옆 <b>Ø30 구멍</b>으로 판 뒤로 빠져 하부 박스로 내려간다.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ 3 -->
+<div class="page">
+  <h2>6. 하부 박스 배면 — 도어 · 통풍 · 케이블</h2>
+  <div class="row">
+    <figure><svg id="rear" width="420" height="175"></svg><figcaption>뒤에서 본 하부 박스. 가운데 도어(잠금), 양옆은 스피커 칸.</figcaption></figure>
+    <div class="col">
+      <ul>
+        <li><b>도어</b> 380×220, 경첩 + 캠락(열쇠). 안에 파이·인코더·멀티탭·12V 어댑터·(책상 1) 스피커 앰프 짝.</li>
+        <li><b>통풍 슬롯</b> 도어 상단·하단 각 3줄 (8×80). 파이 패시브 케이스는 위아래 공기 흐름만 있으면 된다.</li>
+        <li><b>케이블 출구</b> 도어 하단 오른쪽 Ø25 (전원선 1줄만 밖으로).</li>
+        <li><b>옆면 통로</b> 박스 양 옆면에 Ø30 (바닥에서 120). 두 책상을 붙이면 서로 마주 본다.</li>
+        <li><b>스피커 칸</b> 좌우 각 190×230×190 내부. 스피커 뒤 노브 쪽이 도어 칸을 향하게 넣어 손이 닿게.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2>7. 두 책상 배치 (위에서)</h2>
+  <div class="row">
+    <figure><svg id="pair" width="420" height="165"></svg><figcaption>나란히 붙여 설치. 사이 케이블은 통로로, 밖에선 전원선 한 줄.</figcaption></figure>
+    <div class="col">
+      <p>책상 1(왼쪽)에 파이·인코더·멀티탭·스피커 액티브 짝. 책상 2(오른쪽)는 모니터·버튼·스피커 패시브 짝만. 두 책상은 <b>구조가 같다</b> — 어느 쪽이 1이 될지는 배선으로 정한다.</p>
+      <p class="small">통로로 지나가는 것: 마이크로HDMI→HDMI 5m 1, 버튼 신호선 5쌍, 스피커선 1, 전원 연장선 1(모니터 2·LED 어댑터).</p>
+    </div>
+  </div>
+
+  <h2>8. 부재표 (책상 1대분)</h2>
+  <table>
+    <tr><th>부재</th><th>치수 (mm)</th><th>수량</th><th>비고</th></tr>
+    <tr><td>상판</td><td>800 × 600 × 40</td><td>1</td><td>집성. 버튼 가공 5곳(4절). 모서리 R12</td></tr>
+    <tr><td>앞다리</td><td>50 × 50 × 660</td><td>2</td><td>상판 아래 660 + 상판 40 = 700</td></tr>
+    <tr><td>뒷다리 = 등판 기둥</td><td>50 × 50 × 1,570</td><td>2</td><td>바닥에서 한 몸. 위에 가로재 30 얹어 1,600. 안쪽에 12mm 판 홈</td></tr>
+    <tr><td>에이프런</td><td>80 × 25</td><td>앞뒤 2, 좌우 2</td><td>좌우 에이프런 안쪽으로 Ø30 통로는 하부 박스에 (박스가 에이프런 뒤에 얹힘)</td></tr>
+    <tr><td>등판 상부 가로재</td><td>700 × 50 × 30</td><td>1</td><td>1,570~1,600. 기둥 사이 윗변, 아래에 판 홈</td></tr>
+    <tr><td>등판 판</td><td>700 × 620 × 12</td><td>1</td><td>950~1,570. 기둥·윗 가로재 홈에 끼우고 아랫변은 하부 박스 윗판에 나사. VESA 부위 뒤에 <b>보강목 200×200×18</b></td></tr>
+    <tr><td>하부 박스</td><td>800 × 250 × 200 (외형)</td><td>1</td><td>18mm 판. 앞판(그릴 구멍 Ø80×2), 상판, 바닥, 옆판 2, 칸막이 2, 뒤 도어</td></tr>
+    <tr><td>철물</td><td>—</td><td>—</td><td>VESA 볼트 M4×16 + 와셔 4, 캠락 1, 경첩 2, 테이블 버튼 8, 스피커 천 2장, 고무 발 4</td></tr>
+  </table>
+
+  <h2>9. 사장님과 확정할 것</h2>
+  <ul>
+    <li>상판 두께 40 인지 50 인지 (50이면 포켓 깊이 36). 등판은 기둥 50×50 + 12mm 판으로 무게를 줄이는 안.</li>
+    <li>수종. 문화관 기존 교구가 밝은 자작나무 톤이라 그에 맞는 밝은 나무 + 투명 마감.</li>
+    <li>버튼 실물 스템·플랜지 지름 실측 후 구멍 확정. 라우터 원형 지그 3종(Ø100/Ø70/Ø25).</li>
+    <li>모니터 실물 VESA 위치와 두께 확인 후 케이블 구멍 위치.</li>
+    <li>헤더 사인·안내판은 인쇄물 별도 — 판에 붙일 자리(1,430~1,600 / 960~1,020)만 평평하게.</li>
+  </ul>
+</div>
+
+<script>
+(() => {
+  const NS = 'http://www.w3.org/2000/svg';
+  const mk = (tag, attrs, parent) => {
+    const n = document.createElementNS(NS, tag);
+    for (const [k, v] of Object.entries(attrs)) n.setAttribute(k, v);
+    parent.append(n);
+    return n;
+  };
+  const text = (svg, x, y, t, opts = {}) => {
+    const n = mk('text', { x, y, 'font-size': opts.size ?? 8.5, 'text-anchor': opts.anchor ?? 'middle',
+      fill: opts.fill ?? '#222', 'font-family': 'Malgun Gothic, sans-serif', ...(opts.rotate ? { transform: `rotate(${opts.rotate} ${x} ${y})` } : {}) }, svg);
+    n.textContent = t;
+    return n;
+  };
+  const rect = (svg, x, y, w, h, opts = {}) => mk('rect', { x, y, width: w, height: h, fill: opts.fill ?? '#f3e7d3', stroke: opts.stroke ?? '#333', 'stroke-width': opts.sw ?? 1, ...(opts.dash ? { 'stroke-dasharray': opts.dash } : {}) }, svg);
+  const line = (svg, x1, y1, x2, y2, opts = {}) => mk('line', { x1, y1, x2, y2, stroke: opts.stroke ?? '#333', 'stroke-width': opts.sw ?? 1, ...(opts.dash ? { 'stroke-dasharray': opts.dash } : {}) }, svg);
+  const circle = (svg, cx, cy, r, opts = {}) => mk('circle', { cx, cy, r, fill: opts.fill ?? 'none', stroke: opts.stroke ?? '#333', 'stroke-width': opts.sw ?? 1, ...(opts.dash ? { 'stroke-dasharray': opts.dash } : {}) }, svg);
+  // 치수선 — 수평(h) 또는 수직(v). off = 본체에서 떨어진 거리
+  const dimH = (svg, x1, x2, y, label, off = 0) => {
+    const yy = y + off;
+    line(svg, x1, y, x1, yy + 3, { stroke: '#1a56db', sw: 0.6 }); line(svg, x2, y, x2, yy + 3, { stroke: '#1a56db', sw: 0.6 });
+    line(svg, x1, yy, x2, yy, { stroke: '#1a56db', sw: 0.8 });
+    line(svg, x1, yy, x1 + 4, yy - 2, { stroke: '#1a56db', sw: 0.8 }); line(svg, x1, yy, x1 + 4, yy + 2, { stroke: '#1a56db', sw: 0.8 });
+    line(svg, x2, yy, x2 - 4, yy - 2, { stroke: '#1a56db', sw: 0.8 }); line(svg, x2, yy, x2 - 4, yy + 2, { stroke: '#1a56db', sw: 0.8 });
+    text(svg, (x1 + x2) / 2, yy - 2.5, label, { fill: '#1a56db', size: 8 });
+  };
+  const dimV = (svg, y1, y2, x, label, off = 0) => {
+    const xx = x + off;
+    line(svg, x, y1, xx - 3, y1, { stroke: '#1a56db', sw: 0.6 }); line(svg, x, y2, xx - 3, y2, { stroke: '#1a56db', sw: 0.6 });
+    line(svg, xx, y1, xx, y2, { stroke: '#1a56db', sw: 0.8 });
+    line(svg, xx, y1, xx - 2, y1 + 4, { stroke: '#1a56db', sw: 0.8 }); line(svg, xx, y1, xx + 2, y1 + 4, { stroke: '#1a56db', sw: 0.8 });
+    line(svg, xx, y2, xx - 2, y2 - 4, { stroke: '#1a56db', sw: 0.8 }); line(svg, xx, y2, xx + 2, y2 - 4, { stroke: '#1a56db', sw: 0.8 });
+    text(svg, xx + 3, (y1 + y2) / 2, label, { fill: '#1a56db', size: 8, anchor: 'start', rotate: 0 });
+  };
+  const COLORS = ['#e53935', '#fdd835', '#43a047', '#1e88e5', '#f5f5f5'];
+
+  /* ---------- 정면도 1:12 ---------- */
+  {
+    const s = document.getElementById('front'); const k = 0.26;
+    const X = 55, Y0 = 448;                          // 바닥선 y
+    const W = 800 * k, H = 700 * k, PH = 900 * k;    // 폭, 상판 높이, 등판 높이
+    const yTop = Y0 - H, yPanelTop = Y0 - (700 + 900) * k;
+    // 등판 (뒷다리 기둥 + 틀 + 판)
+    rect(s, X, yPanelTop, W, PH, { fill: '#f7efe2' });
+    rect(s, X, yPanelTop, 50 * k, PH + H, { fill: '#e8d7bb' });               // 왼 기둥 (바닥까지)
+    rect(s, X + W - 50 * k, yPanelTop, 50 * k, PH + H, { fill: '#e8d7bb' });  // 오른 기둥
+    // 헤더 사인 구역
+    rect(s, X + 50 * k, yPanelTop, W - 100 * k, 170 * k, { fill: '#e3ecf7', dash: '3 2' });
+    text(s, X + W / 2, yPanelTop + 170 * k / 2 + 3, '헤더 사인 800×170 (인쇄)', { size: 7.5, fill: '#1a56db' });
+    // 모니터
+    const mW = 615 * k, mH = 366 * k, mCy = Y0 - 1220 * k;
+    rect(s, X + W / 2 - mW / 2, mCy - mH / 2, mW, mH, { fill: '#2b2b2b', stroke: '#111' });
+    rect(s, X + W / 2 - mW / 2 + 3, mCy - mH / 2 + 3, mW - 6, mH - 6, { fill: '#3d4a6b', stroke: 'none' });
+    text(s, X + W / 2, mCy + 3, '27" FHD  ·  VESA 100', { fill: '#fff', size: 8 });
+    // 안내판
+    rect(s, X + 60 * k, Y0 - 1020 * k, 300 * k, 60 * k, { fill: '#efe3f7', dash: '3 2' });
+    rect(s, X + 440 * k, Y0 - 1020 * k, 300 * k, 60 * k, { fill: '#e2f3ea', dash: '3 2' });
+    text(s, X + 210 * k, Y0 - 990 * k + 3, '체험방법', { size: 7 }); text(s, X + 590 * k, Y0 - 990 * k + 3, '체험미션', { size: 7 });
+    // 하부 박스 (700~950)
+    rect(s, X, Y0 - 950 * k, W, 250 * k, { fill: '#eadcc3' });
+    circle(s, X + 150 * k, Y0 - 825 * k, 40 * k, { fill: '#555', stroke: '#222' });
+    circle(s, X + 650 * k, Y0 - 825 * k, 40 * k, { fill: '#555', stroke: '#222' });
+    text(s, X + 150 * k, Y0 - 825 * k + 2.5, 'Ø80 그릴', { fill: '#fff', size: 6 }); text(s, X + 650 * k, Y0 - 825 * k + 2.5, 'Ø80 그릴', { fill: '#fff', size: 6 });
+    text(s, X + W / 2, Y0 - 825 * k + 3, '제어부 칸 (앞 막힘)', { size: 7 });
+    // 상판·다리
+    rect(s, X - 0, yTop, W, 40 * k, { fill: '#e8d7bb' });
+    rect(s, X, yTop + 40 * k, 50 * k, H - 40 * k, { fill: '#e8d7bb' });
+    rect(s, X + W - 50 * k, yTop + 40 * k, 50 * k, H - 40 * k, { fill: '#e8d7bb' });
+    rect(s, X + 50 * k, yTop + 40 * k, W - 100 * k, 80 * k, { fill: '#e8d7bb' });   // 앞 에이프런
+    // 버튼 (정면에서는 돔 윗부분만)
+    for (let i = 0; i < 5; i++) {
+      const cx = X + (120 + 140 * i) * k;
+      mk('path', { d: `M ${cx - 49 * k} ${yTop} a ${49 * k} ${20 * k} 0 0 1 ${98 * k} 0 z`, fill: COLORS[i], stroke: '#333', 'stroke-width': 0.8 }, s);
+    }
+    line(s, X - 15, Y0, X + W + 15, Y0, { sw: 1.4 });
+    // 치수
+    dimH(s, X, X + W, Y0 + 6, '800', 10);
+    dimV(s, yPanelTop, Y0, X + W + 6, '1,600', 10);
+    dimV(s, yTop, Y0, X - 6, '700', -22);
+    dimV(s, yPanelTop, yTop, X - 6, '900', -22);
+    dimV(s, mCy, Y0, X + W + 6, '1,220 (화면 중심)', 30);
+    text(s, X + W / 2, yTop + 40 * k + 80 * k / 2 + 3, '버튼 5개  빨 · 노 · 초 · 파 · 흰 (앞에서 170)', { size: 7 });
+  }
+
+  /* ---------- 측면도 1:12 ---------- */
+  {
+    const s = document.getElementById('side'); const k = 0.26;
+    const X = 75, Y0 = 448;
+    const D = 600 * k, H = 700 * k;
+    const yTop = Y0 - H, yPanelTop = Y0 - 1600 * k;
+    // 등판(뒤쪽 62 두께: 틀 50 + 판 12) — 뒤 200 안에서 뒷면에 붙음
+    rect(s, X + D - 62 * k, yPanelTop, 62 * k, 1600 * k - H, { fill: '#e8d7bb' });
+    // 하부 박스 200 깊이, 700~950
+    rect(s, X + D - 200 * k, Y0 - 950 * k, 200 * k, 250 * k, { fill: '#eadcc3' });
+    // 모니터 (판 위에 얹힘)
+    const mCy = Y0 - 1220 * k;
+    rect(s, X + D - 62 * k - 45 * k, mCy - 183 * k, 45 * k, 366 * k, { fill: '#2b2b2b', stroke: '#111' });
+    // 상판 + 다리
+    rect(s, X, yTop, D, 40 * k, { fill: '#e8d7bb' });
+    rect(s, X + 20 * k, yTop + 40 * k, 50 * k, H - 40 * k, { fill: '#e8d7bb' });
+    rect(s, X + D - 50 * k, yTop + 40 * k, 50 * k, H - 40 * k, { fill: '#e8d7bb' });
+    rect(s, X + 70 * k, yTop + 40 * k, D - 120 * k, 80 * k, { fill: '#e8d7bb' });
+    // 버튼 단면 (앞에서 170)
+    const bx = X + 170 * k;
+    mk('path', { d: `M ${bx - 49 * k} ${yTop} a ${49 * k} ${20 * k} 0 0 1 ${98 * k} 0 z`, fill: COLORS[0], stroke: '#333', 'stroke-width': 0.8 }, s);
+    rect(s, bx - 12 * k, yTop + 40 * k, 24 * k, 30 * k, { fill: '#bbb' });
+    line(s, X - 10, Y0, X + D + 10, Y0, { sw: 1.4 });
+    dimH(s, X, X + D, Y0 + 6, '600', 10);
+    dimH(s, X, bx, yTop - 8, '170', -14);
+    dimH(s, X + D - 200 * k, X + D, yTop - 4, '200', -8);
+    dimH(s, X + D - 62 * k, X + D, yPanelTop - 6, '62', -10);
+    dimV(s, Y0 - 950 * k, yTop, X + D + 6, '250', 12);
+    text(s, X + D - 100 * k, Y0 - 825 * k + 3, '스피커/제어부', { size: 7 });
+    text(s, X + D - 62 * k - 60 * k, mCy - 200 * k, '모니터 (VESA 직결)', { size: 7, anchor: 'end' });
+  }
+
+  /* ---------- 상판 평면 1:5 ---------- */
+  {
+    const s = document.getElementById('top'); const k = 0.40;
+    const X = 45, Y = 28;
+    rect(s, X, Y, 800 * k, 600 * k, { fill: '#f3e7d3' });
+    rect(s, X, Y, 800 * k, 200 * k, { fill: '#eadcc3', dash: '4 2' });   // 뒤 200 = 하부 박스
+    text(s, X + 400 * k, Y + 100 * k + 3, '하부 박스 자리 (800 × 200) — 스피커 · 제어부', { size: 8 });
+    for (let i = 0; i < 5; i++) {
+      const cx = X + (120 + 140 * i) * k, cy = Y + (600 - 170) * k;
+      circle(s, cx, cy, 50 * k, { fill: '#fff', stroke: '#999', dash: '2 2' });
+      circle(s, cx, cy, 49 * k, { fill: COLORS[i], stroke: '#333' });
+      circle(s, cx, cy, 12.5 * k, { fill: '#fff', stroke: '#333' });
+      text(s, cx, cy + 3, String(i + 1), { size: 8 });
+    }
+    // 치수
+    const rowY = Y + (600 - 170) * k;
+    dimH(s, X, X + 120 * k, Y + 600 * k + 6, '120', 10);
+    for (let i = 0; i < 4; i++) dimH(s, X + (120 + 140 * i) * k, X + (260 + 140 * i) * k, Y + 600 * k + 6, '140', 10);
+    dimH(s, X + 680 * k, X + 800 * k, Y + 600 * k + 6, '120', 10);
+    dimH(s, X, X + 800 * k, Y + 600 * k + 6, '800', 26);
+    dimV(s, rowY, Y + 600 * k, X + 800 * k + 6, '170', 8);
+    dimV(s, Y, Y + 600 * k, X + 800 * k + 6, '600', 30);
+    dimV(s, Y, Y + 200 * k, X - 6, '200', -20);
+    text(s, X + 400 * k, Y + 330 * k, '손목 놓는 자리 · 체험미션 A4 를 아크릴 아래 넣을 수 있음', { size: 7.5, fill: '#666' });
+    text(s, X + 400 * k, Y - 10, '앞 ↓ (사람이 서는 쪽이 아래)', { size: 7.5, fill: '#666' });
+  }
+
+  /* ---------- 버튼 구멍 단면 1:1.5 ---------- */
+  {
+    const s = document.getElementById('hole'); const k = 1.5;
+    const X = 35, Y = 50, T = 40 * k, W = 220 * k;
+    const cx = X + W / 2;
+    // 상판 단면 (해칭 대신 연한 색)
+    rect(s, X, Y, W, T, { fill: '#e8d7bb' });
+    // 매립 Ø100×8 (위)
+    rect(s, cx - 50 * k, Y, 100 * k, 8 * k, { fill: '#fff', stroke: '#333' });
+    // 포켓 Ø70×26 (아래)
+    rect(s, cx - 35 * k, Y + T - 26 * k, 70 * k, 26 * k, { fill: '#fff', stroke: '#333' });
+    // 관통 Ø25
+    rect(s, cx - 12.5 * k, Y + 8 * k, 25 * k, T - 8 * k - 26 * k, { fill: '#fff', stroke: '#333' });
+    // 버튼 (플랜지 + 돔 + 스템 + 너트)
+    rect(s, cx - 49 * k, Y, 98 * k, 8 * k, { fill: '#ddd', stroke: '#555', dash: '2 1' });
+    mk('path', { d: `M ${cx - 44 * k} ${Y} a ${44 * k} ${20 * k} 0 0 1 ${88 * k} 0 z`, fill: '#e53935', stroke: '#555', 'stroke-width': 0.8 }, s);
+    rect(s, cx - 12 * k, Y + 8 * k, 24 * k, 30 * k, { fill: '#bbb', stroke: '#555' });     // M24 스템
+    rect(s, cx - 17 * k, Y + 14 * k, 34 * k, 5 * k, { fill: '#999', stroke: '#555' });     // 너트 (살 아래)
+    rect(s, cx - 14 * k, Y + 24 * k, 28 * k, 12 * k, { fill: '#c8c8c8', stroke: '#555' }); // 스위치 홀더
+    // 라벨
+    text(s, cx, Y - 34, '① 윗면 Ø100 × 8 (플랜지 매립)', { size: 8 });
+    text(s, cx, Y + T + 26, '② 아랫면 Ø70 × 26 (너트·스위치 자리)', { size: 8 });
+    text(s, cx + 60 * k, Y + 14 * k + 1, '③ Ø25 관통', { size: 8, anchor: 'start' });
+    text(s, cx + 60 * k, Y + 20 * k + 1, '살 6', { size: 8, anchor: 'start', fill: '#1a56db' });
+    dimV(s, Y, Y + T, X - 6, '40', -18);
+    dimV(s, Y, Y + 8 * k, X + W + 6, '8', 8);
+    dimV(s, Y + T - 26 * k, Y + T, X + W + 6, '26', 8);
+    dimH(s, cx - 50 * k, cx + 50 * k, Y - 6, '100', -8);
+    dimH(s, cx - 35 * k, cx + 35 * k, Y + T + 4, '70', 6);
+  }
+
+  /* ---------- 등판 정면 1:8 ---------- */
+  {
+    const s = document.getElementById('back'); const k = 0.42;
+    const X = 45, Y = 25;   // Y = 1600 높이
+    const y = (h) => Y + (1600 - h) * k;  // 높이(mm) → svg y
+    rect(s, X, y(1600), 800 * k, 900 * k, { fill: '#f7efe2' });
+    rect(s, X, y(1600), 50 * k, 900 * k, { fill: '#e8d7bb' }); rect(s, X + 750 * k, y(1600), 50 * k, 900 * k, { fill: '#e8d7bb' });
+    // 가로재 (1600, 1420, 960)
+    rect(s, X + 50 * k, y(1600), 700 * k, 30 * k, { fill: '#e8d7bb' });
+    // 헤더
+    rect(s, X + 50 * k, y(1600) + 30 * k, 700 * k, 140 * k, { fill: '#e3ecf7', dash: '3 2' });
+    text(s, X + 400 * k, y(1515) + 3, '헤더 사인 (제목 + 질문형 부제)', { size: 8, fill: '#1a56db' });
+    // 모니터 + VESA
+    const mCy = y(1220);
+    rect(s, X + 400 * k - 307 * k, mCy - 183 * k, 615 * k, 366 * k, { fill: 'none', stroke: '#111', dash: '4 2' });
+    for (const [dx, dy] of [[-50, -50], [50, -50], [-50, 50], [50, 50]]) circle(s, X + (400 + dx) * k, y(1220 - dy), 3, { fill: '#fff', stroke: '#111' });
+    rect(s, X + 300 * k, y(1320), 200 * k, 200 * k, { fill: 'none', stroke: '#888', dash: '2 2' });
+    text(s, X + 400 * k, y(1128), '보강목 200×200 (판 뒤)', { size: 7, fill: '#888' });
+    circle(s, X + 520 * k, y(1220), 15 * k, { fill: '#fff' }); text(s, X + 540 * k, y(1220) + 3, 'Ø30 케이블', { size: 6.5, anchor: 'start' });
+    text(s, X + 400 * k, mCy - 150 * k, '27" 모니터 외곽 (615×366)', { size: 7.5 });
+    text(s, X + 400 * k, mCy + 3, 'VESA 100×100', { size: 8 }); text(s, X + 400 * k, mCy + 13, '중심 (400, 1220)', { size: 7 });
+    // 안내판
+    rect(s, X + 60 * k, y(1020), 300 * k, 60 * k, { fill: '#efe3f7', dash: '3 2' }); text(s, X + 210 * k, y(990) + 3, '체험방법', { size: 7 });
+    rect(s, X + 440 * k, y(1020), 300 * k, 60 * k, { fill: '#e2f3ea', dash: '3 2' }); text(s, X + 590 * k, y(990) + 3, '체험미션', { size: 7 });
+    // 하부 박스
+    rect(s, X, y(950), 800 * k, 250 * k, { fill: '#eadcc3' });
+    circle(s, X + 150 * k, y(825), 40 * k, { fill: '#555' }); circle(s, X + 650 * k, y(825), 40 * k, { fill: '#555' });
+    text(s, X + 150 * k, y(825) + 3, 'Ø80', { fill: '#fff', size: 7 }); text(s, X + 650 * k, y(825) + 3, 'Ø80', { fill: '#fff', size: 7 });
+    text(s, X + 400 * k, y(825) + 3, '제어부 칸 400 (앞 막힘)', { size: 7.5 });
+    line(s, X + 300 * k, y(950), X + 300 * k, y(700), { dash: '2 2', stroke: '#888' }); line(s, X + 500 * k, y(950), X + 500 * k, y(700), { dash: '2 2', stroke: '#888' });
+    // 상판선
+    line(s, X - 10, y(700), X + 800 * k + 10, y(700), { sw: 1.4 }); text(s, X + 2, y(700) + 11, '상판 윗면 700', { size: 7, anchor: 'start' });
+    // 치수 (높이)
+    dimV(s, y(1600), y(1430), X - 6, '170', -18);
+    dimV(s, y(1403), y(1037), X - 6, '366', -18);
+    dimV(s, y(1020), y(960), X - 6, '60', -18);
+    dimV(s, y(950), y(700), X - 6, '250', -18);
+    dimV(s, y(1220), y(700), X + 800 * k + 6, '520', 12);
+    dimH(s, X, X + 800 * k, y(700) + 8, '800', 14);
+    dimH(s, X + 150 * k, X + 650 * k, y(700) + 8, '500 (그릴 중심 간격)', 30);
+  }
+
+  /* ---------- 하부 박스 배면 1:8 ---------- */
+  {
+    const s = document.getElementById('rear'); const k = 0.42;
+    const X = 45, Y = 28;
+    rect(s, X, Y, 800 * k, 250 * k, { fill: '#eadcc3' });
+    // 칸막이
+    line(s, X + 200 * k, Y, X + 200 * k, Y + 250 * k, { dash: '2 2', stroke: '#888' }); line(s, X + 600 * k, Y, X + 600 * k, Y + 250 * k, { dash: '2 2', stroke: '#888' });
+    text(s, X + 100 * k, Y + 125 * k + 3, '스피커 칸', { size: 7.5 }); text(s, X + 700 * k, Y + 125 * k + 3, '스피커 칸', { size: 7.5 });
+    // 도어 380×220
+    rect(s, X + 210 * k, Y + 15 * k, 380 * k, 220 * k, { fill: '#f7efe2', stroke: '#333' });
+    for (let i = 0; i < 3; i++) { rect(s, X + 300 * k, Y + (30 + i * 14) * k, 200 * k, 8 * k, { fill: '#555' }); rect(s, X + 300 * k, Y + (185 + i * 14) * k, 200 * k, 8 * k, { fill: '#555' }); }
+    circle(s, X + 560 * k, Y + 125 * k, 8 * k, { fill: '#999' }); text(s, X + 560 * k, Y + 150 * k + 2, '캠락', { size: 6.5 });
+    circle(s, X + 560 * k, Y + 215 * k, 12.5 * k, { fill: '#fff' }); text(s, X + 605 * k, Y + 218 * k, '← Ø25 전원선', { size: 6.5, anchor: 'start' });
+    text(s, X + 400 * k, Y + 125 * k + 3, '도어 380 × 220 (경첩 왼쪽)', { size: 7.5 });
+    text(s, X + 400 * k, Y + 100 * k, '통풍 슬롯 8×80 ×3 (위·아래)', { size: 6.5, fill: '#555' });
+    // 옆면 통로 표시
+    circle(s, X + 6, Y + 130 * k, 15 * k, { fill: '#fff' }); circle(s, X + 800 * k - 6, Y + 130 * k, 15 * k, { fill: '#fff' });
+    text(s, X + 30, Y + 250 * k + 12, '← 옆면 Ø30 통로 (바닥에서 120)', { size: 7, anchor: 'start' });
+    text(s, X + 800 * k - 30, Y + 250 * k + 12, '옆면 Ø30 통로 →', { size: 7, anchor: 'end' });
+    dimH(s, X, X + 800 * k, Y + 250 * k + 20, '800', 8);
+    dimV(s, Y, Y + 250 * k, X + 800 * k + 6, '250', 8);
+  }
+
+  /* ---------- 두 책상 배치 1:20 ---------- */
+  {
+    const s = document.getElementById('pair'); const k = 0.21;
+    const X = 45, Y = 14;
+    for (let d = 0; d < 2; d++) {
+      const x = X + d * 800 * k;
+      rect(s, x, Y, 800 * k, 600 * k, { fill: '#f3e7d3' });
+      rect(s, x, Y, 800 * k, 200 * k, { fill: '#eadcc3' });
+      for (let i = 0; i < 5; i++) circle(s, x + (120 + 140 * i) * k, Y + 430 * k, 49 * k, { fill: COLORS[i] });
+      text(s, x + 400 * k, Y + 100 * k + 3, d === 0 ? '책상 1: 파이·인코더·멀티탭·앰프 스피커' : '책상 2: 모니터·버튼·패시브 스피커', { size: 7 });
+    }
+    line(s, X + 800 * k, Y, X + 800 * k, Y + 600 * k, { sw: 1.4 });
+    circle(s, X + 800 * k, Y + 130 * k, 3, { fill: '#fff' });
+    text(s, X + 800 * k, Y + 280 * k, 'Ø30 통로 (맞닿음)', { size: 7 });
+    dimH(s, X, X + 1600 * k, Y + 600 * k + 4, '1,600', 10);
+    text(s, X + 400 * k, Y + 560 * k, '전원선 1줄 ↓', { size: 7, fill: '#666' });
+  }
+})();
+</script>
+</body>
+</html>

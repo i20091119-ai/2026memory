@@ -165,6 +165,8 @@ docs/wiring.html        # 배선도 (조립용)
 docs/배선도.pdf          # 위 문서를 인쇄용으로 뽑은 것
 docs/hardware-guide.md  # 실물 조립·설치 가이드 (배선·전원·문제 해결)
 docs/raspberry-pi-setup.md # 정식 게임기: 라즈베리파이 5 설치 절차
+docs/desk.html          # 정식 게임기 책상 제작 도면 (치수·부재표)
+docs/책상도면.pdf        # 위 문서를 인쇄용으로 뽑은 것 (목공 사장님용)
 test/games.test.js      # node --test
 ```
 
@@ -215,7 +217,8 @@ test/games.test.js      # node --test
 
 **정식 게임기(라즈베리파이 5 + USB 인코더, 책상 2대)** 설치는
 [`docs/raspberry-pi-setup.md`](docs/raspberry-pi-setup.md) 를 따른다. 브리지·감시 스크립트 없이
-`install-kiosk.sh` 한 번이면 된다.
+`install-kiosk.sh` 한 번이면 된다. 책상(800×600×700 원목, 등판에 27" 모니터·스피커·제어부)
+제작 도면은 **[`docs/책상도면.pdf`](docs/책상도면.pdf)** (원본 `docs/desk.html`).
 
 파일럿 구성(우노 Q + App Lab 브리지)은 그대로 지원한다. 배선 그림은
 **[`docs/배선도.pdf`](docs/배선도.pdf)**, 조립·키오스크 설정은
