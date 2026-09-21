@@ -31,11 +31,22 @@ const SHAPE_NOTES = [
   NOTE.C4, NOTE.D4, NOTE.E4, NOTE.F4, NOTE.G4, NOTE.A4, NOTE.B4, NOTE.C5,
 ];
 
+/**
+ * AudioContext 는 페이지에 하나만 둔다. 좌석이 둘이어도 컨텍스트는 공유하고,
+ * 좌석마다 팬(좌/우) 노드만 따로 둔다 — 왼쪽 책상 소리는 왼쪽 스피커에서.
+ */
+const shared = { ctx: null, master: null };
+
 export class Audio {
-  constructor() {
+  /**
+   * @param {{pan?: number}} [opts] pan: -1(왼쪽) … 0(가운데) … 1(오른쪽)
+   */
+  constructor(opts = {}) {
     /** @type {AudioContext|null} */
     this.ctx = null;
+    /** 이 좌석의 출력 노드 (팬 → 마스터) */
     this.master = null;
+    this.pan = opts.pan ?? 0;
     this.muted = false;
     /** 정답음을 살짝씩 바꾸기 위한 카운터 */
     this._correctCount = 0;
@@ -43,17 +54,28 @@ export class Audio {
 
   /** 첫 사용자 제스처에서 호출. 여러 번 불러도 안전하다. */
   unlock() {
-    if (!this.ctx) {
+    if (!shared.ctx) {
       const Ctor = globalThis.AudioContext || globalThis.webkitAudioContext;
       if (!Ctor) return;                       // 오디오 미지원 환경 — 게임은 그대로 진행
       try {
-        this.ctx = new Ctor();
-        this.master = this.ctx.createGain();
-        this.master.gain.value = 0.35;
-        this.master.connect(this.ctx.destination);
+        shared.ctx = new Ctor();
+        shared.master = shared.ctx.createGain();
+        shared.master.gain.value = 0.35;
+        shared.master.connect(shared.ctx.destination);
       } catch {
-        this.ctx = null;
+        shared.ctx = null;
         return;
+      }
+    }
+    if (!this.ctx) {
+      this.ctx = shared.ctx;
+      if (this.pan !== 0 && typeof this.ctx.createStereoPanner === 'function') {
+        const panner = this.ctx.createStereoPanner();
+        panner.pan.value = this.pan;
+        panner.connect(shared.master);
+        this.master = panner;
+      } else {
+        this.master = shared.master;
       }
     }
     if (this.ctx.state === 'suspended') this.ctx.resume().catch(() => {});
@@ -299,6 +321,44 @@ export class Audio {
   /** UI 이동/선택 소리 */
   blip() {
     this.tone(NOTE.B4, { duration: 0.06, type: 'square', gain: 0.25 });
+  }
+
+  /* ---------------- 2인 대결 ---------------- */
+
+  /** 도전장이 날아왔다 — 주의를 끄는 두 번 "띵동" */
+  challenge() {
+    this.melody([NOTE.E5, NOTE.C5, NOTE.E5, NOTE.C5], { step: 0.14, duration: 0.2, gain: 0.5 });
+  }
+
+  /** 도전 수락 — 올라가는 팡파레 */
+  challengeAccepted() {
+    this.melody([NOTE.C5, NOTE.E5, NOTE.G5, NOTE.C6], { step: 0.08, duration: 0.2, gain: 0.55 });
+    this.chord([NOTE.C5, NOTE.G5, NOTE.C6], { delay: 0.34, duration: 0.5, gain: 0.25 });
+  }
+
+  /** 도전 거절/무응답 — 내려가는 두 음 */
+  challengeDeclined() {
+    this.melody([NOTE.E4, NOTE.C4], { step: 0.16, duration: 0.24, type: 'sine', gain: 0.4 });
+  }
+
+  /** 대결 라운드 결과 — 이겼을 때 */
+  roundWon() {
+    this.melody([NOTE.G5, NOTE.C6, NOTE.E6], { step: 0.07, duration: 0.16, gain: 0.5 });
+  }
+
+  /** 대결 라운드 결과 — 졌을 때 (부드럽게, 부저 아님) */
+  roundLost() {
+    this.melody([NOTE.E4, NOTE.D4], { step: 0.14, duration: 0.22, type: 'sine', gain: 0.35 });
+  }
+
+  /** 대결 최종 승리 */
+  matchWon() {
+    this.allClear();
+  }
+
+  /** 대결 최종 패배 — 게임오버보다 가볍게 */
+  matchLost() {
+    this.melody([NOTE.G4, NOTE.E4, NOTE.C4], { step: 0.16, duration: 0.3, type: 'sine', gain: 0.35 });
   }
 }
 

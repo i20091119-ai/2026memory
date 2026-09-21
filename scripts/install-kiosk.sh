@@ -1,12 +1,16 @@
 #!/usr/bin/env bash
 #
-# install-kiosk.sh — 우노 Q 에 메모리 게임을 설치하고 부팅 시 자동으로 뜨게 한다.
+# install-kiosk.sh — 메모리 게임을 설치하고 부팅 시 자동으로 뜨게 한다.
 #
 #   bash scripts/install-kiosk.sh              # 설치 / 재설치
 #   bash scripts/install-kiosk.sh --uninstall  # 되돌리기 (파일은 안 지운다)
 #   bash scripts/install-kiosk.sh --status     # 지금 상태만 보기
 #
-# 서비스 세 개를 사용자 서비스로 등록한다.
+# 두 구성을 모두 안다:
+#   라즈베리파이 5 (정식 게임기) — 자동 감지. 인코더 버튼, 모니터 2대 한 창, pi-kiosk.sh
+#   우노 Q (파일럿)             — App Lab 브리지 + 감시 스크립트
+#
+# 서비스를 사용자 서비스로 등록한다.
 #   torus-web           정적 웹서버 (python3 -m http.server 8000)
 #   torus-bridge        버튼 → WebSocket 브리지 (firmware/button_bridge/python/main.py)
 #   torus-kiosk         크로미움 전체화면
@@ -77,6 +81,20 @@ done
 [ -n "$BROWSER" ] || die "크로미움이 없습니다: sudo apt install chromium"
 ok "브라우저: $BROWSER"
 
+# 라즈베리파이인가 — 정식 게임기 구성.
+#   버튼: USB 아케이드 인코더(게임패드) → 브리지·감시가 필요 없다
+#   화면: 모니터 2대를 한 창(3840×1080)으로 → --kiosk 대신 --app 창 + Openbox 무장식 규칙
+#   화면 띄우기: scripts/pi-kiosk.sh (모니터 배치·소리·절전 해제까지 한 번에)
+PI_MODE=0
+if [ "${TORUS_PI:-}" = "1" ] || grep -qi "raspberry pi" /proc/device-tree/model 2>/dev/null; then
+  PI_MODE=1
+  ok "라즈베리파이 구성 ($(tr -d '\0' < /proc/device-tree/model 2>/dev/null || echo 'TORUS_PI=1'))"
+  if [ "${XDG_SESSION_TYPE:-}" = "wayland" ]; then
+    warn "지금 세션이 Wayland 입니다. 두 모니터에 창 하나를 펼치려면 X11 이어야 합니다:"
+    warn "   sudo raspi-config nonint do_wayland W1   → 재부팅 후 다시 실행"
+  fi
+fi
+
 # 버튼 브리지를 systemd 로 돌릴 수 있는지 판단한다.
 #
 # 우노 Q 는 STM32 가 내장이라 USB 시리얼(/dev/ttyACM*)로 잡히지 않는다. 그 보드에서
@@ -87,7 +105,9 @@ BRIDGE="$REPO/firmware/button_bridge/python/main.py"
 BRIDGE_OK=0
 SERIAL_DEV="$(ls /dev/ttyACM* /dev/ttyUSB* 2>/dev/null | head -1 || true)"
 
-if [ ! -f "$BRIDGE" ]; then
+if [ "$PI_MODE" -eq 1 ]; then
+  ok "버튼: USB 인코더(게임패드) — 브리지 불필요"
+elif [ ! -f "$BRIDGE" ]; then
   warn "브리지 파일이 없습니다: $BRIDGE"
 elif ! python3 -c 'import websockets' 2>/dev/null; then
   warn "websockets 가 없습니다 — sudo apt install -y python3-websockets python3-serial"
@@ -125,6 +145,9 @@ if [ "$USERCTL" -eq 1 ]; then
   if [ "${TORUS_KIOSK_MODE:-}" = "service" ] || [ "${TORUS_KIOSK_MODE:-}" = "autostart" ]; then
     KIOSK_MODE="$TORUS_KIOSK_MODE"
     ok "키오스크 방식을 지정받음: $KIOSK_MODE"
+  elif [ "$PI_MODE" -eq 1 ]; then
+    # 파이 OS 데스크톱(LXDE)은 ~/.config/autostart 를 확실히 읽는다
+    KIOSK_MODE="autostart"
   elif systemctl --user is-active --quiet graphical-session.target 2>/dev/null; then
     KIOSK_MODE="service"
   else
@@ -247,11 +270,65 @@ EOF
 # 먼저 뜨면 "연결할 수 없음" 화면이 그대로 남는다.
 WAIT_THEN_KIOSK="/usr/bin/env bash -c 'until curl -sf http://localhost:$PORT/ >/dev/null; do sleep 1; done; exec $KIOSK_CMD'"
 
-case "$KIOSK_MODE" in
-  autostart)     write_desktop "$WAIT_THEN_KIOSK" ;;
-  autostart-all) write_desktop "/usr/bin/env bash $REPO/scripts/start-all.sh" ;;
-  service)       rm -f "$HOME/.config/autostart/torus-kiosk.desktop" ;;
-esac
+if [ "$PI_MODE" -eq 1 ]; then
+  # 파이는 모니터 배치·소리·창 크기까지 pi-kiosk.sh 가 맡는다
+  write_desktop "/usr/bin/env bash $REPO/scripts/pi-kiosk.sh"
+
+  # Openbox 규칙: 크로미움 --app 창을 테두리 없이 0,0 에 3840×1080 으로.
+  # --kiosk 전체화면은 모니터 하나에만 붙어서 쓸 수 없다.
+  OB_DIR="$HOME/.config/openbox"
+  OB_RC="$OB_DIR/lxde-pi-rc.xml"
+  mkdir -p "$OB_DIR"
+  [ -f "$OB_RC" ] || cp /etc/xdg/openbox/lxde-pi-rc.xml "$OB_RC" 2>/dev/null || cp /etc/xdg/openbox/rc.xml "$OB_RC" 2>/dev/null || true
+  if [ -f "$OB_RC" ]; then
+    python3 - "$OB_RC" <<'PYEOF'
+import re, sys
+path = sys.argv[1]
+s = open(path, encoding="utf-8").read()
+rule = """  <application class="Chromium*" role="pop-up" >
+    <decor>no</decor>
+  </application>
+  <application class="Chromium*">
+    <decor>no</decor>
+    <position force="yes"><x>0</x><y>0</y></position>
+    <size><width>3840</width><height>1080</height></size>
+    <maximized>no</maximized>
+    <fullscreen>no</fullscreen>
+    <skip_taskbar>yes</skip_taskbar>
+    <skip_pager>yes</skip_pager>
+  </application>
+"""
+marker = "<!-- torus-kiosk -->"
+if marker in s:
+    s = re.sub(marker + r".*?" + marker, marker + "\n" + rule + marker, s, flags=re.S)
+elif "</applications>" in s:
+    s = s.replace("</applications>", marker + "\n" + rule + marker + "\n</applications>")
+else:
+    s = s.replace("</openbox_config>", "<applications>\n" + marker + "\n" + rule + marker + "\n</applications>\n</openbox_config>")
+open(path, "w", encoding="utf-8").write(s)
+PYEOF
+    ok "Openbox 규칙: 크로미움 창 테두리 없이 3840×1080 ($OB_RC)"
+  else
+    warn "Openbox 설정 파일을 못 찾았습니다 — 창에 테두리가 남을 수 있습니다"
+  fi
+
+  # SD 카드 쓰기 줄이기 — 로그는 램에만, 스왑 끄기. sudo 가 되면 바로, 아니면 안내.
+  if sudo -n true 2>/dev/null; then
+    sudo mkdir -p /etc/systemd/journald.conf.d
+    printf '[Journal]\nStorage=volatile\nRuntimeMaxUse=32M\n' | sudo tee /etc/systemd/journald.conf.d/torus-volatile.conf >/dev/null
+    sudo systemctl disable --now dphys-swapfile 2>/dev/null || true
+    ok "SD 쓰기 줄임: 로그 램 저장, 스왑 끔"
+  else
+    warn "SD 쓰기 줄이기는 sudo 가 필요합니다. 나중에 한 번:"
+    warn "   sudo bash -c 'mkdir -p /etc/systemd/journald.conf.d && printf \"[Journal]\\nStorage=volatile\\n\" > /etc/systemd/journald.conf.d/torus-volatile.conf && systemctl disable --now dphys-swapfile'"
+  fi
+else
+  case "$KIOSK_MODE" in
+    autostart)     write_desktop "$WAIT_THEN_KIOSK" ;;
+    autostart-all) write_desktop "/usr/bin/env bash $REPO/scripts/start-all.sh" ;;
+    service)       rm -f "$HOME/.config/autostart/torus-kiosk.desktop" ;;
+  esac
+fi
 
 # ------------------------------------------------------------------ 켜기
 head_ "3. 켜기"
@@ -305,9 +382,15 @@ fi
 # 브리지 감시. 운영 중에 App Lab 앱이 멈춰 아케이드 버튼만 죽은 일이 있었다.
 # App Lab 은 멈춘 앱을 되살리지 않으므로 8765 를 지켜보다 다시 띄운다.
 # 실패해도 게임 설치는 그대로 끝난다 — 감시는 덧붙이는 안전장치다.
-bash "$REPO/scripts/bridge-watch.sh" --install >/dev/null 2>&1 \
-  && ok "브리지 감시 등록 (죽으면 자동 복구)" \
-  || warn "브리지 감시를 등록하지 못했습니다 — bash scripts/bridge-watch.sh --install"
+# 파이(인코더) 구성에는 브리지가 없으므로 감시도 걸지 않는다 (걸면 영영 "죽음"만 기록한다).
+if [ "$PI_MODE" -eq 1 ]; then
+  systemctl --user is-enabled torus-bridge-watch >/dev/null 2>&1 && bash "$REPO/scripts/bridge-watch.sh" --uninstall >/dev/null 2>&1
+  ok "브리지 감시: 불필요 (인코더 구성)"
+else
+  bash "$REPO/scripts/bridge-watch.sh" --install >/dev/null 2>&1 \
+    && ok "브리지 감시 등록 (죽으면 자동 복구)" \
+    || warn "브리지 감시를 등록하지 못했습니다 — bash scripts/bridge-watch.sh --install"
+fi
 
 # ------------------------------------------------------------------ 절전 끄기
 head_ "4. 화면 절전 끄기"

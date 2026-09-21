@@ -141,3 +141,26 @@ test('MAX_ENTRIES 는 한 달 부스 운영량을 넉넉히 담는다', () => {
   // 하루 100판 × 31일 = 3,100 — 그보다 커야 한 달 집계가 잘리지 않는다
   assert.ok(MAX_ENTRIES >= 3100);
 });
+
+test('대결(vs) 기록은 따로 세고, 깔때기·완주율에는 섞이지 않는다', () => {
+  const s = summarize([
+    entry({ res: 'clear', l: 4, r: 5 }),
+    { t: T0, g: 4, l: 6, r: 1, res: 'vs', ms: 150000, c: 0, m: 0, w: 1 },
+    { t: T0, g: 1, l: 9, r: 1, res: 'vs', ms: 200000, c: 0, m: 0, w: -1 },
+  ]);
+  assert.equal(s.plays, 1);
+  assert.equal(s.versus, 2);
+  assert.equal(s.clearRate, 1);
+  assert.deepEqual(s.funnel, [1, 1, 1, 1, 1]);
+  assert.equal(s.byGame[4].plays, 0);
+});
+
+test('finishRun: 대결 결과에는 이긴 좌석(w)이 붙는다', () => {
+  const run = startRun(2, T0);
+  const saved = finishRun(run, { level: 7, round: 1, result: 'vs', winner: 0 }, T0 + 1000);
+  assert.equal(saved.res, 'vs');
+  assert.equal(saved.w, 0);
+  assert.ok(isValidEntry(saved));
+  const csv = toCsv([saved], { 2: '숫자' });
+  assert.ok(csv.includes(',숫자,대결,7,1,1,0,0'));
+});

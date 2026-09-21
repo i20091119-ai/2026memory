@@ -13,7 +13,9 @@
  *     res: 'clear'|'over'|'quit', ms: 소요, c: 이어하기 횟수, m: 오답 횟수 }
  *
  *   res  clear = 완주 / over = 목숨 소진 후 그만둠 / quit = 빨+파 홀드로 중도 이탈
+ *        vs = 2인 대결 한 판 (두 좌석에 한 줄만 남긴다)
  *   l, r 는 "들어선" 가장 먼 지점이다 (3개 기억 1라운드에서 죽었으면 l=3, r=1).
+ *   대결(vs)에서는 l = 치른 라운드 수, r = 1, w = 이긴 좌석(0|1, 무승부 -1) 이다.
  *
  * 집계(summarize)·CSV(toCsv)는 DOM 없이 순수 함수라 node --test 로 검증한다.
  */
@@ -23,7 +25,7 @@ const KEY = 'torus-memory.log.v1';
 /** 이보다 많이 쌓이면 오래된 것부터 버린다. 한 줄 ~80B 라 5천 줄이어도 400KB 남짓. */
 export const MAX_ENTRIES = 5000;
 
-export const RESULTS = ['clear', 'over', 'quit'];
+export const RESULTS = ['clear', 'over', 'quit', 'vs'];
 
 function safeGet(key) {
   try {
@@ -96,6 +98,7 @@ export function finishRun(run, end, now = Date.now()) {
     c: end.continues ?? 0,
     m: end.misses ?? 0,
   };
+  if (end.result === 'vs') entry.w = end.winner ?? -1;
   if (!isValidEntry(entry)) return null;
 
   const log = loadLog();
@@ -158,7 +161,10 @@ export function summarize(entries, opts = {}) {
   const levels = opts.levels ?? 4;
 
   const out = {
-    plays: entries.length,
+    /** 혼자 놀기 판 수 (대결은 따로 센다) */
+    plays: 0,
+    /** 2인 대결 판 수 */
+    versus: 0,
     clears: 0,
     overs: 0,
     quits: 0,
@@ -183,6 +189,15 @@ export function summarize(entries, opts = {}) {
   const durations = [];
 
   for (const e of entries) {
+    if (out.first === null || e.t < out.first) out.first = e.t;
+    if (out.last === null || e.t > out.last) out.last = e.t;
+
+    // 대결은 혼자 놀기와 구조가 달라(목숨·단계 없음) 판 수만 센다.
+    if (e.res === 'vs') {
+      out.versus++;
+      continue;
+    }
+    out.plays++;
     const bg = out.byGame[e.g] ?? (out.byGame[e.g] = { plays: 0, clears: 0 });
     bg.plays++;
     out.continues += e.c ?? 0;
@@ -205,9 +220,6 @@ export function summarize(entries, opts = {}) {
     if (e.res === 'clear') out.funnel[levels]++;
 
     out.byHour[new Date(e.t).getHours()]++;
-
-    if (out.first === null || e.t < out.first) out.first = e.t;
-    if (out.last === null || e.t > out.last) out.last = e.t;
   }
 
   out.clearRate = out.plays ? out.clears / out.plays : null;
@@ -228,7 +240,7 @@ export function formatLocal(ms) {
     + `${pad2(d.getHours())}:${pad2(d.getMinutes())}:${pad2(d.getSeconds())}`;
 }
 
-const RESULT_LABEL = { clear: '완주', over: '게임오버', quit: '중도이탈' };
+const RESULT_LABEL = { clear: '완주', over: '게임오버', quit: '중도이탈', vs: '대결' };
 
 /**
  * 엑셀에 바로 열리는 CSV. 호출한 쪽에서 앞에 BOM(﻿) 을 붙여 저장해야

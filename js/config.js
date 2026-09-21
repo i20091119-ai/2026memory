@@ -19,12 +19,35 @@ export const CONFIG = {
   DIGIT_MIN: 0, DIGIT_MAX: 9,
   SHAPES: ['circle', 'square', 'triangle', 'star', 'heart', 'diamond', 'moon', 'cross'],
   WS_URL: 'ws://localhost:8765',
-  KEY_MAP: { '1': 0, '2': 1, '3': 2, '4': 3 },   // 테스트용 키보드
+  /* 버튼은 5개다: 0~3 = 빨·노·초·파 (게임 입력), 4 = 흰색 (도전 신청/수락 전용).
+     키보드는 좌석마다 한 줄씩 — 왼쪽 좌석 1 2 3 4 5, 오른쪽 좌석 Q W E R T. */
+  BUTTONS: 5,
+  KEY_MAPS: [
+    { '1': 0, '2': 1, '3': 2, '4': 3, '5': 4 },
+    { 'q': 0, 'w': 1, 'e': 2, 'r': 3, 't': 4 },
+  ],
+  /* 제로딜레이 USB 인코더(게임패드로 잡힘)의 버튼 번호 → 좌석별 버튼.
+     인코더 입력 K1~K5 = 왼쪽 좌석 빨·노·초·파·흰, K6~K10 = 오른쪽 좌석. */
+  GAMEPAD_MAPS: [
+    [0, 1, 2, 3, 4],
+    [5, 6, 7, 8, 9],
+  ],
   ATTRACT_IDLE_MS: 60000,    // 타이틀 방치 → 어트랙트 데모
   EXIT_HOLD_MS: 2000,        // 빨+파 홀드 → 타이틀 복귀
   ADMIN_HOLD_MS: 3000,       // 타이틀에서 노+초 홀드 → 운영자 화면
   ADMIN_KEY: '0',            // 브라우저에서 운영자 화면을 여는 키
   ADMIN_IDLE_MS: 90000,      // 운영자 화면 방치 → 타이틀
+
+  /* 2인 대결 (흰색 버튼) */
+  CHALLENGE_MS: 10000,       // "도전에 응하시겠습니까?" 가 떠 있는 시간
+  CHALLENGE_PENALTY_MS: 2500,// 상대가 흰색 아닌 버튼을 누를 때마다 이만큼 빨리 줄어든다
+  CHALLENGE_DECLINED_MS: 2500,// 거절/무응답 안내가 떠 있는 시간
+  VS_PICK_MS: 8000,          // 대결 게임 고르기 제한 — 지나면 혼합
+  VS_ROUNDS: [1, 1, 2, 2, 3, 3, 4, 4],   // 라운드별 기억할 개수
+  VS_WIN_POINTS: 5,          // 먼저 이만큼 따면 승리
+  VS_INTRO_MS: 3200,         // 대결 안내 화면
+  VS_ROUND_RESULT_MS: 1800,  // 라운드 결과 연출
+  VS_RESULT_IDLE_MS: 20000,  // 최종 결과 방치 → 타이틀
   GAMEOVER_IDLE_MS: 15000,   // 게임오버 방치 → 타이틀
   INTRO_MIN_MS: 600,         // 차수 안내: 이 시간 동안은 입력을 안 받는다(오입력 방지)
   LEVEL_CLEAR_MS: 1000,      // 단계 클리어 연출
@@ -34,6 +57,24 @@ export const CONFIG = {
 
 /** 버튼 색 (0=빨,1=노,2=초,3=파). 이 순서는 절대 바꾸지 않는다. */
 export const COLORS = ['#e53935', '#fdd835', '#43a047', '#1e88e5'];
+
+/** 예전 이름 — 왼쪽(첫) 좌석의 키보드 매핑 */
+CONFIG.KEY_MAP = CONFIG.KEY_MAPS[0];
+
+/**
+ * 좌석 수. 실물 키오스크는 파이 한 대가 모니터 두 대를 한 화면(3840×1080)으로
+ * 쓰므로 왼쪽 반 = 책상 1, 오른쪽 반 = 책상 2 다. ?seats=2 로 지정하거나,
+ * 화면이 두 배로 넓으면(가로세로비 2.6 이상) 저절로 2좌석이 된다.
+ * 보통 브라우저(github.io)에서는 1좌석이다.
+ */
+function readSeats() {
+  const p = new URLSearchParams(globalThis.location?.search ?? '');
+  const n = Number.parseInt(p.get('seats') ?? '', 10);
+  if (n === 1 || n === 2) return n;
+  const w = globalThis.innerWidth ?? 0, h = globalThis.innerHeight ?? 1;
+  return w / h >= 2.6 ? 2 : 1;
+}
+export const SEATS = readSeats();
 
 /** 1차 제시음·입력음 음높이 (도/미/솔/도′) */
 export const COLOR_TONES = [261.63, 329.63, 392.00, 523.25];

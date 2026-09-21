@@ -89,12 +89,13 @@ function renderBody(entries, period, now) {
     el('div.admin-period', { text: periodLabel(period, range, s, now) }),
   );
 
-  if (!s.plays) {
+  if (!s.plays && !s.versus) {
     return el('div.admin-body', {}, head, el('div.admin-empty', { text: STR.ADMIN_EMPTY }));
   }
 
   const tiles = el('div.admin-tiles', {},
-    statTile(STR.ADMIN_STAT_PLAYS, STR.ADMIN_UNIT_PLAYS(s.plays)),
+    statTile(STR.ADMIN_STAT_PLAYS, STR.ADMIN_UNIT_PLAYS(s.plays),
+      s.versus ? STR.VS_ADMIN_COUNT(s.versus) : null),
     statTile(STR.ADMIN_STAT_CLEARS, num(s.clears), `${pct(s.clears, s.plays)}%`),
     statTile(STR.ADMIN_STAT_QUITS, num(s.quits), `${pct(s.quits, s.plays)}%`),
     statTile(STR.ADMIN_STAT_TIME, formatDuration(s.medianMs), STR.ADMIN_STAT_TIME_NOTE),
@@ -124,7 +125,7 @@ function renderBody(entries, period, now) {
       const isClear = i === CONFIG.LEVELS;
       return barRow({
         label: isClear ? STR.ADMIN_FUNNEL_CLEAR : STR.ADMIN_FUNNEL_LEVEL(i + 1),
-        ratio: n / s.plays,
+        ratio: s.plays ? n / s.plays : 0,
         color: isClear ? 'var(--sun)' : 'var(--lav)',
         text: `${pct(n, s.plays)}% · ${num(n)}`,
       });

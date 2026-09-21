@@ -38,6 +38,10 @@ export async function attractScene(ctx) {
   const off = ctx.input.onButton((ev) => {
     if (ev.source === 'human') ac.abort();
   });
+  // 바깥(좌석 전체)이 중단되면 — 예: 대결 시작 — 데모도 함께 끝난다.
+  const onOuterAbort = () => ac.abort();
+  if (ctx.signal?.aborted) ac.abort();
+  ctx.signal?.addEventListener('abort', onOuterAbort, { once: true });
 
   const badge = el('div.attract-badge', {},
     el('span.attract-dot'),
@@ -83,6 +87,7 @@ export async function attractScene(ctx) {
     if (!isExit(err)) throw err;
   } finally {
     off();
+    ctx.signal?.removeEventListener('abort', onOuterAbort);
     for (const t of timers) clearTimeout(t);
     badge.remove();
     hint.remove();

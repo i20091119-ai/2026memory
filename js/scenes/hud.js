@@ -46,6 +46,8 @@ export function createHud(state) {
     el('div.hud-center', {}, stage),
     el('div.hud-right', {}, dots),
   );
+  // 대결에서는 목숨·단계·라운드 점이 의미가 없다. 그 자리는 대결 점수판(vs-bar)이 쓴다.
+  if (state.versus) node.classList.add('versus');
 
   /** 하트를 lives 개만큼 채운다 */
   node.setLives = (lives) => {

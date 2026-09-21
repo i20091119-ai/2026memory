@@ -10,11 +10,12 @@
  *   'script' — 어트랙트 데모의 유령 입력
  */
 import { CONFIG } from './config.js';
-import { RED, YELLOW, GREEN, BLUE } from './games.js';
+import { RED, YELLOW, GREEN, BLUE, WHITE } from './games.js';
 
 /**
- * 눌림/뗌 이벤트를 모아 게임이 쓰기 좋은 형태로 바꿔 주는 허브.
- * - onButton 은 'down' 에서만 발화한다 (§5.2).
+ * 눌림/뗌 이벤트를 모아 게임이 쓰기 좋은 형태로 바꿔 주는 허브. 좌석마다 하나씩이다.
+ * - onButton 은 색 버튼(0..3)의 'down' 에서만 발화한다 (§5.2).
+ * - 흰색(4)은 게임 입력이 아니라 onWhite 로 따로 나간다 — 씬들은 흰색을 모른다.
  * - 'up' 은 홀드 콤보 추적에만 쓴다.
  *
  * 홀드 콤보는 두 가지다. "두 버튼을 동시에 누른 채 버틴 시간"으로 성립한다.
@@ -33,6 +34,8 @@ export class InputManager {
     this._exitHandlers = new Set();
     /** @type {Set<() => void>} */
     this._adminHandlers = new Set();
+    /** @type {Set<(ev: {source: string}) => void>} 흰색 버튼 (도전 신청/수락) */
+    this._whiteHandlers = new Set();
     /** @type {Set<(ev: object) => void>} 눌림/뗌 원본 (홀드 진행 표시용) */
     this._rawHandlers = new Set();
     this._lastDownAt = 0;
@@ -66,6 +69,12 @@ export class InputManager {
     return () => this._adminHandlers.delete(handler);
   }
 
+  /** 흰색 버튼 눌림 구독 (좌석 간 도전 흐름은 arena.js 가 맡는다) */
+  onWhite(handler) {
+    this._whiteHandlers.add(handler);
+    return () => this._whiteHandlers.delete(handler);
+  }
+
   /** 눌림/뗌 원본 이벤트 구독 (홀드 게이지 표시용) */
   onRaw(handler) {
     this._rawHandlers.add(handler);
@@ -79,7 +88,7 @@ export class InputManager {
    * @param {string} source 'human' | 'script'
    */
   emit(type, id, source = 'human') {
-    if (!Number.isInteger(id) || id < 0 || id > 3) return;
+    if (!Number.isInteger(id) || id < 0 || id >= (this.config.BUTTONS ?? 5)) return;
 
     if (type === 'down') {
       // 하드웨어 채터링·키 반복 방지: 이미 눌린 상태면 중복 발화하지 않는다.
@@ -93,6 +102,11 @@ export class InputManager {
       if (source === 'human' && now - this._lastDownAt < this.config.DEBOUNCE_MS) return;
       this._lastDownAt = now;
 
+      // 흰색은 게임 입력이 아니다. 씬으로 가지 않고 도전 흐름으로만 간다.
+      if (id === WHITE) {
+        for (const h of [...this._whiteHandlers]) h({ source });
+        return;
+      }
       for (const h of [...this._buttonHandlers]) h({ id, source });
     } else {
       if (!this.pressed.delete(id)) return;
@@ -183,14 +197,21 @@ export class InputManager {
 }
 
 /**
- * 키보드 1·2·3·4 입력. 화면 요소 탭/클릭은 각 씬이 직접
- * `input.emit('down'|'up', id)` 를 불러 처리한다 (모바일 테스트용).
+ * 키보드 입력. 좌석마다 키 한 줄씩(왼쪽 1~5, 오른쪽 Q~T). 화면 요소 탭/클릭은
+ * 각 씬이 직접 `input.emit('down'|'up', id)` 를 불러 처리한다 (모바일 테스트용).
  */
 export class KeyboardInput {
-  /** @param {InputManager} manager */
-  constructor(manager, config = CONFIG) {
+  /**
+   * @param {InputManager} manager
+   * @param {object} [config]
+   * @param {{keyMap?: Record<string, number>, adminKey?: string|null}} [opts]
+   *   adminKey 는 한 좌석(보통 왼쪽)에만 준다 — 두 좌석이 같은 키를 받으면 두 번 열린다.
+   */
+  constructor(manager, config = CONFIG, opts = {}) {
     this.manager = manager;
     this.config = config;
+    this.keyMap = opts.keyMap ?? config.KEY_MAPS?.[0] ?? config.KEY_MAP;
+    this.adminKey = opts.adminKey === undefined ? config.ADMIN_KEY : opts.adminKey;
     this._onKeyDown = this._onKeyDown.bind(this);
     this._onKeyUp = this._onKeyUp.bind(this);
     this._onBlur = this._onBlur.bind(this);
@@ -222,20 +243,20 @@ export class KeyboardInput {
       return;
     }
     // 운영자 화면 (실기에서는 타이틀에서 노랑+초록 3초 홀드가 정식 경로)
-    if (ev.key === this.config.ADMIN_KEY) {
+    if (this.adminKey && ev.key === this.adminKey) {
       ev.preventDefault();
       this.manager.requestAdmin();
       return;
     }
 
-    const id = this.config.KEY_MAP[ev.key];
+    const id = this.keyMap[ev.key.toLowerCase()];
     if (id === undefined) return;
     ev.preventDefault();
     this.manager.emit('down', id, 'human');
   }
 
   _onKeyUp(ev) {
-    const id = this.config.KEY_MAP[ev.key];
+    const id = this.keyMap[ev.key.toLowerCase()];
     if (id === undefined) return;
     ev.preventDefault();
     this.manager.emit('up', id, 'human');
@@ -243,6 +264,68 @@ export class KeyboardInput {
 
   _onBlur() {
     for (const id of [...this.manager.pressed]) this.manager.emit('up', id, 'human');
+  }
+}
+
+/**
+ * USB 아케이드 인코더(제로딜레이) 입력. PC 에는 게임패드로 잡히므로 Gamepad API 를
+ * 프레임마다 읽어 눌림/뗌 변화를 좌석별 InputManager 에 흘린다.
+ *
+ * 인코더 하나에 두 좌석의 버튼 10개를 다 물린다 — 인코더가 둘이면 부팅마다
+ * 어느 게 왼쪽인지 바뀔 수 있어서다. 어느 게임패드든 같은 번호표(GAMEPAD_MAPS)로 읽는다.
+ *
+ * 브라우저는 첫 버튼을 누르기 전까지 게임패드를 노출하지 않는다. 그래서 목록이
+ * 비어 있어도 계속 폴링한다 (부담은 프레임당 함수 호출 하나 정도다).
+ */
+export class GamepadInput {
+  /**
+   * @param {InputManager[]} managers 좌석 순서대로
+   * @param {number[][]} [maps] 좌석별 [빨,노,초,파,흰] 의 게임패드 버튼 번호
+   */
+  constructor(managers, maps = CONFIG.GAMEPAD_MAPS) {
+    this.managers = managers;
+    this.maps = maps;
+    /** @type {Map<number, boolean[]>} 게임패드 index → 버튼별 직전 눌림 */
+    this._prev = new Map();
+    this._raf = null;
+    this._tick = this._tick.bind(this);
+    this.available = typeof navigator !== 'undefined' && typeof navigator.getGamepads === 'function';
+  }
+
+  start() {
+    if (!this.available || this._raf !== null) return this;
+    this._raf = requestAnimationFrame(this._tick);
+    return this;
+  }
+
+  stop() {
+    if (this._raf !== null) cancelAnimationFrame(this._raf);
+    this._raf = null;
+  }
+
+  _tick() {
+    this._raf = requestAnimationFrame(this._tick);
+    let pads;
+    try {
+      pads = navigator.getGamepads();
+    } catch {
+      return;
+    }
+    for (const pad of pads) {
+      if (!pad) continue;
+      const prev = this._prev.get(pad.index) ?? [];
+      const cur = pad.buttons.map((b) => b.pressed);
+      this._prev.set(pad.index, cur);
+      for (let seat = 0; seat < this.managers.length; seat++) {
+        const map = this.maps[seat] ?? [];
+        for (let id = 0; id < map.length; id++) {
+          const btn = map[id];
+          const now = !!cur[btn], before = !!prev[btn];
+          if (now === before) continue;
+          this.managers[seat].emit(now ? 'down' : 'up', id, 'human');
+        }
+      }
+    }
   }
 }
 

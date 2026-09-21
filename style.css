@@ -55,17 +55,17 @@
           'Noto Sans KR', system-ui, sans-serif;
 
   --radius: 24px;
-  --hud-h: 9vh;
+  --hud-h: 9cqh;
   --shadow-soft: 0 10px 30px rgba(120, 90, 140, 0.16);
 
   /* 기관 로고가 차지하는 높이. 씬은 이만큼 아래를 비워 둔다.
      배경 그림은 네 모서리에 장식이 있고 아래 가운데가 비어 있어서, 로고를 거기 둔다. */
-  --brand-h: clamp(20px, 3.4vh, 42px);
+  --brand-h: clamp(20px, 3.4cqh, 42px);
 }
 
 /* 타이틀·올클리어에서는 로고를 크게 */
-body:has(#app .scene-title),
-body:has(#app .scene-allclear) { --brand-h: clamp(42px, 8vh, 96px); }
+.seat:has(.scene-title),
+.seat:has(.scene-allclear) { --brand-h: clamp(42px, 8cqh, 96px); }
 
 /* ---------------- 리셋 · 키오스크 ---------------- */
 
@@ -141,10 +141,10 @@ body.show-cursor, body.show-cursor button { cursor: default; }
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 2.2vh;
+  gap: 2.2cqh;
   min-height: 0;
   /* 아래는 로고 자리로 비워 둔다 */
-  padding: 2vh 4vw calc(var(--brand-h) + 3vh);
+  padding: 2cqh 4cqw calc(var(--brand-h) + 3cqh);
 }
 
 /* ---------------- HUD ---------------- */
@@ -156,24 +156,24 @@ body.show-cursor, body.show-cursor button { cursor: default; }
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  padding: 0 3vw;
-  gap: 2vw;
+  padding: 0 3cqw;
+  gap: 2cqw;
 }
 
 .hud-left {
   justify-self: start;
   display: flex;
   align-items: center;
-  gap: 1.4vw;
+  gap: 1.4cqw;
 }
 .hud-right { justify-self: end; }
 
-.hud-hearts { display: flex; gap: 0.7vw; }
+.hud-hearts { display: flex; gap: 0.7cqw; }
 
 /* 하트는 그림 파일 3종을 쓴다 (assets/heart*.png). 서체에 따라 모양이 달라지지 않게. */
 .heart {
-  width: clamp(30px, 4.8vh, 64px);
-  height: clamp(30px, 4.8vh, 64px);
+  width: clamp(30px, 4.8cqh, 64px);
+  height: clamp(30px, 4.8cqh, 64px);
   display: block;
   transition: transform 200ms, opacity 200ms;
 }
@@ -220,18 +220,18 @@ body.show-cursor, body.show-cursor button { cursor: default; }
 .hud-home {
   display: flex;
   align-items: center;
-  gap: 0.5vw;
+  gap: 0.5cqw;
   background: rgba(255, 255, 255, 0.78);
   border: 1px solid rgba(160, 140, 180, 0.18);
   border-radius: 999px;
-  padding: 0.6vh 1.2vw;
-  font-size: clamp(12px, 1.8vh, 23px);
+  padding: 0.6cqh 1.2cqw;
+  font-size: clamp(12px, 1.8cqh, 23px);
   color: var(--ink-dim);
   white-space: nowrap;
 }
 .home-key {
-  width: clamp(10px, 1.3vh, 16px);
-  height: clamp(10px, 1.3vh, 16px);
+  width: clamp(10px, 1.3cqh, 16px);
+  height: clamp(10px, 1.3cqh, 16px);
   border-radius: 50%;
   background: linear-gradient(135deg, var(--c-red) 0 50%, var(--c-blue) 50% 100%);
   flex: 0 0 auto;
@@ -246,7 +246,7 @@ body.show-cursor, body.show-cursor button { cursor: default; }
   overflow: hidden;
   box-shadow: 0 5px 16px rgba(120, 90, 140, 0.2);
   font-family: var(--display);
-  font-size: clamp(14px, 2.4vh, 30px);
+  font-size: clamp(14px, 2.4cqh, 30px);
   line-height: 1;
   white-space: nowrap;
 }
@@ -255,7 +255,7 @@ body.show-cursor, body.show-cursor button { cursor: default; }
 .stage-level {
   display: flex;
   align-items: center;
-  padding: 0.9vh 1.5vw;
+  padding: 0.9cqh 1.5cqw;
 }
 
 .stage-round {
@@ -279,14 +279,14 @@ body.show-cursor, body.show-cursor button { cursor: default; }
 /* 라운드 진행 점 5개 — 같은 단계에서 몇 번째 판인지 */
 .stage-pips {
   display: flex;
-  gap: 0.4vw;
+  gap: 0.4cqw;
   align-items: center;
   background: var(--panel);
-  padding: 0 1.2vw 0 0.2vw;
+  padding: 0 1.2cqw 0 0.2cqw;
 }
 .pip {
-  width: clamp(7px, 1.1vh, 14px);
-  height: clamp(7px, 1.1vh, 14px);
+  width: clamp(7px, 1.1cqh, 14px);
+  height: clamp(7px, 1.1cqh, 14px);
   border-radius: 50%;
   background: #e3dcea;
 }
@@ -296,11 +296,11 @@ body.show-cursor, body.show-cursor button { cursor: default; }
   box-shadow: 0 0 8px rgba(255, 194, 71, 0.8);
 }
 
-.hud-dots { display: flex; gap: 0.7vw; align-items: center; }
+.hud-dots { display: flex; gap: 0.7cqw; align-items: center; }
 
 .dot {
-  width: clamp(10px, 1.5vh, 20px);
-  height: clamp(10px, 1.5vh, 20px);
+  width: clamp(10px, 1.5cqh, 20px);
+  height: clamp(10px, 1.5cqh, 20px);
   border-radius: 50%;
   background: #e3dcea;
   transition: background 180ms, transform 180ms;
@@ -320,12 +320,12 @@ body.show-cursor, body.show-cursor button { cursor: default; }
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1vh;
+  gap: 1cqh;
 }
 
 .strip-label {
   font-family: var(--display);
-  font-size: clamp(13px, 2vh, 26px);
+  font-size: clamp(13px, 2cqh, 26px);
   color: var(--ink-dim);
   letter-spacing: 0.02em;
   min-height: 1.3em;
@@ -333,12 +333,12 @@ body.show-cursor, body.show-cursor button { cursor: default; }
 
 .strip-row {
   display: flex;
-  gap: clamp(8px, 1.1vw, 18px);
+  gap: clamp(8px, 1.1cqw, 18px);
 }
 
 .slot {
-  width: clamp(38px, 7vh, 84px);
-  height: clamp(38px, 7vh, 84px);
+  width: clamp(38px, 7cqh, 84px);
+  height: clamp(38px, 7cqh, 84px);
   border-radius: 20px;
   background: rgba(255, 255, 255, 0.72);
   border: 3px dashed #d9cfe4;
@@ -401,7 +401,7 @@ body.show-cursor, body.show-cursor button { cursor: default; }
 
 .slot-digit {
   font-family: var(--display);
-  font-size: clamp(20px, 4vh, 46px);
+  font-size: clamp(20px, 4cqh, 46px);
   line-height: 1;
   color: #fff;
 }
@@ -418,7 +418,7 @@ body.show-cursor, body.show-cursor button { cursor: default; }
 /* ---------------- 타이틀 ---------------- */
 
 /* 아래 가운데에 큰 로고가 놓이므로 그만큼 자리를 비워 둔다 */
-.scene-title { justify-content: center; gap: 1.2vh; padding: 2vh 4vw calc(var(--brand-h) + 4vh); }
+.scene-title { justify-content: center; gap: 1.2cqh; padding: 2cqh 4cqw calc(var(--brand-h) + 4cqh); }
 
 /* 캐릭터와 카드가 겹쳐 놓인 표지 영역 */
 .title-hero {
@@ -433,7 +433,7 @@ body.show-cursor, body.show-cursor button { cursor: default; }
 
 .title-text {
   font-family: var(--display);
-  font-size: clamp(34px, 8vh, 96px);
+  font-size: clamp(34px, 8cqh, 96px);
   line-height: 1.18;
   text-align: center;
   margin: 0;
@@ -441,32 +441,32 @@ body.show-cursor, body.show-cursor button { cursor: default; }
   text-shadow: 0 4px 0 #fff, 0 10px 24px rgba(140, 110, 160, 0.22);
 }
 
-.title-torus { margin: -1vh 0; }
+.title-torus { margin: -1cqh 0; }
 
 .title-record { text-align: center; }
 .record-line {
   font-family: var(--display);
-  font-size: clamp(18px, 2.8vh, 36px);
+  font-size: clamp(18px, 2.8cqh, 36px);
   color: #e59b00;
 }
 .record-sub {
-  font-size: clamp(13px, 1.8vh, 22px);
+  font-size: clamp(13px, 1.8cqh, 22px);
   color: var(--ink-dim);
-  margin-top: 0.4vh;
+  margin-top: 0.4cqh;
 }
 
 .title-press {
   font-family: var(--display);
-  font-size: clamp(18px, 3vh, 40px);
+  font-size: clamp(18px, 3cqh, 40px);
   color: var(--ink);
   background: var(--panel);
   border-radius: 999px;
-  padding: 1vh 2.6vw;
+  padding: 1cqh 2.6cqw;
   box-shadow: var(--shadow-soft);
 }
 
 .title-keyhint {
-  font-size: clamp(11px, 1.5vh, 18px);
+  font-size: clamp(11px, 1.5cqh, 18px);
   color: var(--ink-dim);
 }
 
@@ -477,18 +477,18 @@ body.show-cursor, body.show-cursor button { cursor: default; }
 
 .intro-title {
   font-family: var(--display);
-  font-size: clamp(34px, 8vh, 92px);
+  font-size: clamp(34px, 8cqh, 92px);
   margin: 0;
   color: var(--ink);
   text-shadow: 0 4px 0 #fff;
   animation: popIn 420ms cubic-bezier(0.2, 1.4, 0.4, 1) both;
 }
 
-.intro-icon { display: flex; gap: 1.4vw; align-items: center; }
+.intro-icon { display: flex; gap: 1.4cqw; align-items: center; }
 
 .intro-swatch {
-  width: clamp(34px, 5vw, 86px);
-  height: clamp(34px, 5vw, 86px);
+  width: clamp(34px, 5cqw, 86px);
+  height: clamp(34px, 5cqw, 86px);
   border-radius: 20px;
   box-shadow: var(--shadow-soft);
 }
@@ -498,8 +498,8 @@ body.show-cursor, body.show-cursor button { cursor: default; }
 .intro-swatch:nth-child(4) { background: var(--c-blue); }
 
 .intro-digit, .intro-shape {
-  width: clamp(34px, 5vw, 86px);
-  height: clamp(34px, 5vw, 86px);
+  width: clamp(34px, 5cqw, 86px);
+  height: clamp(34px, 5cqw, 86px);
   border-radius: 20px;
   background: var(--stage);
   box-shadow: var(--shadow-soft);
@@ -509,7 +509,7 @@ body.show-cursor, body.show-cursor button { cursor: default; }
 }
 .intro-digit {
   font-family: var(--display);
-  font-size: clamp(24px, 3.4vw, 56px);
+  font-size: clamp(24px, 3.4cqw, 56px);
   color: #fff;
 }
 
@@ -520,7 +520,7 @@ body.show-cursor, body.show-cursor button { cursor: default; }
 
 /* 진행 방식 한 줄 — "1개 기억부터 4개 기억까지 · 단계마다 5번씩!" */
 .intro-flow {
-  font-size: clamp(14px, 2.3vh, 30px);
+  font-size: clamp(14px, 2.3cqh, 30px);
   color: var(--ink-dim);
 }
 
@@ -528,7 +528,7 @@ body.show-cursor, body.show-cursor button { cursor: default; }
 
 .select-title {
   font-family: var(--display);
-  font-size: clamp(30px, 7vh, 84px);
+  font-size: clamp(30px, 7cqh, 84px);
   margin: 0;
   color: var(--ink);
   text-shadow: 0 4px 0 #fff;
@@ -537,15 +537,15 @@ body.show-cursor, body.show-cursor button { cursor: default; }
 
 /* 카드 색 = 버튼 색. "저 색 버튼을 누르면 저걸 고른다"가 한눈에 보여야 한다. */
 /* 제목은 위에 두고, 카드만 제목과 토러스 말풍선 사이로 내린다 */
-.select-body { justify-content: flex-start; padding-top: 5vh; gap: 0; }
-.select-grid { margin-top: 8.5vh; }
+.select-body { justify-content: flex-start; padding-top: 5cqh; gap: 0; }
+.select-grid { margin-top: 8.5cqh; }
 
 .select-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: clamp(10px, 1.8vw, 34px);
-  width: min(92vw, 1500px);
-  height: min(42vh, 500px);
+  gap: clamp(10px, 1.8cqw, 34px);
+  width: min(92cqw, 1500px);
+  height: min(42cqh, 500px);
 }
 
 .select-card {
@@ -554,8 +554,8 @@ body.show-cursor, body.show-cursor button { cursor: default; }
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 1.6vh;
-  padding: 2vh 1vw;
+  gap: 1.6cqh;
+  padding: 2cqh 1cqw;
   box-shadow: 0 10px 0 rgba(120, 90, 140, 0.24),
               0 16px 32px rgba(120, 90, 140, 0.2);
   animation: cardIn 260ms cubic-bezier(0.2, 1.3, 0.4, 1) both;
@@ -566,7 +566,7 @@ body.show-cursor, body.show-cursor button { cursor: default; }
 
 .select-name {
   font-family: var(--display);
-  font-size: clamp(20px, 4.2vh, 54px);
+  font-size: clamp(20px, 4.2cqh, 54px);
   color: #fff;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   line-height: 1.2;
@@ -577,7 +577,7 @@ body.show-cursor, body.show-cursor button { cursor: default; }
 .select-card:nth-child(2) .select-record { color: rgba(74, 63, 0, 0.85); }
 
 .select-desc {
-  font-size: clamp(14px, 2.5vh, 32px);
+  font-size: clamp(14px, 2.5cqh, 32px);
   color: rgba(255, 255, 255, 0.92);
   line-height: 1.3;
 }
@@ -585,12 +585,12 @@ body.show-cursor, body.show-cursor button { cursor: default; }
 /* 대표 이미지 — 그 게임에서 실제로 나오는 것들의 미리보기 */
 .select-preview {
   display: flex;
-  gap: clamp(6px, 0.8vw, 16px);
-  margin-top: 0.6vh;
+  gap: clamp(6px, 0.8cqw, 16px);
+  margin-top: 0.6cqh;
 }
 .select-chip {
-  width: clamp(34px, 6.4vh, 76px);
-  height: clamp(34px, 6.4vh, 76px);
+  width: clamp(34px, 6.4cqh, 76px);
+  height: clamp(34px, 6.4cqh, 76px);
   border-radius: 22%;
   display: flex;
   align-items: center;
@@ -604,43 +604,43 @@ body.show-cursor, body.show-cursor button { cursor: default; }
 }
 .select-chip-digit {
   font-family: var(--display);
-  font-size: clamp(19px, 3.6vh, 44px);
+  font-size: clamp(19px, 3.6cqh, 44px);
   color: #fff;
 }
 
 .select-record {
-  font-size: clamp(12px, 2vh, 26px);
+  font-size: clamp(12px, 2cqh, 26px);
   color: rgba(255, 255, 255, 0.9);
   background: rgba(0, 0, 0, 0.16);
   border-radius: 999px;
-  padding: 0.6vh 1.6vw;
-  margin-top: 0.4vh;
+  padding: 0.6cqh 1.6cqw;
+  margin-top: 0.4cqh;
 }
 
 .select-torus {
   position: absolute;
-  left: 2vw;
-  bottom: calc(var(--brand-h) + 1.5vh);
+  left: 2cqw;
+  bottom: calc(var(--brand-h) + 1.5cqh);
 }
-.select-torus .torus { --char-h: clamp(70px, 14vh, 170px); }
+.select-torus .torus { --char-h: clamp(70px, 14cqh, 170px); }
 
 /* 차수 안내에서 "아무 버튼이나 누르면 시작" */
 .intro-press {
   font-family: var(--display);
-  font-size: clamp(16px, 2.6vh, 34px);
+  font-size: clamp(16px, 2.6cqh, 34px);
   color: var(--ink);
   background: var(--panel);
   border-radius: 999px;
-  padding: 1vh 2.6vw;
+  padding: 1cqh 2.6cqw;
   box-shadow: var(--shadow-soft);
 }
 
 .exit-hint {
   position: absolute;
-  bottom: calc(var(--brand-h) + 3.2vh);
+  bottom: calc(var(--brand-h) + 3.2cqh);
   left: 50%;
   transform: translateX(-50%);
-  font-size: clamp(11px, 1.5vh, 18px);
+  font-size: clamp(11px, 1.5cqh, 18px);
   color: var(--ink-dim);
   white-space: nowrap;
 }
@@ -656,8 +656,8 @@ body.show-cursor, body.show-cursor button { cursor: default; }
 /* 흰 숫자·흰 모양이 또렷하게 보이도록 어두운 '무대' 위에 올린다 */
 .present-stage {
   flex: 1;
-  width: min(78vw, 1100px);
-  max-height: 60vh;
+  width: min(78cqw, 1100px);
+  max-height: 60cqh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -676,21 +676,21 @@ body.show-cursor, body.show-cursor button { cursor: default; }
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.4vh;
+  gap: 1.4cqh;
   animation: countPop 520ms ease-out both;
 }
 
 .count-hint {
   font-family: var(--body);
-  font-size: clamp(14px, 2.4vh, 30px);
+  font-size: clamp(14px, 2.4cqh, 30px);
   color: rgba(255, 255, 255, 0.8);
   letter-spacing: 0.06em;
 }
 
 .count-dial {
   position: relative;
-  width: clamp(120px, 30vh, 340px);
-  height: clamp(120px, 30vh, 340px);
+  width: clamp(120px, 30cqh, 340px);
+  height: clamp(120px, 30cqh, 340px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -725,7 +725,7 @@ body.show-cursor, body.show-cursor button { cursor: default; }
 
 .count-word {
   font-family: var(--body);
-  font-size: clamp(38px, 11vh, 130px);
+  font-size: clamp(38px, 11cqh, 130px);
   line-height: 1;
   color: var(--sun);
   text-shadow: 0 4px 0 rgba(0, 0, 0, 0.12);
@@ -733,7 +733,7 @@ body.show-cursor, body.show-cursor button { cursor: default; }
 
 .countdown.go {
   font-family: var(--display);
-  font-size: clamp(50px, 14vh, 170px);
+  font-size: clamp(50px, 14cqh, 170px);
   line-height: 1;
   color: var(--sun);
 }
@@ -745,8 +745,8 @@ body.show-cursor, body.show-cursor button { cursor: default; }
 
 /* 1차: 큰 색상 패널. 색 자체가 정보이므로 텍스트는 넣지 않는다. */
 .present-color {
-  width: min(40vh, 44vw);
-  height: min(40vh, 44vw);
+  width: min(40cqh, 44cqw);
+  height: min(40cqh, 44cqw);
   border-radius: 36px;
   box-shadow: 0 0 90px currentColor;
   animation: itemIn 160ms ease-out both;
@@ -755,7 +755,7 @@ body.show-cursor, body.show-cursor button { cursor: default; }
 /* 2차: 흰색 큰 숫자 */
 .present-digit {
   font-family: var(--display);
-  font-size: clamp(100px, 34vh, 380px);
+  font-size: clamp(100px, 34cqh, 380px);
   line-height: 1;
   color: #fff;
   animation: itemIn 160ms ease-out both;
@@ -769,8 +769,8 @@ body.show-cursor, body.show-cursor button { cursor: default; }
   animation: itemIn 160ms ease-out both;
 }
 .present-shape svg {
-  width: min(36vh, 42vw) !important;
-  height: min(36vh, 42vw) !important;
+  width: min(36cqh, 42cqw) !important;
+  height: min(36cqh, 42cqw) !important;
   filter: drop-shadow(0 0 34px rgba(255, 255, 255, 0.28));
 }
 
@@ -781,8 +781,8 @@ body.show-cursor, body.show-cursor button { cursor: default; }
 
 .present-torus {
   position: absolute;
-  left: 2vw;
-  bottom: calc(var(--brand-h) + 1.5vh);
+  left: 2cqw;
+  bottom: calc(var(--brand-h) + 1.5cqh);
   pointer-events: none;
 }
 
@@ -790,7 +790,7 @@ body.show-cursor, body.show-cursor button { cursor: default; }
 
 .recall-prompt {
   font-family: var(--display);
-  font-size: clamp(24px, 5vh, 62px);
+  font-size: clamp(24px, 5cqh, 62px);
   margin: 0;
   text-align: center;
   color: var(--ink);
@@ -802,8 +802,8 @@ body.show-cursor, body.show-cursor button { cursor: default; }
 .recall-color .recall-input-row {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: clamp(12px, 2vw, 40px);
-  width: min(88vw, 1300px);
+  gap: clamp(12px, 2cqw, 40px);
+  width: min(88cqw, 1300px);
 }
 
 .pad {
@@ -813,8 +813,8 @@ body.show-cursor, body.show-cursor button { cursor: default; }
               0 16px 30px rgba(120, 90, 140, 0.22),
               0 0 0 8px rgba(255, 255, 255, 0.75);
   transition: transform 90ms ease-out, filter 120ms;
-  max-height: 32vh;
-  max-width: 32vh;
+  max-height: 32cqh;
+  max-width: 32cqh;
   width: 100%;
   justify-self: center;
 }
@@ -833,9 +833,9 @@ body.show-cursor, body.show-cursor button { cursor: default; }
 .recall-choice .recall-input-row {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: clamp(10px, 1.8vw, 34px);
-  width: min(88vw, 1300px);
-  height: min(36vh, 420px);
+  gap: clamp(10px, 1.8cqw, 34px);
+  width: min(88cqw, 1300px);
+  height: min(36cqh, 420px);
 }
 
 .card {
@@ -858,7 +858,7 @@ body.show-cursor, body.show-cursor button { cursor: default; }
 /* 흰 글자·흰 도형이 노란 카드 위에서도 또렷하게 보이도록 어두운 테두리를 준다 */
 .card-digit {
   font-family: var(--display);
-  font-size: clamp(56px, 17vh, 190px);
+  font-size: clamp(56px, 17cqh, 190px);
   line-height: 1;
   color: #fff;
   -webkit-text-stroke: 3px rgba(0, 0, 0, 0.3);
@@ -904,7 +904,7 @@ body.show-cursor, body.show-cursor button { cursor: default; }
 
 .clear-title {
   font-family: var(--display);
-  font-size: clamp(40px, 10vh, 120px);
+  font-size: clamp(40px, 10cqh, 120px);
   margin: 0;
   color: #f59e0b;
   text-shadow: 0 4px 0 #fff, 0 12px 30px rgba(245, 158, 11, 0.3);
@@ -924,26 +924,26 @@ body.show-cursor, body.show-cursor button { cursor: default; }
 
 .miss-title {
   font-family: var(--display);
-  font-size: clamp(40px, 9vh, 110px);
+  font-size: clamp(40px, 9cqh, 110px);
   margin: 0;
   color: var(--c-red);
   text-shadow: 0 4px 0 #fff;
 }
 
 .miss-answer-label {
-  font-size: clamp(15px, 2.4vh, 30px);
+  font-size: clamp(15px, 2.4cqh, 30px);
   color: var(--ink-dim);
 }
 
 .miss-answer-color {
-  width: min(20vh, 24vw);
-  height: min(20vh, 24vw);
+  width: min(20cqh, 24cqw);
+  height: min(20cqh, 24cqw);
   border-radius: 28px;
   box-shadow: 0 0 60px currentColor, 0 0 0 8px rgba(255, 255, 255, 0.8);
 }
 .miss-answer-digit {
   font-family: var(--display);
-  font-size: clamp(60px, 16vh, 190px);
+  font-size: clamp(60px, 16cqh, 190px);
   line-height: 1;
   color: #fff;
   background: var(--stage);
@@ -955,19 +955,19 @@ body.show-cursor, body.show-cursor button { cursor: default; }
   display: flex;
   background: var(--stage);
   border-radius: 32px;
-  padding: 1.4vh;
+  padding: 1.4cqh;
   box-shadow: var(--shadow-soft);
 }
 .miss-answer-shape svg {
-  width: min(17vh, 21vw) !important;
-  height: min(17vh, 21vw) !important;
+  width: min(17cqh, 21cqw) !important;
+  height: min(17cqh, 21cqw) !important;
 }
 
 /* ---------------- 게임 오버 ---------------- */
 
 .gameover-title {
   font-family: var(--display);
-  font-size: clamp(42px, 10vh, 120px);
+  font-size: clamp(42px, 10cqh, 120px);
   margin: 0;
   color: var(--c-red);
   text-shadow: 0 4px 0 #fff;
@@ -978,7 +978,7 @@ body.show-cursor, body.show-cursor button { cursor: default; }
 
 .new-record {
   font-family: var(--display);
-  font-size: clamp(22px, 4vh, 52px);
+  font-size: clamp(22px, 4cqh, 52px);
   color: #f59e0b;
   text-shadow: 0 3px 0 #fff;
   animation: popIn 480ms cubic-bezier(0.2, 1.4, 0.4, 1) both,
@@ -989,35 +989,35 @@ body.show-cursor, body.show-cursor button { cursor: default; }
 .continue-box {
   background: var(--panel);
   border-radius: var(--radius);
-  padding: 2vh 3vw;
+  padding: 2cqh 3cqw;
   display: flex;
   flex-direction: column;
-  gap: 1.1vh;
+  gap: 1.1cqh;
   align-items: flex-start;
   box-shadow: var(--shadow-soft);
 }
 
 .continue-title {
   font-family: var(--display);
-  font-size: clamp(17px, 2.6vh, 32px);
+  font-size: clamp(17px, 2.6cqh, 32px);
   align-self: center;
-  margin-bottom: 0.4vh;
+  margin-bottom: 0.4cqh;
 }
 
-.continue-row { display: flex; align-items: center; gap: 1vw; }
+.continue-row { display: flex; align-items: center; gap: 1cqw; }
 
 .continue-dot {
-  width: clamp(16px, 2.4vh, 30px);
-  height: clamp(16px, 2.4vh, 30px);
+  width: clamp(16px, 2.4cqh, 30px);
+  height: clamp(16px, 2.4cqh, 30px);
   border-radius: 50%;
   flex: 0 0 auto;
   box-shadow: 0 0 14px currentColor;
 }
 
-.continue-text { font-size: clamp(14px, 2.1vh, 26px); }
+.continue-text { font-size: clamp(14px, 2.1cqh, 26px); }
 
 .gameover-countdown {
-  font-size: clamp(12px, 1.8vh, 20px);
+  font-size: clamp(12px, 1.8cqh, 20px);
   color: var(--ink-dim);
   min-height: 1.4em;
 }
@@ -1026,7 +1026,7 @@ body.show-cursor, body.show-cursor button { cursor: default; }
 
 .allclear-title {
   font-family: var(--display);
-  font-size: clamp(46px, 12vh, 150px);
+  font-size: clamp(46px, 12cqh, 150px);
   margin: 0;
   background: linear-gradient(90deg, var(--c-red), #f59e0b, var(--c-green), var(--c-blue));
   -webkit-background-clip: text;
@@ -1035,13 +1035,13 @@ body.show-cursor, body.show-cursor button { cursor: default; }
 }
 
 .allclear-sub {
-  font-size: clamp(15px, 2.6vh, 32px);
+  font-size: clamp(15px, 2.6cqh, 32px);
   color: var(--ink);
 }
 
 .allclear-press {
   font-family: var(--display);
-  font-size: clamp(15px, 2.4vh, 30px);
+  font-size: clamp(15px, 2.4cqh, 30px);
   color: var(--ink-dim);
 }
 
@@ -1050,33 +1050,33 @@ body.show-cursor, body.show-cursor button { cursor: default; }
   background: var(--panel);
   border-radius: var(--radius);
   box-shadow: var(--shadow-soft);
-  padding: 1.6vh 3vw 1.8vh;
+  padding: 1.6cqh 3cqw 1.8cqh;
   display: grid;
   grid-template-columns: auto 1fr;
   grid-template-rows: auto auto;
-  column-gap: 2.4vw;
-  row-gap: 0.6vh;
+  column-gap: 2.4cqw;
+  row-gap: 0.6cqh;
   align-items: center;
-  max-width: 78vw;
+  max-width: 78cqw;
   animation: popIn 480ms cubic-bezier(0.2, 1.4, 0.4, 1) 600ms both;
 }
-.span-meter { grid-row: 1 / 3; display: flex; flex-direction: column; align-items: center; gap: 0.8vh; }
+.span-meter { grid-row: 1 / 3; display: flex; flex-direction: column; align-items: center; gap: 0.8cqh; }
 .span-label {
   font-family: var(--display);
-  font-size: clamp(15px, 2.3vh, 28px);
+  font-size: clamp(15px, 2.3cqh, 28px);
   color: var(--ink-dim);
   letter-spacing: 0.02em;
 }
-.span-cells { display: flex; gap: 0.7vw; align-items: center; }
+.span-cells { display: flex; gap: 0.7cqw; align-items: center; }
 .span-cell {
-  width: clamp(30px, 5.6vh, 64px);
-  height: clamp(30px, 5.6vh, 64px);
+  width: clamp(30px, 5.6cqh, 64px);
+  height: clamp(30px, 5.6cqh, 64px);
   border-radius: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: var(--display);
-  font-size: clamp(16px, 3vh, 34px);
+  font-size: clamp(16px, 3cqh, 34px);
   color: #fff;
   background: linear-gradient(135deg, var(--sun), #ff9d3d);
   border: 3px solid #fff;
@@ -1084,14 +1084,14 @@ body.show-cursor, body.show-cursor button { cursor: default; }
 }
 .span-value {
   font-family: var(--display);
-  font-size: clamp(30px, 6vh, 74px);
+  font-size: clamp(30px, 6cqh, 74px);
   line-height: 1;
   color: #e59b00;
 }
 .span-value small { font-size: 0.5em; color: var(--ink-dim); margin-left: 0.15em; }
-.span-fact { font-size: clamp(15px, 2.4vh, 30px); color: var(--ink); line-height: 1.35; align-self: end; }
+.span-fact { font-size: clamp(15px, 2.4cqh, 30px); color: var(--ink); line-height: 1.35; align-self: end; }
 .span-fact b { color: #7c5cff; font-weight: inherit; }
-.span-tip { font-size: clamp(13px, 2vh, 24px); color: var(--ink-dim); line-height: 1.35; align-self: start; }
+.span-tip { font-size: clamp(13px, 2cqh, 24px); color: var(--ink-dim); line-height: 1.35; align-self: start; }
 .span-tip b {
   font-weight: inherit;
   color: var(--ink);
@@ -1104,7 +1104,7 @@ body.show-cursor, body.show-cursor button { cursor: default; }
 
 .confetti-bit {
   position: absolute;
-  top: -6vh;
+  top: -6cqh;
   width: 10px;
   height: 18px;
   border-radius: 3px;
@@ -1113,26 +1113,26 @@ body.show-cursor, body.show-cursor button { cursor: default; }
   animation-iteration-count: infinite;
 }
 @keyframes fall {
-  from { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
-  to   { transform: translateY(110vh) rotate(720deg); opacity: 0.9; }
+  from { transform: translateY(-10cqh) rotate(0deg); opacity: 1; }
+  to   { transform: translateY(110cqh) rotate(720deg); opacity: 0.9; }
 }
 
 /* ---------------- 타이틀 로봇 캐릭터 ---------------- */
 
 /* 크기는 화면 '높이'에 맞춘다. px 로 고정하면 낮은 화면에서 다른 요소를 덮는다. */
 .mascot {
-  --char-h: clamp(100px, 27vh, 360px);
+  --char-h: clamp(100px, 27cqh, 360px);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1vh;
+  gap: 1cqh;
 }
 
 .mascot-img {
   display: block;
   height: var(--char-h);
   width: auto;
-  max-width: 86vw;
+  max-width: 86cqw;
 }
 
 .mascot-body {
@@ -1145,21 +1145,21 @@ body.show-cursor, body.show-cursor button { cursor: default; }
 /* ---------------- 게임 중 안내 캐릭터 ---------------- */
 
 .torus {
-  --char-h: clamp(70px, 16vh, 200px);
+  --char-h: clamp(70px, 16cqh, 200px);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1vh;
+  gap: 1cqh;
 }
 
 /* 씬마다 캐릭터가 차지해도 되는 높이가 다르다 */
-.intro-torus    .torus { --char-h: clamp(95px, 21vh, 260px); }
-.present-torus  .torus { --char-h: clamp(80px, 16vh, 195px); }
-.clear-torus    .torus { --char-h: clamp(90px, 20vh, 250px); }
-.miss-torus     .torus { --char-h: clamp(75px, 16vh, 200px); }
-.gameover-torus .torus { --char-h: clamp(75px, 15vh, 190px); }
-.allclear-torus .torus { --char-h: clamp(95px, 21vh, 270px); }
-.attract-guide  .torus { --char-h: clamp(85px, 17vh, 205px); }
+.intro-torus    .torus { --char-h: clamp(95px, 21cqh, 260px); }
+.present-torus  .torus { --char-h: clamp(80px, 16cqh, 195px); }
+.clear-torus    .torus { --char-h: clamp(90px, 20cqh, 250px); }
+.miss-torus     .torus { --char-h: clamp(75px, 16cqh, 200px); }
+.gameover-torus .torus { --char-h: clamp(75px, 15cqh, 190px); }
+.allclear-torus .torus { --char-h: clamp(95px, 21cqh, 270px); }
+.attract-guide  .torus { --char-h: clamp(85px, 17cqh, 205px); }
 
 .torus-body {
   position: relative;
@@ -1177,12 +1177,12 @@ body.show-cursor, body.show-cursor button { cursor: default; }
 .torus-bubble {
   position: relative;
   z-index: 2;                       /* 캐릭터가 말풍선을 가리지 않게 */
-  max-width: min(60vw, 620px);
+  max-width: min(60cqw, 620px);
   background: var(--panel);
   color: var(--ink);
-  font-size: clamp(16px, 2.7vh, 34px);
+  font-size: clamp(16px, 2.7cqh, 34px);
   line-height: 1.35;
-  padding: 1.2vh 1.8vw;
+  padding: 1.2cqh 1.8cqw;
   border-radius: 22px;
   text-align: center;
   box-shadow: var(--shadow-soft);
@@ -1203,7 +1203,7 @@ body.show-cursor, body.show-cursor button { cursor: default; }
   display: block;
   height: var(--char-h);
   width: auto;
-  max-width: 40vw;
+  max-width: 40cqw;
 }
 
 /* 올클리어에서만 더 요란하게 — 표정을 따로 그리지 않고 씬 단위로 얹는다 */
@@ -1222,11 +1222,11 @@ body.show-cursor, body.show-cursor button { cursor: default; }
 }
 .edge-flash.on-correct {
   animation: edgeFlash 420ms ease-out;
-  box-shadow: inset 0 0 18vh 4vh rgba(111, 216, 193, 0.6);
+  box-shadow: inset 0 0 18cqh 4cqh rgba(111, 216, 193, 0.6);
 }
 .edge-flash.on-wrong {
   animation: edgeFlash 620ms ease-out;
-  box-shadow: inset 0 0 18vh 4vh rgba(229, 57, 53, 0.42);
+  box-shadow: inset 0 0 18cqh 4cqh rgba(229, 57, 53, 0.42);
 }
 @keyframes edgeFlash {
   0% { opacity: 0; }
@@ -1248,7 +1248,7 @@ body.show-cursor, body.show-cursor button { cursor: default; }
 .brand {
   position: absolute;
   left: 50%;
-  bottom: 1.4vh;
+  bottom: 1.4cqh;
   transform: translateX(-50%);
   display: flex;
   align-items: center;
@@ -1267,16 +1267,16 @@ body.show-cursor, body.show-cursor button { cursor: default; }
    예전엔 9px 이라 사실상 안 보였고, 정작 버튼이 안 먹을 때 확인할 수단이 없었다. */
 .ws-status {
   position: absolute;
-  left: 1vw;
-  top: 1vh;
+  left: 1cqw;
+  top: 1cqh;
   display: flex;
   align-items: center;
-  gap: 0.5vw;
+  gap: 0.5cqw;
 }
 
 .ws-dot {
-  width: clamp(11px, 1.6vh, 20px);
-  height: clamp(11px, 1.6vh, 20px);
+  width: clamp(11px, 1.6cqh, 20px);
+  height: clamp(11px, 1.6cqh, 20px);
   border-radius: 50%;
   background: #cbbfd8;
   box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.7);
@@ -1292,11 +1292,11 @@ body.show-cursor, body.show-cursor button { cursor: default; }
    공개 웹 주소에서는 브리지가 원래 없으므로 띄우지 않는다. */
 .ws-label {
   display: none;
-  font-size: clamp(11px, 1.5vh, 18px);
+  font-size: clamp(11px, 1.5cqh, 18px);
   color: var(--c-red);
   background: rgba(255, 255, 255, 0.85);
   border-radius: 999px;
-  padding: 0.3vh 0.8vw;
+  padding: 0.3cqh 0.8cqw;
   white-space: nowrap;
 }
 .ws-status.kiosk:not(.on) .ws-label { display: block; }
@@ -1326,8 +1326,8 @@ body.show-cursor, body.show-cursor button { cursor: default; }
   transform: translateX(-50%);
   background: var(--ink);
   color: #fff;
-  font-size: clamp(11px, 1.5vh, 17px);
-  padding: 0.5vh 1.4vw;
+  font-size: clamp(11px, 1.5cqh, 17px);
+  padding: 0.5cqh 1.4cqw;
   border-radius: 999px;
   white-space: nowrap;
 }
@@ -1335,22 +1335,22 @@ body.show-cursor, body.show-cursor button { cursor: default; }
 /* 어트랙트 데모 배지 — HUD 아래에 둬서 진행 점(k/n)을 가리지 않게 한다 */
 .attract-badge {
   position: absolute;
-  top: calc(var(--hud-h) + 1vh);
-  right: 2.4vw;
+  top: calc(var(--hud-h) + 1cqh);
+  right: 2.4cqw;
   display: flex;
   align-items: center;
-  gap: 0.6vw;
+  gap: 0.6cqw;
   background: var(--panel);
   border-radius: 999px;
-  padding: 1vh 2vw;
-  font-size: clamp(15px, 2.4vh, 30px);
+  padding: 1cqh 2cqw;
+  font-size: clamp(15px, 2.4cqh, 30px);
   color: var(--ink);
   letter-spacing: 0.04em;
   box-shadow: var(--shadow-soft);
 }
 .attract-dot {
-  width: clamp(9px, 1.4vh, 16px);
-  height: clamp(9px, 1.4vh, 16px);
+  width: clamp(9px, 1.4cqh, 16px);
+  height: clamp(9px, 1.4cqh, 16px);
   border-radius: 50%;
   background: var(--c-red);
   animation: blink 1.2s ease-in-out infinite;
@@ -1359,21 +1359,21 @@ body.show-cursor, body.show-cursor button { cursor: default; }
 /* 데모를 안내하는 토러스 — 씬이 교체돼도 남도록 오버레이에 얹는다 */
 .attract-guide {
   position: absolute;
-  right: 2.4vw;
-  bottom: calc(var(--brand-h) + 2vh);
+  right: 2.4cqw;
+  bottom: calc(var(--brand-h) + 2cqh);
 }
 
 .attract-hint {
   position: absolute;
-  bottom: calc(var(--brand-h) + 3.2vh);
+  bottom: calc(var(--brand-h) + 3.2cqh);
   left: 50%;
   transform: translateX(-50%);
   font-family: var(--display);
-  font-size: clamp(18px, 3vh, 38px);
+  font-size: clamp(18px, 3cqh, 38px);
   color: var(--ink);
   background: var(--panel);
   border-radius: 999px;
-  padding: 1vh 2.4vw;
+  padding: 1cqh 2.4cqw;
   box-shadow: var(--shadow-soft);
 }
 
@@ -1384,8 +1384,8 @@ body.show-cursor, body.show-cursor button { cursor: default; }
 .scene-admin {
   justify-content: flex-start;
   /* 위는 왼쪽 위 연결 표시등(.ws-status)을 피할 만큼 띄운다 */
-  padding: 4.5vh 3vw calc(var(--brand-h) + 1.5vh);
-  gap: 1.2vh;
+  padding: 4.5cqh 3cqw calc(var(--brand-h) + 1.5cqh);
+  gap: 1.2cqh;
 }
 
 .admin-content { flex: 1; width: 100%; min-height: 0; display: flex; }
@@ -1396,29 +1396,29 @@ body.show-cursor, body.show-cursor button { cursor: default; }
   min-height: 0;
   display: flex;
   flex-direction: column;
-  gap: 1.4vh;
+  gap: 1.4cqh;
 }
 
 .admin-head {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  gap: 2vw;
+  gap: 2cqw;
 }
 .admin-title {
   font-family: var(--display);
-  font-size: clamp(24px, 4.6vh, 56px);
+  font-size: clamp(24px, 4.6cqh, 56px);
   margin: 0;
   line-height: 1.1;
 }
-.admin-privacy { font-size: clamp(11px, 1.6vh, 18px); color: var(--ink-dim); }
+.admin-privacy { font-size: clamp(11px, 1.6cqh, 18px); color: var(--ink-dim); }
 .admin-period {
   font-family: var(--display);
-  font-size: clamp(18px, 3.2vh, 40px);
+  font-size: clamp(18px, 3.2cqh, 40px);
   color: var(--ink);
   background: var(--panel);
   border-radius: 999px;
-  padding: 0.8vh 2.2vw;
+  padding: 0.8cqh 2.2cqw;
   box-shadow: var(--shadow-soft);
   white-space: nowrap;
 }
@@ -1428,77 +1428,77 @@ body.show-cursor, body.show-cursor button { cursor: default; }
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: clamp(18px, 3.4vh, 42px);
+  font-size: clamp(18px, 3.4cqh, 42px);
   color: var(--ink-dim);
 }
 
 .admin-tiles {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 1.2vw;
+  gap: 1.2cqw;
 }
 .admin-tile {
   background: var(--panel);
   border-radius: var(--radius);
-  padding: 1.2vh 1.6vw;
+  padding: 1.2cqh 1.6cqw;
   box-shadow: var(--shadow-soft);
   display: flex;
   flex-direction: column;
-  gap: 0.2vh;
+  gap: 0.2cqh;
 }
-.admin-tile-label { font-size: clamp(12px, 1.9vh, 22px); color: var(--ink-dim); }
+.admin-tile-label { font-size: clamp(12px, 1.9cqh, 22px); color: var(--ink-dim); }
 .admin-tile-value {
   font-family: var(--display);
-  font-size: clamp(26px, 5.4vh, 64px);
+  font-size: clamp(26px, 5.4cqh, 64px);
   line-height: 1.05;
 }
-.admin-tile-note { font-size: clamp(12px, 1.8vh, 20px); color: var(--ink-dim); }
+.admin-tile-note { font-size: clamp(12px, 1.8cqh, 20px); color: var(--ink-dim); }
 
 .admin-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1.2vw;
+  gap: 1.2cqw;
   min-height: 0;
 }
 
 .admin-panel {
   background: var(--panel);
   border-radius: var(--radius);
-  padding: 1.2vh 1.6vw 1.4vh;
+  padding: 1.2cqh 1.6cqw 1.4cqh;
   box-shadow: var(--shadow-soft);
   display: flex;
   flex-direction: column;
-  gap: 0.9vh;
+  gap: 0.9cqh;
   min-height: 0;
   overflow: hidden;    /* 낮은 화면에서 내용이 옆 판 위로 새지 않게 */
 }
 .admin-panel-title {
   font-family: var(--display);
-  font-size: clamp(16px, 2.6vh, 32px);
-  margin: 0 0 0.3vh;
+  font-size: clamp(16px, 2.6cqh, 32px);
+  margin: 0 0 0.3cqh;
   display: flex;
   align-items: baseline;
-  gap: 1vw;
+  gap: 1cqw;
 }
-.admin-panel-note { font-family: var(--body); font-size: clamp(11px, 1.5vh, 17px); color: var(--ink-dim); }
+.admin-panel-note { font-family: var(--body); font-size: clamp(11px, 1.5cqh, 17px); color: var(--ink-dim); }
 
 .admin-row {
   display: grid;
   grid-template-columns: minmax(6.5em, auto) 1fr auto;
   align-items: center;
-  gap: 1vw;
-  font-size: clamp(13px, 2vh, 24px);
+  gap: 1cqw;
+  font-size: clamp(13px, 2cqh, 24px);
 }
-.admin-row-label { display: flex; align-items: center; gap: 0.6vw; white-space: nowrap; }
+.admin-row-label { display: flex; align-items: center; gap: 0.6cqw; white-space: nowrap; }
 .admin-dot {
-  width: clamp(12px, 1.9vh, 22px);
-  height: clamp(12px, 1.9vh, 22px);
+  width: clamp(12px, 1.9cqh, 22px);
+  height: clamp(12px, 1.9cqh, 22px);
   border-radius: 50%;
   flex: 0 0 auto;
   box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.8);
 }
 .admin-bar {
-  height: clamp(12px, 2.2vh, 26px);
+  height: clamp(12px, 2.2cqh, 26px);
   background: var(--bg-2);
   border-radius: 999px;
   overflow: hidden;
@@ -1516,8 +1516,8 @@ body.show-cursor, body.show-cursor button { cursor: default; }
 .admin-hour-bars {
   display: grid;
   grid-template-columns: repeat(24, 1fr);
-  gap: 0.3vw;
-  height: clamp(44px, 9vh, 110px);
+  gap: 0.3cqw;
+  height: clamp(44px, 9cqh, 110px);
 }
 .admin-hour { display: flex; flex-direction: column; min-width: 0; }
 .admin-hour-bar {
@@ -1530,42 +1530,42 @@ body.show-cursor, body.show-cursor button { cursor: default; }
 }
 .admin-hour-fill { width: 100%; background: var(--mint); border-radius: 6px 6px 0 0; }
 .admin-hour-label {
-  font-size: clamp(9px, 1.4vh, 15px);
+  font-size: clamp(9px, 1.4cqh, 15px);
   color: var(--ink-dim);
   text-align: center;
   height: 1.3em;
   line-height: 1.3em;
 }
 
-.admin-foot { font-size: clamp(11px, 1.6vh, 18px); color: var(--ink-dim); text-align: right; }
+.admin-foot { font-size: clamp(11px, 1.6cqh, 18px); color: var(--ink-dim); text-align: right; }
 
 .admin-legend {
   flex: 0 0 auto;
   display: flex;
-  gap: 1.2vw;
+  gap: 1.2cqw;
   flex-wrap: wrap;
   justify-content: center;
 }
 .admin-key {
   display: flex;
   align-items: center;
-  gap: 0.6vw;
+  gap: 0.6cqw;
   background: var(--panel);
   border-radius: 999px;
-  padding: 0.7vh 1.4vw;
-  font-size: clamp(12px, 1.9vh, 22px);
+  padding: 0.7cqh 1.4cqw;
+  font-size: clamp(12px, 1.9cqh, 22px);
   box-shadow: var(--shadow-soft);
 }
 
 .admin-toast {
   position: absolute;
   left: 50%;
-  bottom: calc(var(--brand-h) + 7vh);
+  bottom: calc(var(--brand-h) + 7cqh);
   transform: translate(-50%, 10px);
   background: var(--ink);
   color: #fff;
-  font-size: clamp(13px, 2.1vh, 26px);
-  padding: 1vh 2.4vw;
+  font-size: clamp(13px, 2.1cqh, 26px);
+  padding: 1cqh 2.4cqw;
   border-radius: 999px;
   opacity: 0;
   transition: opacity 160ms, transform 160ms;
@@ -1576,41 +1576,41 @@ body.show-cursor, body.show-cursor button { cursor: default; }
 
 /* ---------------- 세로 화면 대응 (개발용 모바일 테스트) ---------------- */
 
-@media (orientation: portrait) {
+@container seat (orientation: portrait) {
   /* 세로 화면에서는 4칸을 한 줄에 못 놓으니 2×2 로 접는다.
      대신 세로로 길어지므로 높이를 눌러 화면 밖으로 나가지 않게 한다. */
   .recall-input-row, .select-grid { grid-template-columns: repeat(2, 1fr); }
-  .select-grid { height: auto; min-height: 46vh; }
+  .select-grid { height: auto; min-height: 46cqh; }
   .recall-choice .recall-input-row {
     height: auto;
-    max-height: 46vh;
-    gap: clamp(8px, 2vw, 20px);
+    max-height: 46cqh;
+    gap: clamp(8px, 2cqw, 20px);
   }
   .card { aspect-ratio: 4 / 3; min-height: 0; }
-  .card-digit { font-size: clamp(40px, 9vh, 110px); }
+  .card-digit { font-size: clamp(40px, 9cqh, 110px); }
 
-  .pad { max-height: 20vh; max-width: 20vh; }
-  .present-stage { width: 92vw; max-height: 42vh; }
+  .pad { max-height: 20cqh; max-width: 20cqh; }
+  .present-stage { width: 92cqw; max-height: 42cqh; }
 
-  .recall-prompt { font-size: clamp(20px, 3.4vh, 40px); }
-  .strip-row { gap: clamp(6px, 1.6vw, 12px); }
-  .slot { width: clamp(30px, 5.4vh, 60px); height: clamp(30px, 5.4vh, 60px); border-radius: 14px; }
+  .recall-prompt { font-size: clamp(20px, 3.4cqh, 40px); }
+  .strip-row { gap: clamp(6px, 1.6cqw, 12px); }
+  .slot { width: clamp(30px, 5.4cqh, 60px); height: clamp(30px, 5.4cqh, 60px); border-radius: 14px; }
 
   /* 세로에서는 캐릭터가 자리를 많이 먹으므로 더 줄인다 */
-  .present-torus .torus { --char-h: clamp(46px, 8vh, 90px); }
+  .present-torus .torus { --char-h: clamp(46px, 8cqh, 90px); }
 
   /* 운영자 화면: 타일 2×2, 패널 한 줄. 시간대 그래프는 자리가 없어 뺀다. */
   .admin-tiles { grid-template-columns: repeat(2, 1fr); }
-  .admin-tile-value { font-size: clamp(22px, 4vh, 48px); }
+  .admin-tile-value { font-size: clamp(22px, 4cqh, 48px); }
   .admin-grid { grid-template-columns: 1fr; }
-  .admin-head { flex-direction: column; align-items: flex-start; gap: 1vh; }
+  .admin-head { flex-direction: column; align-items: flex-start; gap: 1cqh; }
   .admin-hours { display: none; }
 
   /* 기억폭 카드: 세로에서는 눈금 위, 글 아래로 쌓는다 */
-  .span-card { grid-template-columns: 1fr; max-width: 92vw; row-gap: 0.8vh; padding: 1.4vh 4vw; }
+  .span-card { grid-template-columns: 1fr; max-width: 92cqw; row-gap: 0.8cqh; padding: 1.4cqh 4cqw; }
   .span-meter { grid-row: auto; }
   .span-fact, .span-tip { text-align: center; }
-  .allclear-torus .torus { --char-h: clamp(70px, 14vh, 160px); }
+  .allclear-torus .torus { --char-h: clamp(70px, 14cqh, 160px); }
 }
 
 /* ---------------- 모션 최소화 선호 ---------------- */
@@ -1627,4 +1627,267 @@ body.show-cursor, body.show-cursor button { cursor: default; }
   }
   /* 흔들림을 못 쓰니 테두리만으로 확실히 구분되게 둔다 */
   .slot.wrong { transform: scale(1.06); }
+}
+
+/* ==================================================================
+   좌석 (책상 하나 = 좌석 하나)
+   실물 키오스크는 파이 한 대가 모니터 두 대를 3840×1080 한 화면으로 쓴다.
+   좌석마다 container-type:size 를 걸어 두어, 위의 cqw/cqh 단위가 전부
+   "그 좌석의 폭·높이" 기준이 된다. 좌석이 하나면 곧 화면 전체다.
+   ================================================================== */
+
+.seat {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  container-type: size;
+  container-name: seat;
+  overflow: hidden;
+  /* 좌석 배경 — body 배경이 두 화면에 걸쳐 늘어나지 않게 좌석마다 따로 깐다 */
+  background-color: var(--bg-1);
+  background-image: url('assets/background.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+body[data-seats="2"] .seat { width: 50%; }
+body[data-seats="2"] .seat[data-seat="1"] { left: 50%; }
+/* 두 좌석 사이의 이음새 — 모니터 베젤이 실제 경계라 얇게만 */
+body[data-seats="2"] .seat[data-seat="1"]::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 2px;
+  background: rgba(120, 90, 140, 0.15);
+  z-index: 5;
+}
+.seat-app { position: absolute; inset: 0; }
+.seat-overlay { position: absolute; inset: 0; pointer-events: none; z-index: 10; }
+/* body 배경은 좌석이 대신 그리므로 비운다 (좌석 밖이 보일 일은 없다) */
+body[data-seats] { background-image: none; }
+
+/* ---------------- 도전 프롬프트 (흰색 버튼) ---------------- */
+
+.challenge {
+  position: absolute;
+  left: 50%;
+  top: calc(var(--hud-h) + 2cqh);
+  transform: translateX(-50%);
+  width: min(78cqw, 900px);
+  background: var(--panel);
+  border-radius: var(--radius);
+  box-shadow: 0 16px 40px rgba(120, 90, 140, 0.35);
+  padding: 2cqh 3cqw 1.8cqh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.9cqh;
+  text-align: center;
+  z-index: 20;
+  animation: challengeIn 420ms cubic-bezier(0.2, 1.4, 0.4, 1) both;
+  border: 4px solid #fff;
+}
+.challenge-in { outline: 5px solid var(--sun); }
+.challenge-out { outline: 5px solid var(--lav); }
+@keyframes challengeIn {
+  from { transform: translate(-50%, -30px) scale(0.9); opacity: 0; }
+  to   { transform: translate(-50%, 0) scale(1); opacity: 1; }
+}
+.challenge-title {
+  font-family: var(--display);
+  font-size: clamp(22px, 4.6cqh, 56px);
+  color: var(--ink);
+  line-height: 1.1;
+}
+.challenge-question { font-size: clamp(15px, 2.6cqh, 32px); color: var(--ink); }
+.challenge-keys { display: flex; gap: 2cqw; flex-wrap: wrap; justify-content: center; }
+.challenge-key {
+  display: flex; align-items: center; gap: 0.6cqw;
+  font-size: clamp(13px, 2.1cqh, 26px);
+  color: var(--ink-dim);
+  background: var(--bg-2);
+  border-radius: 999px;
+  padding: 0.7cqh 1.6cqw;
+}
+.challenge-key.accept {
+  color: var(--ink);
+  background: #fff;
+  box-shadow: 0 0 0 3px var(--sun);
+  animation: blink 1.1s ease-in-out infinite;
+}
+.challenge-dot {
+  width: clamp(16px, 2.6cqh, 32px); height: clamp(16px, 2.6cqh, 32px);
+  border-radius: 50%; flex: 0 0 auto;
+}
+.challenge-dot.white { background: #fff; box-shadow: 0 0 0 3px #d9d0ee, 0 0 12px rgba(255,255,255,.9); }
+.challenge-bar {
+  width: 100%;
+  height: clamp(10px, 1.8cqh, 20px);
+  background: var(--bg-2);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-top: 0.4cqh;
+}
+.challenge-fill {
+  height: 100%;
+  width: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--sun), var(--pink));
+  transition: width 60ms linear;
+}
+
+.vs-toast {
+  position: absolute;
+  left: 50%;
+  top: calc(var(--hud-h) + 2cqh);
+  transform: translate(-50%, -10px);
+  background: var(--ink);
+  color: #fff;
+  font-family: var(--display);
+  font-size: clamp(16px, 3cqh, 36px);
+  padding: 1.2cqh 2.8cqw;
+  border-radius: 999px;
+  opacity: 0;
+  transition: opacity 200ms, transform 200ms;
+  z-index: 20;
+  white-space: nowrap;
+}
+.vs-toast.on { opacity: 1; transform: translate(-50%, 0); }
+
+/* ---------------- 대결 점수판 (HUD 자리) ---------------- */
+
+.hud.versus .hud-hearts, .hud.versus .hud-stage, .hud.versus .hud-dots { visibility: hidden; }
+
+.vs-bar {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+  height: var(--hud-h);
+  display: flex;
+  align-items: center;
+  gap: 2.4cqw;
+  padding: 0 3cqw;
+  z-index: 12;
+}
+.vs-side { display: flex; align-items: center; gap: 0.8cqw; }
+.vs-label { font-size: clamp(13px, 2.2cqh, 26px); color: var(--ink-dim); }
+.vs-score {
+  font-family: var(--display);
+  font-size: clamp(30px, 6cqh, 74px);
+  line-height: 1;
+  color: #fff;
+  background: var(--lav);
+  border-radius: 18px;
+  padding: 0.4cqh 1.4cqw;
+  box-shadow: var(--shadow-soft);
+  min-width: 1.4em;
+  text-align: center;
+}
+.vs-score.me { background: var(--mint); }
+.vs-score.opp { background: var(--pink); }
+.vs-mid { display: flex; flex-direction: column; align-items: center; gap: 0.5cqh; }
+.vs-round {
+  font-family: var(--display);
+  font-size: clamp(15px, 2.6cqh, 32px);
+  color: var(--ink);
+  background: var(--panel);
+  border-radius: 999px;
+  padding: 0.4cqh 1.6cqw;
+  box-shadow: var(--shadow-soft);
+}
+.vs-bar.sudden .vs-round { background: var(--c-red); color: #fff; animation: blink 0.8s ease-in-out infinite; }
+.vs-opp-dots { display: flex; align-items: center; gap: 0.5cqw; }
+.vs-opp-label { font-size: clamp(11px, 1.7cqh, 20px); color: var(--ink-dim); margin-right: 0.3cqw; }
+.vs-dot {
+  width: clamp(10px, 1.7cqh, 20px); height: clamp(10px, 1.7cqh, 20px);
+  border-radius: 50%;
+  background: var(--bg-2);
+  box-shadow: 0 0 0 2px #fff;
+}
+.vs-dot.done { background: var(--pink); }
+
+/* ---------------- 대결 씬들 ---------------- */
+
+.vs-body {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2cqh;
+  min-height: 0;
+  padding: calc(var(--hud-h) + 1cqh) 4cqw calc(var(--brand-h) + 3cqh);
+}
+.vs-title {
+  font-family: var(--display);
+  font-size: clamp(42px, 10cqh, 120px);
+  margin: 0;
+  color: var(--ink);
+  text-shadow: 0 4px 0 #fff;
+  line-height: 1.05;
+}
+.vs-title.wrong { color: var(--c-red); }
+.vs-title.final { font-size: clamp(50px, 13cqh, 150px); }
+.scene-vs-result.won .vs-title {
+  background: linear-gradient(90deg, var(--c-red), #f59e0b, var(--c-green), var(--c-blue));
+  -webkit-background-clip: text; background-clip: text; color: transparent; text-shadow: none;
+}
+.scene-vs-round.won .vs-title { color: var(--c-green); }
+.scene-vs-round.lost .vs-title { color: var(--ink-dim); }
+.vs-sub { font-size: clamp(15px, 2.6cqh, 32px); color: var(--ink-dim); }
+.vs-rule { font-size: clamp(17px, 3cqh, 38px); color: var(--ink); text-align: center; max-width: 80cqw; line-height: 1.4; }
+.vs-game {
+  font-family: var(--display);
+  font-size: clamp(22px, 4.4cqh, 54px);
+  color: #fff;
+  border-radius: 999px;
+  padding: 0.8cqh 3cqw;
+  box-shadow: var(--shadow-soft);
+  text-shadow: 0 2px 0 rgba(0,0,0,.18);
+}
+.vs-torus .torus { --char-h: clamp(90px, 20cqh, 250px); }
+.vs-torus { display: flex; justify-content: center; }
+.vs-press { font-family: var(--display); font-size: clamp(15px, 2.4cqh, 30px); color: var(--ink-dim); }
+
+.vs-scoreline { display: flex; align-items: center; gap: 2cqw; }
+.vs-big {
+  font-family: var(--display);
+  font-size: clamp(60px, 16cqh, 190px);
+  line-height: 1;
+  color: #fff;
+  border-radius: 28px;
+  padding: 0.6cqh 2.4cqw;
+  box-shadow: var(--shadow-soft);
+  min-width: 1.2em;
+  text-align: center;
+}
+.vs-big.me { background: var(--mint); }
+.vs-big.opp { background: var(--pink); }
+.vs-colon { font-family: var(--display); font-size: clamp(50px, 12cqh, 150px); color: var(--ink-dim); }
+
+.vs-pick-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.6cqw;
+  width: min(88cqw, 1400px);
+  height: min(34cqh, 400px);
+}
+.vs-pick-card {
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-soft);
+  border: 6px solid rgba(255, 255, 255, 0.85);
+  animation: popIn 420ms cubic-bezier(0.2, 1.4, 0.4, 1) both;
+}
+.vs-pick-name {
+  font-family: var(--display);
+  font-size: clamp(28px, 6cqh, 74px);
+  color: #fff;
+  text-shadow: 0 3px 0 rgba(0, 0, 0, 0.2);
 }

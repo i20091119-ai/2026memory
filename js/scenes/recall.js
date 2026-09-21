@@ -46,8 +46,10 @@ function cardContent(kind, value) {
  * @param {import('../state.js').Ctx} ctx
  * @param {{game: number, level: number, round?: number, lives: number}} state
  * @param {ReturnType<import('../games.js').buildRound>} round
- * @param {{onReady?: (k: number, correctButton: number) => void}} [opts]
+ * @param {{onReady?: (k: number, correctButton: number) => void,
+ *          onProgress?: (done: number, total: number) => void}} [opts]
  *   onReady 는 어트랙트 데모가 유령 입력을 넣을 시점을 잡는 데 쓴다.
+ *   onProgress 는 맞힐 때마다 불린다 — 대결에서 상대 화면에 진행을 보여 주는 용도.
  * @returns {Promise<RecallResult>}
  */
 export async function recallScene(ctx, state, round, opts = {}) {
@@ -140,6 +142,11 @@ export async function recallScene(ctx, state, round, opts = {}) {
     entered.push(item.value);
     strip.setEntered(entered);
     hud.setProgress(k + 1, total);
+    opts.onProgress?.(k + 1, total);
+    // 대결에서는 마지막 항목을 맞힌 순간이 곧 완료다 — 연출 대기 없이 바로 알린다.
+    if (done && state.versus) {
+      return { cleared: true, failedIndex: -1, expectedItem: null, pressedValue: null };
+    }
     await sleep(CONFIG.FEEDBACK_MS, ctx.signal);
 
     if (done) return { cleared: true, failedIndex: -1, expectedItem: null, pressedValue: null };

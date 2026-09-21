@@ -1,5 +1,5 @@
 /**
- * state.js — 게임 상태 머신 (구조 v2).
+ * state.js — 게임 상태 머신 (구조 v2). 좌석 하나의 혼자 놀기 루프다.
  *
  * TITLE ─(아무 버튼)→ SELECT(게임 고르기) → GAME_INTRO → 라운드 반복:
  *   PRESENT → RECALL →
@@ -8,6 +8,10 @@
  *
  * 전역: 플레이 중 빨강+파랑 2초 홀드 → 즉시 TITLE.
  *       타이틀에서 노랑+초록 3초 홀드 → ADMIN(운영 기록) → TITLE.
+ *
+ * 바깥 신호(opts.signal)가 중단되면 어느 화면에 있든 루프를 빠져나와 돌아온다.
+ * 옆 좌석과의 대결이 시작될 때 arena.js 가 이렇게 두 좌석의 혼자 놀기를 멈춘다.
+ * 지금 어느 화면인지는 base.onPhase 로 알린다 (도전을 걸어도 되는 때인지 판단용).
  *
  * 판(playCourse)마다 플레이 기록 한 줄을 남긴다 (playlog.js).
  */
@@ -36,22 +40,29 @@ import { attractScene } from './scenes/attract.js';
  */
 
 /**
- * 앱 최상위 루프. 절대 끝나지 않는다 (키오스크).
- * @param {Omit<Ctx, 'signal'>} base
+ * 좌석 하나의 혼자 놀기 루프. 바깥 신호가 중단될 때까지 돌고, 중단되면 돌아온다.
+ * @param {Omit<Ctx, 'signal'> & {onPhase?: (phase: string) => void}} base
+ * @param {{signal?: AbortSignal, cheat?: boolean}} [opts]
+ *   cheat: URL 치트를 이 루프에 적용할지 (좌석이 둘이면 왼쪽만 true)
  */
-export async function runApp(base) {
+export async function runApp(base, opts = {}) {
+  const outer = opts.signal ?? new AbortController().signal;
+  const app = { ...base, outer };
+  const phase = (p) => base.onPhase?.(p);
+
   // 첫 실행이 URL 치트로 시작하는지 기억해 둔다 (한 번만 적용).
-  let pendingCheat = CHEAT;
+  let pendingCheat = opts.cheat === false ? null : CHEAT;
 
   for (;;) {
-    const idle = { ...base, signal: neverAbort() };
+    if (outer.aborted) return;
 
     let action;
     if (pendingCheat) {
       action = 'start';
     } else {
       // 타이틀은 운영자 콤보로 중단될 수 있다. 중단되면 운영 기록 화면으로.
-      const ac = new AbortController();
+      phase('title');
+      const ac = linked(outer);
       let adminWanted = false;
       const offAdmin = base.input.onAdmin(() => { adminWanted = true; ac.abort(); });
       try {
@@ -61,36 +72,42 @@ export async function runApp(base) {
         action = adminWanted ? 'admin' : 'title';
       } finally {
         offAdmin();
+        ac.release();
       }
     }
 
+    if (outer.aborted) return;
     if (action === 'title') continue;
 
     if (action === 'admin') {
-      await safeScene(base, (ctx2) => adminScene(ctx2));
+      phase('admin');
+      await safeScene(app, (ctx2) => adminScene(ctx2));
       continue;
     }
 
     if (action === 'attract') {
-      await attractScene(idle);
+      phase('attract');
+      await safeScene(app, (ctx2) => attractScene(ctx2));
       continue;
     }
 
     // 게임 선택 → 플레이. 게임오버에서 "다른 게임 고르기"를 누르면
     // 타이틀을 거치지 않고 선택 화면으로 곧장 돌아온다.
     for (;;) {
+      if (outer.aborted) return;
       let start;
       if (pendingCheat) {
         // 개발용 치트로 시작한 판은 기록에 남기지 않는다
         start = { ...pendingCheat, cheat: true };
         pendingCheat = null;
       } else {
-        const picked = await safeScene(base, (ctx2) => selectScene(ctx2));
+        phase('select');
+        const picked = await safeScene(app, (ctx2) => selectScene(ctx2));
         if (picked === 'title' || picked === undefined) break;
         start = { game: picked, level: 1, round: 1 };
       }
 
-      const outcome = await playCourse(base, start);
+      const outcome = await playCourse(app, start);
       if (outcome !== 'select') break; // 'title'
     }
   }
@@ -98,11 +115,12 @@ export async function runApp(base) {
 
 /**
  * 고른 게임 한 판. 게임오버에서 컨티뉴를 고르면 같은 판 안에서 이어진다.
- * @param {Omit<Ctx, 'signal'>} base
- * @param {{game: number, level: number, round: number}} start
+ * @param {object} app runApp 이 만든 좌석 컨텍스트 (outer 신호 포함)
+ * @param {{game: number, level: number, round: number, cheat?: boolean}} start
  * @returns {Promise<'title'|'select'>} 다음에 보여 줄 화면
  */
-async function playCourse(base, start) {
+async function playCourse(app, start) {
+  const phase = (p) => app.onPhase?.(p);
   const game = start.game;
   let level = start.level;
   let round = start.round;
@@ -126,10 +144,11 @@ async function playCourse(base, start) {
 
   for (;;) {
     // 중도 이탈(빨+파 2초)은 판 단위로 신호를 새로 건다.
-    const ac = new AbortController();
-    const ctx = { ...base, signal: ac.signal };
+    const ac = linked(app.outer);
+    const ctx = { ...app, signal: ac.signal };
     ctx.input.exitComboEnabled = true;
     const offExit = ctx.input.onExit(() => ac.abort());
+    phase('play');
 
     let outcome;
     try {
@@ -140,6 +159,7 @@ async function playCourse(base, start) {
       return 'title';
     } finally {
       offExit();
+      ac.release();
       ctx.input.exitComboEnabled = false;
       ctx.input.reset();
     }
@@ -147,12 +167,14 @@ async function playCourse(base, start) {
     if (outcome.kind === 'allClear') {
       record('clear');
       const clearCount = bumpAllClear(game);
-      await safeScene(base, (ctx2) => allClearScene(ctx2, { game, clearCount }));
+      phase('allclear');
+      await safeScene(app, (ctx2) => allClearScene(ctx2, { game, clearCount }));
       return 'title';
     }
 
     // 게임 오버 → 컨티뉴 선택
-    const choice = await safeScene(base, (ctx2) =>
+    phase('gameover');
+    const choice = await safeScene(app, (ctx2) =>
       gameOverScene(ctx2, { game, ...progress.reached }));
 
     if (choice === 'continue') {
@@ -235,22 +257,37 @@ async function runFrom(ctx, init) {
 
 /**
  * 중도 이탈이 의미 없는 씬(선택·게임오버·완주)을 안전하게 실행한다.
+ * 바깥 신호가 중단되면 그 씬도 함께 끝난다.
  * @template T
- * @param {Omit<Ctx, 'signal'>} base
+ * @param {{outer: AbortSignal}} app
  * @param {(ctx: Ctx) => Promise<T>} fn
  * @returns {Promise<T|undefined>}
  */
-async function safeScene(base, fn) {
-  const ctx = { ...base, signal: neverAbort() };
+async function safeScene(app, fn) {
+  const ac = linked(app.outer);
+  const ctx = { ...app, signal: ac.signal };
   try {
     return await fn(ctx);
   } catch (err) {
     if (isExit(err)) return undefined;
     throw err;
+  } finally {
+    ac.release();
   }
 }
 
-/** 절대 중단되지 않는 신호 — 타이틀·결과 화면처럼 이탈 개념이 없는 곳에서 쓴다. */
-function neverAbort() {
-  return new AbortController().signal;
+/**
+ * 바깥 신호에 딸린 AbortController. 바깥이 중단되면 같이 중단된다.
+ * 씬이 끝나면 release() 로 바깥에 건 리스너를 떼어 낸다 — 좌석 하나가 하루에
+ * 수백 씬을 돌므로 떼지 않으면 리스너가 쌓인다.
+ * @param {AbortSignal} outer
+ * @returns {AbortController & {release: () => void}}
+ */
+export function linked(outer) {
+  const ac = new AbortController();
+  const onAbort = () => ac.abort();
+  if (outer.aborted) ac.abort();
+  else outer.addEventListener('abort', onAbort, { once: true });
+  ac.release = () => outer.removeEventListener('abort', onAbort);
+  return ac;
 }

@@ -11,7 +11,7 @@ import assert from 'node:assert/strict';
 import { CONFIG, COLORS, COLOR_TONES } from '../js/config.js';
 import { SHAPE_PATHS, SHAPE_NAMES } from '../js/shapes.js';
 import { STR } from '../js/strings.js';
-import { poolFor, GAME_SHAPE, GAME_DIGIT } from '../js/games.js';
+import { poolFor, GAME_SHAPE, GAME_DIGIT, WHITE } from '../js/games.js';
 import { MOODS } from '../js/torus.js';
 
 test('config.SHAPES 의 모든 모양이 shapes.js 에 그려져 있다', () => {
@@ -39,11 +39,29 @@ test('색 관련 배열은 전부 4개 (0=빨 1=노 2=초 3=파)', () => {
   assert.equal(COLORS.length, 4);
   assert.equal(COLOR_TONES.length, 4);
   assert.equal(STR.COLOR_NAME.length, 4);
-  assert.equal(Object.keys(CONFIG.KEY_MAP).length, 4);
 });
 
-test('키보드 매핑이 버튼 인덱스 0..3 을 빠짐없이 덮는다', () => {
-  assert.deepEqual(Object.values(CONFIG.KEY_MAP).sort(), [0, 1, 2, 3]);
+test('버튼은 5개 — 색 4개 + 흰색(도전 전용)', () => {
+  assert.equal(CONFIG.BUTTONS, 5);
+  assert.equal(WHITE, 4);
+});
+
+test('키보드 매핑이 좌석마다 버튼 0..4 를 빠짐없이 덮고, 두 좌석의 키가 겹치지 않는다', () => {
+  assert.equal(CONFIG.KEY_MAPS.length, 2);
+  for (const map of CONFIG.KEY_MAPS) {
+    assert.deepEqual(Object.values(map).sort(), [0, 1, 2, 3, 4]);
+  }
+  const keys0 = Object.keys(CONFIG.KEY_MAPS[0]), keys1 = Object.keys(CONFIG.KEY_MAPS[1]);
+  assert.equal(keys0.filter((k) => keys1.includes(k)).length, 0);
+  assert.ok(!keys0.includes(CONFIG.ADMIN_KEY) && !keys1.includes(CONFIG.ADMIN_KEY), '운영자 키가 버튼 키와 겹친다');
+  assert.equal(CONFIG.KEY_MAP, CONFIG.KEY_MAPS[0]);
+});
+
+test('게임패드(인코더) 번호표가 좌석마다 5개, 서로 겹치지 않는다', () => {
+  assert.equal(CONFIG.GAMEPAD_MAPS.length, 2);
+  const all = CONFIG.GAMEPAD_MAPS.flat();
+  assert.equal(new Set(all).size, all.length);
+  for (const m of CONFIG.GAMEPAD_MAPS) assert.equal(m.length, CONFIG.BUTTONS);
 });
 
 test('회상 프롬프트가 최대 항목 수만큼, 세 종류 모두 준비되어 있다', () => {

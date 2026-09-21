@@ -29,7 +29,8 @@ export async function titleScene(ctx) {
       }),
     ),
     el('div.title-press.blink', { text: STR.TITLE_START }),
-    el('div.title-keyhint', { text: '키보드 1 2 3 4 = 빨 노 초 파' }),
+    // 좌석마다 키가 다르다 (왼쪽 1 2 3 4, 오른쪽 Q W E R). main.js 가 넣어 준다.
+    el('div.title-keyhint', { text: ctx.keyHint ?? STR.TITLE_KEYHINT('1 2 3 4') }),
   );
 
   mount(ctx.root, node);
