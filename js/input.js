@@ -10,12 +10,17 @@
  *   'script' — 어트랙트 데모의 유령 입력
  */
 import { CONFIG } from './config.js';
-import { RED, BLUE } from './games.js';
+import { RED, YELLOW, GREEN, BLUE } from './games.js';
 
 /**
  * 눌림/뗌 이벤트를 모아 게임이 쓰기 좋은 형태로 바꿔 주는 허브.
  * - onButton 은 'down' 에서만 발화한다 (§5.2).
- * - 'up' 은 홀드 콤보(빨+파 2초) 추적에만 쓴다.
+ * - 'up' 은 홀드 콤보 추적에만 쓴다.
+ *
+ * 홀드 콤보는 두 가지다. "두 버튼을 동시에 누른 채 버틴 시간"으로 성립한다.
+ *   exit  빨강+파랑 · 플레이 중에만  → 타이틀로
+ *   admin 노랑+초록 · 플레이 밖에서만 → 운영자 화면 (타이틀에서 연다)
+ * 서로 배타적이라 한 순간에 하나만 돌고, 어느 쪽인지는 holdKind() 로 알 수 있다.
  */
 export class InputManager {
   constructor(config = CONFIG) {
@@ -26,10 +31,14 @@ export class InputManager {
     this._buttonHandlers = new Set();
     /** @type {Set<() => void>} */
     this._exitHandlers = new Set();
+    /** @type {Set<() => void>} */
+    this._adminHandlers = new Set();
     /** @type {Set<(ev: object) => void>} 눌림/뗌 원본 (홀드 진행 표시용) */
     this._rawHandlers = new Set();
     this._lastDownAt = 0;
     this._holdTimer = null;
+    this._holdKind = null;
+    this._holdMs = 0;
     this._holdStartedAt = 0;
     /** 중도 이탈 콤보 활성화 여부 (타이틀에서는 끈다) */
     this.exitComboEnabled = false;
@@ -49,6 +58,12 @@ export class InputManager {
   onExit(handler) {
     this._exitHandlers.add(handler);
     return () => this._exitHandlers.delete(handler);
+  }
+
+  /** 운영자 콤보(노+초 홀드) 성립 시 호출 */
+  onAdmin(handler) {
+    this._adminHandlers.add(handler);
+    return () => this._adminHandlers.delete(handler);
   }
 
   /** 눌림/뗌 원본 이벤트 구독 (홀드 게이지 표시용) */
@@ -92,30 +107,39 @@ export class InputManager {
     setTimeout(() => this.emit('up', id, 'script'), holdMs);
   }
 
-  /** 빨강+파랑이 동시에 눌려 있는 동안만 타이머를 돌린다. */
+  /** 지금 눌린 조합이 어느 콤보인가. 없으면 null. */
+  _activeCombo() {
+    const has = (a, b) => this.pressed.has(a) && this.pressed.has(b);
+    if (this.exitComboEnabled) return has(RED, BLUE) ? 'exit' : null;
+    return has(YELLOW, GREEN) ? 'admin' : null;
+  }
+
+  /** 콤보 조합이 눌려 있는 동안만 타이머를 돌린다. */
   _updateHold() {
-    const comboHeld = this.pressed.has(RED) && this.pressed.has(BLUE);
-    if (comboHeld && this.exitComboEnabled) {
-      if (this._holdTimer) return;
-      this._holdStartedAt = performance.now();
-      this._holdTimer = setTimeout(() => {
-        this._holdTimer = null;
-        // 콤보가 풀리지 않고 유지된 경우에만 성립
-        if (this.pressed.has(RED) && this.pressed.has(BLUE)) {
-          for (const h of [...this._exitHandlers]) h();
-        }
-      }, this.config.EXIT_HOLD_MS);
-    } else {
-      this._cancelHold();
-    }
+    const kind = this._activeCombo();
+    if (kind === this._holdKind) return;   // 이미 그 콤보의 타이머가 도는 중 (또는 둘 다 없음)
+    this._cancelHold();
+    if (!kind) return;
+
+    const ms = kind === 'exit' ? this.config.EXIT_HOLD_MS : this.config.ADMIN_HOLD_MS;
+    this._holdKind = kind;
+    this._holdMs = ms;
+    this._holdStartedAt = performance.now();
+    this._holdTimer = setTimeout(() => {
+      this._holdTimer = null;
+      this._holdKind = null;
+      // 콤보가 풀리지 않고 유지된 경우에만 성립
+      if (this._activeCombo() !== kind) return;
+      const handlers = kind === 'exit' ? this._exitHandlers : this._adminHandlers;
+      for (const h of [...handlers]) h();
+    }, ms);
   }
 
   _cancelHold() {
-    if (this._holdTimer) {
-      clearTimeout(this._holdTimer);
-      this._holdTimer = null;
-      this._holdStartedAt = 0;
-    }
+    if (this._holdTimer) clearTimeout(this._holdTimer);
+    this._holdTimer = null;
+    this._holdKind = null;
+    this._holdStartedAt = 0;
   }
 
   /**
@@ -128,15 +152,27 @@ export class InputManager {
     for (const h of [...this._exitHandlers]) h();
   }
 
-  /** 지금 이탈 콤보를 누르고 있는 중인가 (게이지를 띄울지 판단용) */
+  /** 운영자 화면을 바로 요청한다 (키보드 경로). 플레이 중에는 무시한다. */
+  requestAdmin() {
+    if (this.exitComboEnabled) return;
+    this._cancelHold();
+    for (const h of [...this._adminHandlers]) h();
+  }
+
+  /** 지금 콤보를 누르고 있는 중인가 (게이지를 띄울지 판단용) */
   isHolding() {
     return this._holdTimer !== null;
+  }
+
+  /** 누르고 있는 콤보 종류 'exit'|'admin', 없으면 null (게이지 문구용) */
+  holdKind() {
+    return this._holdKind;
   }
 
   /** 홀드 진행률 0..1 (게이지 길이용). 막 시작한 순간엔 0 이므로 isHolding() 과 함께 쓴다. */
   holdProgress() {
     if (!this._holdTimer) return 0;
-    return Math.min(1, (performance.now() - this._holdStartedAt) / this.config.EXIT_HOLD_MS);
+    return Math.min(1, (performance.now() - this._holdStartedAt) / this._holdMs);
   }
 
   /** 씬 전환 시 눌림 상태를 털어낸다 (키가 눌린 채 씬이 바뀌는 경우 대비) */
@@ -183,6 +219,12 @@ export class KeyboardInput {
     if (ev.key === 'Escape') {
       ev.preventDefault();
       this.manager.requestExit();
+      return;
+    }
+    // 운영자 화면 (실기에서는 타이틀에서 노랑+초록 3초 홀드가 정식 경로)
+    if (ev.key === this.config.ADMIN_KEY) {
+      ev.preventDefault();
+      this.manager.requestAdmin();
       return;
     }
 

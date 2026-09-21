@@ -49,6 +49,41 @@ export const STR = {
   /* 홈으로 돌아가기 */
   HOME_HINT: '빨강+파랑 2초 = 홈',
   HOME_HOLDING: '홈으로 돌아가는 중…',
+  ADMIN_HOLDING: '운영 기록 여는 중…',
+
+  /* 운영자 화면 — 타이틀에서 노랑+초록 3초 홀드 (브라우저는 0 키) */
+  ADMIN_TITLE: '운영 기록',
+  ADMIN_PRIVACY: '이 기기 안에만 저장 · 개인정보 없음',
+  ADMIN_PERIOD: {
+    today: '오늘',
+    month: '이번 달',
+    lastMonth: '지난 달',
+    all: '전체',
+  },
+  ADMIN_EMPTY: '이 기간에는 기록이 없어요',
+  ADMIN_STAT_PLAYS: '플레이',
+  ADMIN_STAT_CLEARS: '완주',
+  ADMIN_STAT_QUITS: '중도 이탈',
+  ADMIN_STAT_TIME: '한 판 시간',
+  ADMIN_STAT_TIME_NOTE: '중간값',
+  ADMIN_UNIT_PLAYS: (n) => `${n.toLocaleString('ko-KR')}판`,
+  ADMIN_BY_GAME: '게임별',
+  ADMIN_GAME_LINE: (plays, rate) =>
+    `${plays.toLocaleString('ko-KR')}판${rate === null ? '' : ` · 완주 ${Math.round(rate * 100)}%`}`,
+  ADMIN_FUNNEL: '어디까지 갔나',
+  ADMIN_FUNNEL_LEVEL: (n) => `${n}개 기억`,
+  ADMIN_FUNNEL_CLEAR: '완주',
+  ADMIN_FUNNEL_NOTE: '판 수 대비 그 단계에 들어선 비율',
+  ADMIN_HOURS: '시간대별 플레이',
+  ADMIN_LAST: (when) => `마지막 기록 ${when}`,
+  ADMIN_KEY_CLOSE: '빨강 · 닫기',
+  ADMIN_KEY_PERIOD: '노랑 · 기간 바꾸기',
+  ADMIN_KEY_CSV: '초록 · CSV 저장',
+  ADMIN_KEY_CLEAR: '파랑 두 번 · 기록 지우기',
+  ADMIN_CSV_SAVED: (name) => `다운로드 폴더에 저장했어요 · ${name}`,
+  ADMIN_CSV_EMPTY: '저장할 기록이 없어요',
+  ADMIN_CLEAR_CONFIRM: '정말 지우려면 5초 안에 파랑을 한 번 더',
+  ADMIN_CLEARED: '기록을 모두 지웠어요',
 
   /* HUD */
   HUD_STAGE: (game, level, round) =>

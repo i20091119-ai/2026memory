@@ -57,21 +57,20 @@ socket.onStatus((connected) => {
 });
 socket.connect();
 
-/* ---------------- 중도 이탈 홀드 게이지 ---------------- */
-// 빨+파를 누르고 있는 동안 진행률을 보여 준다. 실수로 눌렀을 때
-// "뭔가 일어나려 한다"를 알 수 있어야 당황하지 않는다.
+/* ---------------- 홀드 게이지 ---------------- */
+// 콤보(빨+파 = 홈, 노+초 = 운영자 화면)를 누르고 있는 동안 진행률을 보여 준다.
+// 실수로 눌렀을 때 "뭔가 일어나려 한다"를 알 수 있어야 당황하지 않는다.
 
 const holdBar = el('div.hold-bar');
-const holdGauge = el('div.hold-gauge', {},
-  holdBar,
-  el('div.hold-text', { text: STR.HOME_HOLDING }),
-);
+const holdText = el('div.hold-text', { text: STR.HOME_HOLDING });
+const holdGauge = el('div.hold-gauge', {}, holdBar, holdText);
 overlay.append(holdGauge);
 
 let holdRaf = null;
 
 input.onRaw(() => {
   if (!input.isHolding() || holdRaf !== null) return;
+  holdText.textContent = input.holdKind() === 'admin' ? STR.ADMIN_HOLDING : STR.HOME_HOLDING;
   const step = () => {
     if (!input.isHolding()) {          // 콤보가 풀렸다 — 게이지를 접는다
       holdGauge.classList.remove('on');

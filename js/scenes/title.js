@@ -2,7 +2,7 @@
  * scenes/title.js — 타이틀 화면 (설계명세서 §4).
  * 아무 버튼이나 누르면 게임 시작, 60초 방치하면 어트랙트 데모로 넘어간다.
  */
-import { el, multiline, mount, waitButton } from '../util.js';
+import { el, multiline, mount, waitRelease } from '../util.js';
 import { STR } from '../strings.js';
 import { CONFIG } from '../config.js';
 import { createMascot } from '../mascot.js';
@@ -33,10 +33,14 @@ export async function titleScene(ctx) {
   );
 
   mount(ctx.root, node);
-  // 타이틀에서는 중도 이탈 콤보가 의미 없다 (이미 타이틀이므로).
+  // 타이틀에서는 중도 이탈 콤보가 의미 없다 (이미 타이틀이므로). 대신 운영자 콤보가 산다.
   ctx.input.exitComboEnabled = false;
+  // 직전 화면에서 누른 버튼의 '뗌'이 여기로 넘어와 곧장 시작시키지 않도록 털어낸다.
+  ctx.input.reset();
 
-  const pressed = await waitButton(ctx.input, ctx.signal, {
+  // 뗌(up)에서 시작한다 — 노랑+초록을 누르고 있는 동안은 시작되지 않아야
+  // 운영자 화면 홀드가 가능하다 (util.waitRelease 의 설명 참조).
+  const pressed = await waitRelease(ctx.input, ctx.signal, {
     timeoutMs: CONFIG.ATTRACT_IDLE_MS,
   });
 

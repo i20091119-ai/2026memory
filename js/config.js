@@ -22,6 +22,9 @@ export const CONFIG = {
   KEY_MAP: { '1': 0, '2': 1, '3': 2, '4': 3 },   // 테스트용 키보드
   ATTRACT_IDLE_MS: 60000,    // 타이틀 방치 → 어트랙트 데모
   EXIT_HOLD_MS: 2000,        // 빨+파 홀드 → 타이틀 복귀
+  ADMIN_HOLD_MS: 3000,       // 타이틀에서 노+초 홀드 → 운영자 화면
+  ADMIN_KEY: '0',            // 브라우저에서 운영자 화면을 여는 키
+  ADMIN_IDLE_MS: 90000,      // 운영자 화면 방치 → 타이틀
   GAMEOVER_IDLE_MS: 15000,   // 게임오버 방치 → 타이틀
   INTRO_MIN_MS: 600,         // 차수 안내: 이 시간 동안은 입력을 안 받는다(오입력 방지)
   LEVEL_CLEAR_MS: 1000,      // 단계 클리어 연출

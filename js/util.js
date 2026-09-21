@@ -76,6 +76,48 @@ export function waitButton(input, signal, opts = {}) {
 }
 
 /**
+ * 버튼을 "눌렀다 뗀" 순간을 기다린다 — 타이틀 전용.
+ *
+ * 타이틀은 아무 버튼이나 누르면 시작인데, 눌림(down) 순간에 시작해 버리면
+ * 노랑+초록 홀드(운영자 화면)를 시도하는 첫 번째 눌림에서 게임이 시작돼 버린다.
+ * 뗌(up)에서 시작하면 누르고 있는 동안은 아무 일도 없어 홀드와 공존한다.
+ * 사람 눈에는 여전히 "누르면 시작"이다 (클릭이 mouseup 에서 나는 것과 같다).
+ *
+ * @param {import('./input.js').InputManager} input
+ * @param {AbortSignal} [signal]
+ * @param {{timeoutMs?: number}} [opts]
+ * @returns {Promise<{id: number, source: string}|null>} 타임아웃이면 null
+ */
+export function waitRelease(input, signal, opts = {}) {
+  const { timeoutMs = 0 } = opts;
+  return new Promise((resolve, reject) => {
+    if (signal?.aborted) return reject(new ExitToTitle());
+
+    let timer = null;
+    const off = input.onRaw((ev) => {
+      if (ev.type !== 'up' || ev.source !== 'human') return;
+      cleanup();
+      resolve({ id: ev.id, source: ev.source });
+    });
+
+    function cleanup() {
+      off();
+      if (timer) clearTimeout(timer);
+      signal?.removeEventListener('abort', onAbort);
+    }
+    function onAbort() {
+      cleanup();
+      reject(new ExitToTitle());
+    }
+
+    if (timeoutMs > 0) {
+      timer = setTimeout(() => { cleanup(); resolve(null); }, timeoutMs);
+    }
+    signal?.addEventListener('abort', onAbort, { once: true });
+  });
+}
+
+/**
  * 엘리먼트 생성 도우미.
  * @param {string} tag 'div.klass.klass2' 형태의 축약 표기 허용
  * @param {object} [props] textContent / html / style / 그 밖의 속성
