@@ -33,27 +33,27 @@
 <!-- ============================================================ 1 -->
 <div class="page">
   <h1>토러스 메모리 게임기 — 책상 제작 도면</h1>
-  <div class="sub">경남수학문화관 · 정식 제작 2대(한 쌍, 나란히 설치 — 책상 A 왼쪽 / 책상 B 오른쪽, 좌우 대칭) · 원목 집성 · 단위 mm · 그림은 축척이 아니며 치수 숫자가 기준 · 2026-09 (2판)</div>
+  <div class="sub">경남수학문화관 · 정식 제작 2대(한 쌍, 나란히 설치 — 책상 A 왼쪽 / 책상 B 오른쪽, 좌우 대칭) · <b>전부 원목</b> · 단위 mm · 그림은 축척이 아니며 치수 숫자가 기준 · 2026-09 (3판)</div>
 
   <h2>1. 개요</h2>
   <table>
     <tr><th style="width:17%">본체 크기</th><td><b>800(W) × 600(D) × 700(H)</b> 상판 기준. 등판 포함 전체 높이 <b>1,600</b></td></tr>
-    <tr><th>재질</th><td>상판·다리·등판은 원목 집성(밝은 수종 — 물푸레·자작·너도밤·단풍), 함수율 8~10% 건조재, 투명 오일 마감. <b>하부 박스만 자작 합판 18mm</b>(같은 오일 마감)</td></tr>
-    <tr><th>두께</th><td>상판 <b>40</b> · 다리 <b>50×50</b> 각재 · 등판 기둥 50×50 + 12mm 판(홈에 끼움) · 하부 박스 18mm 합판</td></tr>
-    <tr><th>화면</th><td>27" FHD 모니터, 등판에 <b>VESA 100×100 직결</b>. 화면 중심 높이 <b>1,220</b></td></tr>
-    <tr><th>버튼</th><td>100파이 돔 LED 버튼. <b>색 버튼 4개</b>(빨·노·초·파)는 상판에 매립, <b>흰 버튼 1개(도전)</b>는 따로 떼어 하부 박스 <b>앞면 가운데</b>(높이 860)에. 접착 없이 너트 고정</td></tr>
-    <tr><th>스피커</th><td>Britz BR-1000A2 한 짝(150 × 228 × 161)씩 하부 박스 좌우 칸(내부 <b>170 × 264 × 214</b>) 안. 앞면 사각 그릴 <b>120 × 200</b> 천 마감</td></tr>
-    <tr><th>제어부</th><td>라즈베리파이 5 + USB 인코더 + 멀티탭 + 12V 어댑터, 하부 박스 가운데 칸(내부 388 × 264 × 214). <b>뒤 도어(경첩 + 캠락)로 연다</b>. 책상 A에만 들어감</td></tr>
+    <tr><th>재질</th><td><b>전부 원목 집성</b>(밝은 수종 — 물푸레·자작·너도밤·단풍), 함수율 8~10% 건조재, 투명 오일 마감. 합판·MDF 없음</td></tr>
+    <tr><th>두께</th><td>상판 <b>40</b> · 다리 <b>50×50</b> 각재 · 등판 기둥 50×50 + 15 판(홈에 띄워 끼움) · 하부 박스 판재 <b>20</b></td></tr>
+    <tr><th>화면</th><td>27" FHD 모니터, 등판에 <b>VESA 100×100 직결</b>. 볼트는 판 뒤 <b>가로재 700×100×30</b>(기둥 사이)에 박힌다. 화면 중심 높이 <b>1,220</b></td></tr>
+    <tr><th>버튼</th><td>100파이 돔 LED 버튼 <b>5개 전부 상판에</b> 수평 매립. 색 버튼 4개(빨·노·초·파)는 앞줄(앞에서 170), <b>흰 버튼(도전)은 뒷줄 오른쪽 구석</b>(앞에서 290, 오른쪽 끝에서 100). 접착 없이 너트 고정</td></tr>
+    <tr><th>스피커</th><td>Britz BR-1000A2 한 짝(150 × 228 × 161)씩 하부 박스 좌우 칸(내부 <b>170 × 260 × 200</b>) 안. 앞판 그릴 구멍 <b>110 × 190 (모서리 R15)</b> 천 마감</td></tr>
+    <tr><th>제어부</th><td>라즈베리파이 5 + USB 인코더 + 멀티탭 + 12V 어댑터, 하부 박스 가운데 칸(내부 380 × 260 × 200). 박스 <b>뒷판 전체가 아래로 젖혀지는 문</b>(경첩 2 + 캠락 1). 책상 A에만 들어감</td></tr>
     <tr><th>두 책상 사이</th><td>하부 박스 <b>마주 보는 옆판에만</b> Ø30 통로 1개씩 (A는 오른쪽 옆판, B는 왼쪽 옆판) — HDMI·버튼 신호선·스피커선·전원선. 바깥쪽 옆판에는 구멍 없음</td></tr>
   </table>
 
-  <div class="note"><b>설계 원칙</b> — 원목은 습도에 따라 결 직각 방향으로 움직이므로 원목 부위(상판·다리·등판)에는 <b>큰 사각 컷아웃을 내지 않는다</b>. 모니터는 볼트 4개, 버튼은 Ø25 관통 + 원형 포켓만. 사각 스피커 그릴과 도어가 필요한 하부 박스는 그래서 <b>합판</b>으로 만든다. 상판은 수축을 허용하는 철물(테이블 버튼/장공)로 고정한다.</div>
-  <div class="note"><b>책상 B 는 A 의 좌우 대칭</b> — 다른 점은 딱 두 가지: Ø30 옆판 통로가 반대쪽, 전원선 출구 Ø25 없음. 나머지(버튼·그릴·도어)는 같다.</div>
+  <div class="note"><b>원목 원칙</b> — 넓은 판(상판·등판 판)에는 큰 사각 컷아웃을 내지 않고, 버튼은 Ø25 관통 + 원형 포켓만. 하부 박스 앞판(폭 300)의 그릴 구멍 110×190 은 결 방향으로 긴 구멍이라 판의 움직임에 영향이 없다 — 모서리 R15, 천은 뒤에서 타카. 사장님이 원형을 선호하면 <b>Ø120(우퍼) + Ø55(트위터) 두 구멍</b>으로 대체(스피커 실물에서 위치 실측). 상판은 수축을 허용하는 철물(테이블 버튼/장공)로, 등판 판은 홈에 띄워 끼운다.</div>
+  <div class="note"><b>책상 B 는 A 의 좌우 대칭</b> — 다른 점: 흰 버튼이 뒷줄 <b>왼쪽</b> 구석(두 책상이 붙는 쪽), Ø30 옆판 통로가 반대쪽, 전원선 출구 Ø25 없음. 나머지는 같다.</div>
 
   <h2>2. 정면도 · 측면도 (책상 A)</h2>
   <div class="row">
-    <figure><svg id="front" width="380" height="470"></svg><figcaption>정면 (앞에서). 등판은 뒷다리와 한 몸. 흰 버튼은 하부 박스 앞면.</figcaption></figure>
-    <figure><svg id="side" width="300" height="470"></svg><figcaption>측면 (오른쪽에서). 하부 박스만 250 깊이 × 300 높이, 위 등판은 62.</figcaption></figure>
+    <figure><svg id="front" width="380" height="470"></svg><figcaption>정면 (앞에서). 등판은 뒷다리와 한 몸. 흰 버튼은 뒷줄이라 정면에서는 파랑 뒤에 살짝 보인다.</figcaption></figure>
+    <figure><svg id="side" width="300" height="470"></svg><figcaption>측면 (오른쪽에서). 하부 박스만 240 깊이 × 300 높이, 위 등판은 65.</figcaption></figure>
   </div>
 </div>
 
@@ -61,7 +61,7 @@
 <div class="page">
   <h2>3. 상판 평면 — 버튼 위치</h2>
   <div class="row">
-    <figure><svg id="top" width="440" height="320"></svg><figcaption>위에서. 색 버튼 4개 중심 간격 140, 앞 가장자리에서 170. 뒤 250은 하부 박스 자리.</figcaption></figure>
+    <figure><svg id="top" width="440" height="320"></svg><figcaption>위에서 (책상 A). 색 버튼 앞줄 170, 흰 버튼 뒷줄 290. 뒤 240은 하부 박스 자리.</figcaption></figure>
     <div class="col">
       <table>
         <tr><th>버튼</th><th>색</th><th>중심 X<br><span class="small">왼쪽 끝 기준</span></th><th>중심 Y<br><span class="small">앞 끝 기준</span></th></tr>
@@ -69,14 +69,14 @@
         <tr><td>2</td><td>노랑</td><td>330</td><td>170</td></tr>
         <tr><td>3</td><td>초록</td><td>470</td><td>170</td></tr>
         <tr><td>4</td><td>파랑</td><td>610</td><td>170</td></tr>
-        <tr><td>5</td><td><b>흰색 (도전)</b></td><td colspan="2">상판이 아니라 <b>하부 박스 앞면</b> 가운데 — X 400, 높이 860 (상판에서 160 위)</td></tr>
+        <tr><td>5</td><td><b>흰색 (도전)</b></td><td><b>700</b> (책상 B 는 <b>100</b>)</td><td><b>290</b></td></tr>
       </table>
-      <p class="small">색 버튼 4개는 상판 가운데 정렬. 플랜지 Ø98 사이 간격 42, 양끝 여유 141. 흰 버튼은 게임 버튼과 떨어져 있어 아이가 실수로 누르지 않고, "도전" 버튼임이 한눈에 보인다.</p>
+      <p class="small">색 버튼 4개 가운데 정렬, 플랜지 Ø98 사이 간격 42. 흰 버튼은 뒷줄 구석이라 파랑과 대각선으로 52 떨어지고, 뒤 하부 박스 앞면까지 21 남는다. 가운데 손목 자리(200~340)에는 아무것도 없다.</p>
       <div class="note">버튼 실물의 <b>스템 지름(M24 → Ø25 관통)</b>과 <b>플랜지 지름(Ø98 → Ø100 매립)</b>은 실물을 한 번 재서 확정. 판매 도면 기준 값이다.</div>
     </div>
   </div>
 
-  <h2>4. 버튼 구멍 단면 — 접착 없이 너트로</h2>
+  <h2>4. 버튼 구멍 단면 (5곳 동일) — 접착 없이 너트로</h2>
   <div class="row">
     <figure><svg id="hole" width="400" height="150"></svg><figcaption>상판 40 기준. 위 Ø100×8 매립 → 아래 Ø70×26 포켓 → 가운데 Ø25 관통. 남는 살 6.</figcaption></figure>
     <div class="col">
@@ -85,76 +85,80 @@
         <li><b>아랫면에서 Ø70, 깊이 26</b> — 너트와 스위치 홀더 자리. 라우터 원형 지그.</li>
         <li><b>가운데 Ø25 관통</b> — M24 스템.</li>
       </ol>
-      <p class="small">남는 살 6mm 는 너트가 조이는 자리일 뿐, 돔을 내리치는 힘은 Ø98 플랜지 바깥 링이 두꺼운 원목에 얹혀 받는다. 상판이 50이면 포켓 깊이를 36으로.</p>
-      <p class="small"><b>흰 버튼(합판 18mm 앞판)</b>은 포켓 없이 <b>Ø25 관통 하나</b>. 플랜지는 앞면 위에 얹히고(8mm 튀어나옴) 안쪽에서 너트로 조인다. 원하면 Ø100×6 매립 가능.</p>
+      <p class="small">남는 살 6mm 는 너트가 조이는 자리일 뿐, 돔을 내리치는 힘은 Ø98 플랜지 바깥 링이 두꺼운 원목에 얹혀 받는다. 상판이 50이면 포켓 깊이를 36으로. 흰 버튼도 똑같은 가공.</p>
       <div class="warn">플랜지 허브 둘레의 작은 구멍 4개가 나사 구멍이면 나사 4개(Ø3, 길이 12)로 직접 고정해도 된다. 실물 확인 후 사장님과 결정.</div>
     </div>
   </div>
 
-  <h2>5. 등판 정면 — 모니터 · 스피커 · 도전 버튼</h2>
+  <h2>5. 등판 정면 — 모니터 · 스피커</h2>
   <div class="row">
     <figure><svg id="back" width="420" height="450"></svg><figcaption>앞에서 본 등판. 상판 윗면(700)부터 1,600까지 900.</figcaption></figure>
     <div class="col">
       <table>
         <tr><th>구역 (높이)</th><th>내용</th></tr>
         <tr><td>1,430 ~ 1,600</td><td><b>헤더 사인</b> 자리 (800×170 인쇄 패널을 판 위에 부착). 문화관 다른 교구의 제목 패널과 같은 형식</td></tr>
-        <tr><td>1,037 ~ 1,403</td><td><b>27" 모니터</b>(약 615×366). VESA 100×100 볼트 구멍 4개, 중심 (400, 1,220). 뒤에 보강목 200×200</td></tr>
+        <tr><td>1,037 ~ 1,403</td><td><b>27" 모니터</b>(약 615×366). VESA 100×100 볼트 구멍 4개, 중심 (400, 1,220). 판 뒤 <b>가로재 700×100×30</b>(1,170~1,270)에 인서트 너트 M4 — 무게는 기둥이 받는다</td></tr>
         <tr><td>1,000 ~ 1,037</td><td>여유 (모니터 아랫변이 박스에 닿지 않게)</td></tr>
-        <tr><td>700 ~ 1,000</td><td><b>하부 박스</b> (800 × 300, 깊이 250). 좌우 <b>스피커 그릴 120×200 (천 마감)</b>, 가운데 <b>흰 도전 버튼</b>(400, 860) + 위에 "도전" 글자</td></tr>
+        <tr><td>700 ~ 1,000</td><td><b>하부 박스</b> (800 × 300, 깊이 240). 좌우 <b>스피커 그릴 110×190 (천 마감)</b>, 가운데는 막힌 판</td></tr>
       </table>
-      <p class="small">체험방법·체험미션 안내판은 두지 않는다 (화면이 안내). 모니터는 판 위에 얹혀 튀어나온다. 모니터 뒤 케이블은 VESA 구멍 옆 <b>Ø30 구멍</b>으로 판 뒤로 빠져 하부 박스로 내려간다.</p>
+      <p class="small">체험방법·체험미션 안내판은 두지 않는다 (화면이 안내). 모니터 뒤 케이블은 VESA 옆 <b>Ø30 구멍</b>(520, 1,220)으로 판 뒤로 빠져 하부 박스로 내려간다. 등판 판(15)은 결 세로, 기둥 홈에 양옆 4씩 띄워 끼우고 가운데 볼트 구멍 4개만 고정.</p>
     </div>
   </div>
 </div>
 
 <!-- ============================================================ 3 -->
 <div class="page">
-  <h2>6. 하부 박스 배면 (책상 A) — 도어 · 통풍 · 케이블</h2>
+  <h2>6. 하부 박스 배면 (책상 A) — 뒷판 문 · 통풍 · 케이블</h2>
   <div class="row">
-    <figure><svg id="rear" width="420" height="185"></svg><figcaption>뒤에서 본 하부 박스 (뒤에서 보므로 좌우가 정면과 반대). 가운데 도어, 양옆 스피커 칸 뒷판.</figcaption></figure>
+    <figure><svg id="rear" width="420" height="185"></svg><figcaption>뒤에서 본 하부 박스 (뒤에서 보므로 좌우가 정면과 반대). 뒷판 전체가 아래로 젖혀지는 문.</figcaption></figure>
     <div class="col">
       <ul>
-        <li><b>제어부 도어</b> 380 × 258, 경첩(한쪽) + 캠락(열쇠). <b>뒤에서 열린다</b>. 안에 파이·인코더·멀티탭·12V 어댑터.</li>
-        <li><b>스피커 칸 뒷판</b> 170 × 264 × 12, 나사 4개로 탈착. 스피커 뒤 노브·전원 스위치·플러그는 이 뒷판을 열어 만진다.</li>
-        <li><b>칸 내부</b> 스피커 170 × 264 × 214 (스피커 150 × 228 × 161 → 폭 10·높이 36·<b>뒤 53 여유</b>: RCA 플러그·전원선 자리). 가운데 388 × 264 × 214.</li>
-        <li><b>통풍 슬롯</b> 도어 상단·하단 각 3줄 (8×80). 파이 패시브 케이스는 위아래 공기 흐름만 있으면 된다.</li>
-        <li><b>전원선 출구</b> 도어 아래 오른쪽 Ø25 — <b>책상 A 만</b>. 밖으로 나가는 선은 이것 하나.</li>
+        <li><b>뒷판 문</b> 760 × 260 × 20 한 장. 아랫변에 <b>경첩 2</b>, 윗변 가운데 <b>캠락 1</b>(열쇠). 아래로 젖혀 열면 세 칸이 다 보인다 — 파이·인코더·멀티탭·12V 어댑터, 스피커 뒤 노브·전원 스위치·플러그.</li>
+        <li><b>칸 내부</b> 스피커 170 × 260 × 200 (스피커 150 × 228 × 161 → 폭 10·높이 32·<b>뒤 39 여유</b>). RCA 플러그는 <b>ㄱ자(L형)</b> 로. 가운데 380 × 260 × 200.</li>
+        <li><b>통풍</b> 뒷판 문에 Ø12 구멍 12개 (위·아래 각 6개, 간격 40). 파이 패시브 케이스는 위아래 공기 흐름만 있으면 된다.</li>
+        <li><b>전원선 출구</b> 뒷판 문 아래 오른쪽(뒤에서 봐서) Ø25 — <b>책상 A 만</b>. 밖으로 나가는 선은 이것 하나.</li>
         <li><b>옆판 통로</b> Ø30, 높이 830 — 책상 B 와 닿는 옆판에만. (A 오른쪽 옆판 / B 왼쪽 옆판)</li>
+        <li>문이 뒤에 있으니 벽에서 <b>30cm 이상</b> 띄우거나 뒤로 손이 들어갈 자리를 둔다.</li>
       </ul>
     </div>
   </div>
 
   <h2>7. 두 책상 배치 (위에서)</h2>
   <div class="row">
-    <figure><svg id="pair" width="420" height="165"></svg><figcaption>나란히 붙여 설치. 사이 케이블은 통로로, 밖에선 전원선 한 줄.</figcaption></figure>
+    <figure><svg id="pair" width="420" height="165"></svg><figcaption>나란히 붙여 설치. 흰 버튼은 둘 다 붙는 쪽 구석. 사이 케이블은 통로로, 밖에선 전원선 한 줄.</figcaption></figure>
     <div class="col">
-      <p>책상 A(왼쪽)에 파이·인코더·멀티탭·스피커 액티브 짝. 책상 B(오른쪽)는 모니터·버튼·스피커 패시브 짝만. B 는 A 의 <b>좌우 대칭</b>(통로 구멍이 서로 마주 보게).</p>
-      <p class="small">통로로 지나가는 것: 마이크로HDMI→HDMI 5m 1, 버튼 신호선 5쌍, 스피커선 1, 전원 연장선 1(모니터·LED 어댑터). 도어가 뒤에 있으니 벽에서 <b>30cm 이상</b> 띄우거나 뒤로 손이 들어갈 자리를 둔다.</p>
+      <p>책상 A(왼쪽)에 파이·인코더·멀티탭·스피커 액티브 짝. 책상 B(오른쪽)는 모니터·버튼·스피커 패시브 짝만. B 는 A 의 <b>좌우 대칭</b> — 흰 버튼과 통로 구멍이 서로 마주 본다.</p>
+      <p class="small">통로로 지나가는 것: 마이크로HDMI→HDMI 5m 1, 버튼 신호선 5쌍, 스피커선 1, 전원 연장선 1(모니터·LED 어댑터).</p>
     </div>
   </div>
 
-  <h2>8. 부재표 (책상 1대분)</h2>
+  <h2>8. 부재표 (책상 1대분, 전부 원목)</h2>
   <table>
     <tr><th>부재</th><th>치수 (mm)</th><th>수량</th><th>비고</th></tr>
-    <tr><td>상판</td><td>800 × 600 × 40</td><td>1</td><td>원목 집성. 버튼 가공 4곳(4절). 모서리 R12</td></tr>
+    <tr><td>상판</td><td>800 × 600 × 40</td><td>1</td><td>집성. 버튼 가공 5곳(4절). 모서리 R12</td></tr>
     <tr><td>앞다리</td><td>50 × 50 × 660</td><td>2</td><td>상판 아래 660 + 상판 40 = 700</td></tr>
-    <tr><td>뒷다리 = 등판 기둥</td><td>50 × 50 × 1,570</td><td>2</td><td>바닥에서 한 몸. 위에 가로재 30 얹어 1,600. 안쪽에 12mm 판 홈</td></tr>
+    <tr><td>뒷다리 = 등판 기둥</td><td>50 × 50 × 1,570</td><td>2</td><td>바닥에서 한 몸. 위에 가로재 30 얹어 1,600. 안쪽에 15 판 홈</td></tr>
     <tr><td>에이프런</td><td>80 × 25</td><td>앞뒤 2, 좌우 2</td><td>상판 아래 틀</td></tr>
     <tr><td>등판 윗 가로재</td><td>700 × 50 × 30</td><td>1</td><td>1,570~1,600. 기둥 사이 윗변, 아래에 판 홈</td></tr>
-    <tr><td>등판 판</td><td>700 × 570 × 12</td><td>1</td><td>1,000~1,570. 기둥·윗 가로재 홈에 끼우고 아랫변은 하부 박스 윗판에 나사. VESA 부위 뒤에 <b>보강목 200×200×18</b>, 케이블 Ø30 (520, 1,220)</td></tr>
-    <tr><td>하부 박스</td><td>800 × 300 × 250 (외형)</td><td>1</td><td>자작 합판 18. 앞판(그릴 120×200 ×2, 흰 버튼 Ø25), 윗판, 바닥, 옆판 2(한쪽 Ø30), 칸막이 2, 스피커 뒷판 2(12mm), 제어부 도어 1</td></tr>
-    <tr><td>철물</td><td>—</td><td>—</td><td>VESA 볼트 M4×16 + 와셔 4, 캠락 1, 경첩 2, 테이블 버튼 8, 스피커 천 2장, 고무 발 4, 뒷판 나사 8</td></tr>
+    <tr><td>등판 VESA 가로재</td><td>700 × 100 × 30</td><td>1</td><td>1,170~1,270, 판 <b>뒤</b>에 기둥 사이. 인서트 너트 M4 ×4 (중심 400, 1,220 기준 ±50)</td></tr>
+    <tr><td>등판 판</td><td>700 × 570 × 15</td><td>1</td><td>1,000~1,570. 결 세로, 홈에 띄워 끼움. VESA 볼트 구멍 Ø6 ×4, 케이블 Ø30 (520, 1,220)</td></tr>
+    <tr><td>하부 박스 앞판</td><td>800 × 300 × 20</td><td>1</td><td>그릴 구멍 110×190 R15 ×2 (중심 x 103 / 697, 높이 850)</td></tr>
+    <tr><td>하부 박스 윗판·바닥</td><td>800 × 240 × 20</td><td>2</td><td>바닥은 상판에 나사 (장공)</td></tr>
+    <tr><td>하부 박스 옆판</td><td>260 × 200 × 20</td><td>2</td><td>한쪽(B와 닿는 쪽)에 Ø30, 높이 830</td></tr>
+    <tr><td>하부 박스 칸막이</td><td>260 × 200 × 20</td><td>2</td><td>안쪽 면 기준 190 / 610 위치</td></tr>
+    <tr><td>하부 박스 뒷판 문</td><td>760 × 260 × 20</td><td>1</td><td>아래 경첩, 위 캠락. Ø12 통풍 12, (A만) Ø25 전원 출구</td></tr>
+    <tr><td>철물</td><td>—</td><td>—</td><td>VESA 볼트 M4×20 + 인서트 너트 4, 캠락 1, 경첩 2, 테이블 버튼 8, 스피커 천 2장, 고무 발 4</td></tr>
   </table>
 
   <h2>9. 사장님과 확정할 것</h2>
   <ul>
-    <li>상판 두께 40 인지 50 인지 (50이면 포켓 깊이 36). 등판은 기둥 50×50 + 12mm 판으로 무게를 줄이는 안.</li>
-    <li>수종. 문화관 기존 교구가 밝은 자작나무 톤이라 그에 맞는 밝은 나무 + 투명 마감. 하부 박스 합판도 같은 마감.</li>
+    <li>상판 두께 40 인지 50 인지 (50이면 포켓 깊이 36). 하부 박스 판재 20 이 가능한지 (25 여도 됨 — 그러면 스피커 뒤 여유 29, 박스 깊이를 250 으로 하고 흰 버튼 줄을 280 으로).</li>
+    <li>수종. 문화관 기존 교구가 밝은 자작나무 톤이라 그에 맞는 밝은 나무 + 투명 마감.</li>
+    <li>스피커 그릴 — 사각 110×190 R15 (기본) 인지, 원형 Ø120 + Ø55 두 구멍인지. 원형이면 스피커 실물에서 우퍼·트위터 중심을 재서 준다.</li>
     <li>버튼 실물 스템·플랜지 지름 실측 후 구멍 확정. 라우터 원형 지그 3종(Ø100/Ø70/Ø25).</li>
-    <li>스피커 실물 치수 재확인 — 150 × 228 × 161 기준으로 칸을 잡았고, 뒤 노브·플러그까지 넣어도 53 남는지 실물로 확인.</li>
-    <li>흰 도전 버튼 앞면 높이 860 (상판에서 160 위) — 아이 손 높이에 맞는지.</li>
+    <li>스피커 실물로 확인 — 뒤 노브·스위치·L형 플러그까지 꽂은 깊이가 200 안에 드는지.</li>
     <li>모니터 실물 VESA 위치와 두께 확인 후 케이블 구멍 위치.</li>
-    <li>헤더 사인은 인쇄물 별도 — 판에 붙일 자리(1,430~1,600)만 평평하게. 도전 버튼 위 "도전" 글자는 스티커/각인.</li>
+    <li>헤더 사인은 인쇄물 별도 — 판에 붙일 자리(1,430~1,600)만 평평하게.</li>
   </ul>
 </div>
 
@@ -173,7 +177,7 @@
     n.textContent = t;
     return n;
   };
-  const rect = (svg, x, y, w, h, opts = {}) => mk('rect', { x, y, width: w, height: h, fill: opts.fill ?? '#f3e7d3', stroke: opts.stroke ?? '#333', 'stroke-width': opts.sw ?? 1, ...(opts.dash ? { 'stroke-dasharray': opts.dash } : {}) }, svg);
+  const rect = (svg, x, y, w, h, opts = {}) => mk('rect', { x, y, width: w, height: h, fill: opts.fill ?? '#f3e7d3', stroke: opts.stroke ?? '#333', 'stroke-width': opts.sw ?? 1, ...(opts.rx ? { rx: opts.rx } : {}), ...(opts.dash ? { 'stroke-dasharray': opts.dash } : {}) }, svg);
   const line = (svg, x1, y1, x2, y2, opts = {}) => mk('line', { x1, y1, x2, y2, stroke: opts.stroke ?? '#333', 'stroke-width': opts.sw ?? 1, ...(opts.dash ? { 'stroke-dasharray': opts.dash } : {}) }, svg);
   const circle = (svg, cx, cy, r, opts = {}) => mk('circle', { cx, cy, r, fill: opts.fill ?? 'none', stroke: opts.stroke ?? '#333', 'stroke-width': opts.sw ?? 1, ...(opts.dash ? { 'stroke-dasharray': opts.dash } : {}) }, svg);
   // 치수선 — 수평(h) 또는 수직(v). off = 본체에서 떨어진 거리
@@ -194,16 +198,16 @@
     text(svg, xx + 3, (y1 + y2) / 2, label, { fill: '#1a56db', size: 8, anchor: 'start', rotate: 0 });
   };
   const COLORS = ['#e53935', '#fdd835', '#43a047', '#1e88e5', '#f5f5f5'];
-  const BX = [190, 330, 470, 610];           // 색 버튼 중심 X
-  const BOX_H = 300, BOX_D = 250, BOX_TOP = 700 + BOX_H;   // 하부 박스
-  const GRILL = { w: 120, h: 200, cy: 850, cx: [103, 697] };
-  const WHITE = { x: 400, h: 860 };
-  const DIV = [206, 594];                    // 칸막이 위치 (안쪽 면 기준 대략)
-  // 스피커 그릴 (천) — 정면
+  const BX = [190, 330, 470, 610];           // 색 버튼 중심 X (앞줄 170)
+  const WHITE = { x: 700, y: 290 };          // 흰 버튼 (책상 A)
+  const BOX_H = 300, BOX_D = 240, BOX_TOP = 700 + BOX_H;   // 하부 박스
+  const GRILL = { w: 110, h: 190, cy: 850, cx: [103, 697] };
+  const DIV = [190, 610];                    // 칸막이 (안쪽 면)
   const grill = (s, x, y, w, h) => {
-    rect(s, x, y, w, h, { fill: '#4a4a4a', stroke: '#222' });
+    rect(s, x, y, w, h, { fill: '#4a4a4a', stroke: '#222', rx: 3 });
     for (let i = 1; i < 6; i++) line(s, x, y + h * i / 6, x + w, y + h * i / 6, { stroke: '#666', sw: 0.5 });
   };
+  const dome = (s, cx, yTop, k, color) => mk('path', { d: `M ${cx - 49 * k} ${yTop} a ${49 * k} ${20 * k} 0 0 1 ${98 * k} 0 z`, fill: color, stroke: '#333', 'stroke-width': 0.8 }, s);
 
   /* ---------- 정면도 ---------- */
   {
@@ -217,34 +221,27 @@
     rect(s, X + W - 50 * k, yPanelTop, 50 * k, PH + H, { fill: '#e8d7bb' });
     rect(s, X + 50 * k, yPanelTop, W - 100 * k, 170 * k, { fill: '#e3ecf7', dash: '3 2' });
     text(s, X + W / 2, yPanelTop + 170 * k / 2 + 3, '헤더 사인 800×170 (인쇄)', { size: 7.5, fill: '#1a56db' });
-    // 모니터
     const mW = 615 * k, mH = 366 * k, mCy = y(1220);
     rect(s, X + W / 2 - mW / 2, mCy - mH / 2, mW, mH, { fill: '#2b2b2b', stroke: '#111' });
     rect(s, X + W / 2 - mW / 2 + 3, mCy - mH / 2 + 3, mW - 6, mH - 6, { fill: '#3d4a6b', stroke: 'none' });
     text(s, X + W / 2, mCy + 3, '27" FHD  ·  VESA 100', { fill: '#fff', size: 8 });
-    // 하부 박스 700~1000
     rect(s, X, y(BOX_TOP), W, BOX_H * k, { fill: '#eadcc3' });
     for (const cx of GRILL.cx) grill(s, X + (cx - GRILL.w / 2) * k, y(GRILL.cy + GRILL.h / 2), GRILL.w * k, GRILL.h * k);
-    circle(s, X + WHITE.x * k, y(WHITE.h), 50 * k, { fill: COLORS[4], stroke: '#333' });
-    circle(s, X + WHITE.x * k, y(WHITE.h), 12 * k, { fill: '#ddd', stroke: '#666', sw: 0.5 });
-    text(s, X + WHITE.x * k, y(930), '도전', { size: 7.5, fill: '#333' });
-    text(s, X + WHITE.x * k, y(760) + 2, '흰 버튼 (400, 860)', { size: 6.5, fill: '#555' });
-    // 상판·다리
+    text(s, X + W / 2, y(850) + 3, '스피커 · 제어부 박스 (앞은 막힌 판)', { size: 7 });
+    // 흰 버튼 (뒷줄) — 정면에서는 앞줄 뒤에 보임
+    dome(s, X + WHITE.x * k, yTop, k, COLORS[4]);
     rect(s, X, yTop, W, 40 * k, { fill: '#e8d7bb' });
     rect(s, X, yTop + 40 * k, 50 * k, H - 40 * k, { fill: '#e8d7bb' });
     rect(s, X + W - 50 * k, yTop + 40 * k, 50 * k, H - 40 * k, { fill: '#e8d7bb' });
     rect(s, X + 50 * k, yTop + 40 * k, W - 100 * k, 80 * k, { fill: '#e8d7bb' });
-    for (let i = 0; i < 4; i++) {
-      const cx = X + BX[i] * k;
-      mk('path', { d: `M ${cx - 49 * k} ${yTop} a ${49 * k} ${20 * k} 0 0 1 ${98 * k} 0 z`, fill: COLORS[i], stroke: '#333', 'stroke-width': 0.8 }, s);
-    }
+    for (let i = 0; i < 4; i++) dome(s, X + BX[i] * k, yTop, k, COLORS[i]);
     line(s, X - 15, Y0, X + W + 15, Y0, { sw: 1.4 });
     dimH(s, X, X + W, Y0 + 6, '800', 10);
     dimV(s, yPanelTop, Y0, X + W + 6, '1,600', 10);
     dimV(s, yTop, Y0, X - 6, '700', -22);
     dimV(s, yPanelTop, yTop, X - 6, '900', -22);
     dimV(s, mCy, Y0, X + W + 6, '1,220 (화면 중심)', 30);
-    text(s, X + W / 2, yTop + 40 * k + 80 * k / 2 + 3, '색 버튼 4개  빨 · 노 · 초 · 파 (앞에서 170)', { size: 7 });
+    text(s, X + W / 2, yTop + 40 * k + 80 * k / 2 + 3, '앞줄: 빨 · 노 · 초 · 파 (170)   뒷줄 오른쪽: 흰 (290)', { size: 7 });
   }
 
   /* ---------- 측면도 ---------- */
@@ -254,59 +251,58 @@
     const D = 600 * k, H = 700 * k;
     const y = (h) => Y0 - h * k;
     const yTop = y(700), yPanelTop = y(1600);
-    rect(s, X + D - 62 * k, yPanelTop, 62 * k, 1600 * k - H, { fill: '#e8d7bb' });
+    rect(s, X + D - 65 * k, yPanelTop, 65 * k, 1600 * k - H, { fill: '#e8d7bb' });
     rect(s, X + D - BOX_D * k, y(BOX_TOP), BOX_D * k, BOX_H * k, { fill: '#eadcc3' });
-    // 흰 버튼 — 박스 앞면에서 튀어나옴
-    const bxF = X + D - BOX_D * k, by = y(WHITE.h);
-    mk('path', { d: `M ${bxF} ${by - 49 * k} a ${20 * k} ${49 * k} 0 0 0 0 ${98 * k} z`, fill: COLORS[4], stroke: '#333', 'stroke-width': 0.8 }, s);
-    text(s, bxF - 8, by + 3, '흰 버튼', { size: 7, anchor: 'end' });
     const mCy = y(1220);
-    rect(s, X + D - 62 * k - 45 * k, mCy - 183 * k, 45 * k, 366 * k, { fill: '#2b2b2b', stroke: '#111' });
+    rect(s, X + D - 65 * k - 45 * k, mCy - 183 * k, 45 * k, 366 * k, { fill: '#2b2b2b', stroke: '#111' });
     rect(s, X, yTop, D, 40 * k, { fill: '#e8d7bb' });
     rect(s, X + 20 * k, yTop + 40 * k, 50 * k, H - 40 * k, { fill: '#e8d7bb' });
     rect(s, X + D - 50 * k, yTop + 40 * k, 50 * k, H - 40 * k, { fill: '#e8d7bb' });
     rect(s, X + 70 * k, yTop + 40 * k, D - 120 * k, 80 * k, { fill: '#e8d7bb' });
-    const bx = X + 170 * k;
-    mk('path', { d: `M ${bx - 49 * k} ${yTop} a ${49 * k} ${20 * k} 0 0 1 ${98 * k} 0 z`, fill: COLORS[0], stroke: '#333', 'stroke-width': 0.8 }, s);
+    const bx = X + 170 * k, wx = X + WHITE.y * k;
+    dome(s, wx, yTop, k, COLORS[4]);
+    dome(s, bx, yTop, k, COLORS[0]);
     rect(s, bx - 12 * k, yTop + 40 * k, 24 * k, 30 * k, { fill: '#bbb' });
+    rect(s, wx - 12 * k, yTop + 40 * k, 24 * k, 30 * k, { fill: '#bbb' });
     line(s, X - 10, Y0, X + D + 10, Y0, { sw: 1.4 });
     dimH(s, X, X + D, Y0 + 6, '600', 10);
     dimH(s, X, bx, yTop - 8, '170', -14);
-    dimH(s, X + D - BOX_D * k, X + D, yTop - 4, '250', -8);
-    dimH(s, X + D - 62 * k, X + D, yPanelTop - 6, '62', -10);
+    dimH(s, X, wx, yTop - 8, '290', -28);
+    dimH(s, X + D - BOX_D * k, X + D, yTop - 4, '240', -8);
+    dimH(s, X + D - 65 * k, X + D, yPanelTop - 6, '65', -10);
     dimV(s, y(BOX_TOP), yTop, X + D + 6, '300', 12);
-    dimV(s, by, yTop, X + D + 6, '160', 34);
-    text(s, X + D - 125 * k, y(900) + 3, '스피커/제어부', { size: 7 });
-    text(s, X + D - 62 * k - 60 * k, mCy - 200 * k, '모니터 (VESA 직결)', { size: 7, anchor: 'end' });
+    text(s, X + D - 120 * k, y(880) + 3, '스피커/제어부', { size: 7 });
+    text(s, X + D - 65 * k - 60 * k, mCy - 200 * k, '모니터 (VESA 직결)', { size: 7, anchor: 'end' });
   }
 
   /* ---------- 상판 평면 ---------- */
   {
     const s = document.getElementById('top'); const k = 0.40;
     const X = 45, Y = 28;
+    const cy = (ymm) => Y + (600 - ymm) * k;
     rect(s, X, Y, 800 * k, 600 * k, { fill: '#f3e7d3' });
     rect(s, X, Y, 800 * k, BOX_D * k, { fill: '#eadcc3', dash: '4 2' });
-    text(s, X + 400 * k, Y + 60 * k + 3, '하부 박스 자리 (800 × 250) — 스피커 · 제어부', { size: 8 });
-    // 흰 버튼 — 박스 앞면(수직면)에 있음을 표시
-    circle(s, X + WHITE.x * k, Y + BOX_D * k, 50 * k, { fill: 'none', stroke: '#666', dash: '2 2' });
-    text(s, X + WHITE.x * k, Y + BOX_D * k - 24 * k, '흰 버튼: 박스 앞면 (수직면, 높이 860)', { size: 7, fill: '#555' });
-    for (let i = 0; i < 4; i++) {
-      const cx = X + BX[i] * k, cy = Y + (600 - 170) * k;
-      circle(s, cx, cy, 50 * k, { fill: '#fff', stroke: '#999', dash: '2 2' });
-      circle(s, cx, cy, 49 * k, { fill: COLORS[i], stroke: '#333' });
-      circle(s, cx, cy, 12.5 * k, { fill: '#fff', stroke: '#333' });
-      text(s, cx, cy + 3, String(i + 1), { size: 8 });
-    }
-    const rowY = Y + (600 - 170) * k;
+    text(s, X + 400 * k, Y + 120 * k + 3, '하부 박스 자리 (800 × 240) — 스피커 · 제어부', { size: 8 });
+    const button = (cx, cyy, color, label) => {
+      circle(s, cx, cyy, 50 * k, { fill: '#fff', stroke: '#999', dash: '2 2' });
+      circle(s, cx, cyy, 49 * k, { fill: color, stroke: '#333' });
+      circle(s, cx, cyy, 12.5 * k, { fill: '#fff', stroke: '#333' });
+      text(s, cx, cyy + 3, label, { size: 8 });
+    };
+    for (let i = 0; i < 4; i++) button(X + BX[i] * k, cy(170), COLORS[i], String(i + 1));
+    button(X + WHITE.x * k, cy(WHITE.y), COLORS[4], '5');
+    text(s, X + WHITE.x * k - 60 * k, cy(WHITE.y) + 3, '흰 (도전)', { size: 7, fill: '#555', anchor: 'end' });
     dimH(s, X, X + BX[0] * k, Y + 600 * k + 6, '190', 10);
     for (let i = 0; i < 3; i++) dimH(s, X + BX[i] * k, X + BX[i + 1] * k, Y + 600 * k + 6, '140', 10);
     dimH(s, X + BX[3] * k, X + 800 * k, Y + 600 * k + 6, '190', 10);
     dimH(s, X, X + 800 * k, Y + 600 * k + 6, '800', 26);
-    dimV(s, rowY, Y + 600 * k, X + 800 * k + 6, '170', 8);
-    dimV(s, Y, Y + 600 * k, X + 800 * k + 6, '600', 30);
-    dimV(s, Y, Y + BOX_D * k, X - 6, '250', -20);
-    text(s, X + 400 * k, Y + 330 * k, '손목 놓는 자리', { size: 7.5, fill: '#666' });
-    text(s, X + 400 * k, Y - 10, '앞 ↓ (사람이 서는 쪽이 아래)', { size: 7.5, fill: '#666' });
+    dimH(s, X + WHITE.x * k, X + 800 * k, cy(WHITE.y) - 60 * k, '100', -6);
+    dimV(s, cy(170), Y + 600 * k, X + 800 * k + 6, '170', 8);
+    dimV(s, cy(WHITE.y), Y + 600 * k, X + 800 * k + 6, '290', 30);
+    dimV(s, Y, Y + 600 * k, X + 800 * k + 6, '600', 52);
+    dimV(s, Y, Y + BOX_D * k, X - 6, '240', -20);
+    text(s, X + 330 * k, cy(290) + 3, '손목 놓는 자리', { size: 7.5, fill: '#666' });
+    text(s, X + 400 * k, Y - 10, '앞 ↓ (사람이 서는 쪽이 아래)  ·  책상 B 는 흰 버튼이 왼쪽 구석 (100, 290)', { size: 7.5, fill: '#666' });
   }
 
   /* ---------- 버튼 구멍 단면 ---------- */
@@ -344,25 +340,22 @@
     rect(s, X + 50 * k, y(1600), 700 * k, 30 * k, { fill: '#e8d7bb' });
     rect(s, X + 50 * k, y(1600) + 30 * k, 700 * k, 140 * k, { fill: '#e3ecf7', dash: '3 2' });
     text(s, X + 400 * k, y(1515) + 3, '헤더 사인 (제목 + 질문형 부제)', { size: 8, fill: '#1a56db' });
+    // VESA 가로재 (판 뒤) 1170~1270
+    rect(s, X + 50 * k, y(1270), 700 * k, 100 * k, { fill: 'none', stroke: '#888', dash: '2 2' });
+    text(s, X + 745 * k, y(1275), 'VESA 가로재 700×100×30 (판 뒤)', { size: 6.5, fill: '#888', anchor: 'end' });
     const mCy = y(1220);
     rect(s, X + 400 * k - 307 * k, mCy - 183 * k, 615 * k, 366 * k, { fill: 'none', stroke: '#111', dash: '4 2' });
     for (const [dx, dy] of [[-50, -50], [50, -50], [-50, 50], [50, 50]]) circle(s, X + (400 + dx) * k, y(1220 - dy), 3, { fill: '#fff', stroke: '#111' });
-    rect(s, X + 300 * k, y(1320), 200 * k, 200 * k, { fill: 'none', stroke: '#888', dash: '2 2' });
-    text(s, X + 400 * k, y(1128), '보강목 200×200 (판 뒤)', { size: 7, fill: '#888' });
     circle(s, X + 520 * k, y(1220), 15 * k, { fill: '#fff' }); text(s, X + 540 * k, y(1220) + 3, 'Ø30 케이블', { size: 6.5, anchor: 'start' });
     text(s, X + 400 * k, mCy - 150 * k, '27" 모니터 외곽 (615×366)', { size: 7.5 });
     text(s, X + 400 * k, mCy + 3, 'VESA 100×100', { size: 8 }); text(s, X + 400 * k, mCy + 13, '중심 (400, 1220)', { size: 7 });
-    // 하부 박스 700~1000
     rect(s, X, y(BOX_TOP), 800 * k, BOX_H * k, { fill: '#eadcc3' });
     for (const d of DIV) line(s, X + d * k, y(BOX_TOP), X + d * k, y(700), { dash: '2 2', stroke: '#888' });
     for (const cx of GRILL.cx) {
       grill(s, X + (cx - GRILL.w / 2) * k, y(GRILL.cy + GRILL.h / 2), GRILL.w * k, GRILL.h * k);
-      text(s, X + cx * k, y(GRILL.cy) + 3, '120×200', { fill: '#fff', size: 7 });
+      text(s, X + cx * k, y(GRILL.cy) + 3, '110×190', { fill: '#fff', size: 7 });
     }
-    circle(s, X + WHITE.x * k, y(WHITE.h), 50 * k, { fill: COLORS[4], stroke: '#333' });
-    circle(s, X + WHITE.x * k, y(WHITE.h), 12 * k, { fill: '#ddd', stroke: '#666', sw: 0.5 });
-    text(s, X + WHITE.x * k, y(945), '도전', { size: 8, fill: '#333' });
-    text(s, X + WHITE.x * k, y(770) + 2, '흰 버튼 Ø100 · 중심 (400, 860)', { size: 6.5, fill: '#555' });
+    text(s, X + 400 * k, y(850) + 3, '제어부 칸 (앞은 막힌 판)', { size: 7.5 });
     line(s, X - 10, y(700), X + 800 * k + 10, y(700), { sw: 1.4 }); text(s, X + 2, y(700) + 11, '상판 윗면 700', { size: 7, anchor: 'start' });
     dimV(s, y(1600), y(1430), X - 6, '170', -18);
     dimV(s, y(1403), y(1037), X - 6, '366', -18);
@@ -377,25 +370,20 @@
     const s = document.getElementById('rear'); const k = 0.42;
     const X = 45, Y = 28;
     const W = 800 * k, Hh = BOX_H * k;
-    const rx = (xmm) => X + (800 - xmm) * k;   // 정면 X → 배면 X (좌우 반전)
+    const rx = (xmm) => X + (800 - xmm) * k;
     rect(s, X, Y, W, Hh, { fill: '#eadcc3' });
-    for (const d of DIV) line(s, rx(d), Y, rx(d), Y + Hh, { dash: '2 2', stroke: '#888' });
-    // 스피커 칸 뒷판 (나사 4)
-    for (const [a, b] of [[18, 188], [612, 782]]) {
-      rect(s, rx(b), Y + 18 * k, (b - a) * k, 264 * k, { fill: '#f3e7d3', stroke: '#555' });
-      for (const [px, py] of [[a + 12, 30], [b - 12, 30], [a + 12, 270], [b - 12, 270]]) circle(s, rx(px), Y + py * k, 1.6, { fill: '#555', stroke: 'none' });
-      text(s, rx((a + b) / 2), Y + 150 * k + 3, '스피커 칸', { size: 7 }); text(s, rx((a + b) / 2), Y + 185 * k + 3, '뒷판 나사 4', { size: 6, fill: '#555' });
-    }
-    // 제어부 도어 380×258, 경첩(정면 기준 오른쪽 = 배면 왼쪽), 캠락 반대
-    rect(s, rx(590), Y + 21 * k, 380 * k, 258 * k, { fill: '#f7efe2', stroke: '#333' });
-    for (const py of [60, 240]) rect(s, rx(590) - 2, Y + py * k, 4, 30 * k, { fill: '#777', stroke: 'none' });
-    text(s, rx(590) + 4, Y + 150 * k + 3, '경첩', { size: 6, anchor: 'start', fill: '#555' });
-    for (let i = 0; i < 3; i++) { rect(s, rx(500), Y + (40 + i * 14) * k, 200 * k, 8 * k, { fill: '#555' }); rect(s, rx(500), Y + (200 + i * 14) * k, 200 * k, 8 * k, { fill: '#555' }); }
-    circle(s, rx(230), Y + 150 * k, 8 * k, { fill: '#999' }); text(s, rx(230), Y + 175 * k + 2, '캠락', { size: 6.5 });
-    text(s, rx(400), Y + 150 * k + 3, '제어부 도어 380 × 258', { size: 7.5 });
-    text(s, rx(400), Y + 115 * k, '통풍 슬롯 8×80 ×3 (위·아래)', { size: 6.5, fill: '#555' });
-    circle(s, rx(240), Y + 262 * k, 12.5 * k, { fill: '#fff' }); text(s, rx(262), Y + 265 * k, 'Ø25 전원선 (A만) →', { size: 6.5, anchor: 'end' });
-    // 옆판 Ø30 — 정면 기준 오른쪽 옆판 = 배면에서 왼쪽
+    // 뒷판 문 760×260
+    rect(s, rx(780), Y + 20 * k, 760 * k, 260 * k, { fill: '#f7efe2', stroke: '#333' });
+    for (const d of DIV) line(s, rx(d), Y + 20 * k, rx(d), Y + 280 * k, { dash: '2 2', stroke: '#aaa' });
+    for (const [a, b, t] of [[20, 190, '스피커 칸'], [610, 780, '스피커 칸']]) text(s, rx((a + b) / 2), Y + 150 * k + 3, t, { size: 7, fill: '#666' });
+    // 경첩 (아랫변) 2, 캠락 (윗변 가운데)
+    for (const xm of [200, 600]) { rect(s, rx(xm) - 16, Y + 278 * k, 32, 4, { fill: '#777', stroke: 'none' }); text(s, rx(xm), Y + 262 * k, '경첩', { size: 6, fill: '#555' }); }
+    circle(s, rx(400), Y + 40 * k, 8 * k, { fill: '#999' }); text(s, rx(400) + 6, Y + 43 * k, '캠락', { size: 6.5, anchor: 'start' });
+    // 통풍 Ø12 ×12 (위·아래 각 6, 간격 40)
+    for (let i = 0; i < 6; i++) { circle(s, rx(300 + i * 40), Y + 70 * k, 6 * k, { fill: '#555', stroke: 'none' }); circle(s, rx(300 + i * 40), Y + 230 * k, 6 * k, { fill: '#555', stroke: 'none' }); }
+    text(s, rx(400), Y + 150 * k + 3, '뒷판 문 760 × 260 — 아래로 젖혀 열림', { size: 7.5 });
+    text(s, rx(400), Y + 118 * k, '통풍 Ø12 × 12', { size: 6.5, fill: '#555' });
+    circle(s, rx(240), Y + 250 * k, 12.5 * k, { fill: '#fff' }); text(s, rx(262), Y + 253 * k, 'Ø25 전원선 (A만) →', { size: 6.5, anchor: 'end' });
     circle(s, X + 5, Y + (BOX_TOP - 830) * k, 15 * k, { fill: '#fff' });
     text(s, X + 2, Y + Hh + 12, '← 옆판 Ø30 통로 (B와 닿는 쪽, 높이 830)', { size: 7, anchor: 'start' });
     text(s, X + W - 2, Y + Hh + 12, '바깥쪽 옆판: 구멍 없음', { size: 7, anchor: 'end', fill: '#555' });
@@ -407,18 +395,20 @@
   {
     const s = document.getElementById('pair'); const k = 0.21;
     const X = 45, Y = 14;
+    const cy = (ymm) => Y + (600 - ymm) * k;
     for (let d = 0; d < 2; d++) {
       const x = X + d * 800 * k;
       rect(s, x, Y, 800 * k, 600 * k, { fill: '#f3e7d3' });
       rect(s, x, Y, 800 * k, BOX_D * k, { fill: '#eadcc3' });
-      for (let i = 0; i < 4; i++) circle(s, x + BX[i] * k, Y + 430 * k, 49 * k, { fill: COLORS[i] });
-      circle(s, x + WHITE.x * k, Y + BOX_D * k, 50 * k, { fill: COLORS[4], stroke: '#333' });
-      text(s, x + WHITE.x * k, Y + BOX_D * k + 85 * k, '도전', { size: 6.5, fill: '#555' });
-      text(s, x + 400 * k, Y + 90 * k + 3, d === 0 ? '책상 A: 파이·인코더·멀티탭·앰프 스피커' : '책상 B: 모니터·버튼·패시브 스피커 (대칭)', { size: 7 });
+      for (let i = 0; i < 4; i++) circle(s, x + BX[i] * k, cy(170), 49 * k, { fill: COLORS[i] });
+      const wx = d === 0 ? WHITE.x : 800 - WHITE.x;
+      circle(s, x + wx * k, cy(WHITE.y), 49 * k, { fill: COLORS[4], stroke: '#333' });
+      text(s, x + wx * k, cy(WHITE.y) - 62 * k, '도전', { size: 6.5, fill: '#555' });
+      text(s, x + 400 * k, Y + 120 * k + 3, d === 0 ? '책상 A: 파이·인코더·멀티탭·앰프 스피커' : '책상 B: 모니터·버튼·패시브 스피커 (대칭)', { size: 7 });
     }
     line(s, X + 800 * k, Y, X + 800 * k, Y + 600 * k, { sw: 1.4 });
-    circle(s, X + 800 * k, Y + 130 * k, 3, { fill: '#fff' });
-    text(s, X + 800 * k, Y + 180 * k + 3, 'Ø30 통로 (맞닿음)', { size: 7 });
+    circle(s, X + 800 * k, Y + 170 * k, 3, { fill: '#fff' });
+    text(s, X + 800 * k, Y + 215 * k + 3, 'Ø30 통로 (맞닿음)', { size: 7 });
     dimH(s, X, X + 1600 * k, Y + 600 * k + 4, '1,600', 10);
     text(s, X + 100 * k, Y + 560 * k, '전원선 1줄 ↓', { size: 7, fill: '#666' });
   }
