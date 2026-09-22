@@ -165,7 +165,7 @@ docs/wiring.html        # 배선도 (조립용)
 docs/배선도.pdf          # 위 문서를 인쇄용으로 뽑은 것
 docs/hardware-guide.md  # 실물 조립·설치 가이드 (배선·전원·문제 해결)
 docs/raspberry-pi-setup.md # 정식 게임기: 라즈베리파이 5 설치 절차
-docs/desk.html          # 정식 게임기 책상 제작 도면 (치수·부재표)
+docs/desk.html          # 정식 게임기 책상 제작 도면 (치수·부재표·가공 체크리스트·겨냥도·배선도)
 docs/책상도면.pdf        # 위 문서를 인쇄용으로 뽑은 것 (목공 사장님용)
 test/games.test.js      # node --test
 ```
