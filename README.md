@@ -167,6 +167,8 @@ docs/hardware-guide.md  # 실물 조립·설치 가이드 (배선·전원·문�
 docs/raspberry-pi-setup.md # 정식 게임기: 라즈베리파이 5 설치 절차
 docs/desk.html          # 정식 게임기 책상 제작 도면 (치수·부재표·가공 체크리스트·겨냥도·배선도)
 docs/책상도면.pdf        # 위 문서를 인쇄용으로 뽑은 것 (목공 사장님용)
+docs/intro.html         # 한 장짜리 게임 소개 (실제 화면 캡처 docs/intro/*.png)
+docs/게임소개.pdf        # 위 문서를 A4 가로 1장으로 뽑은 것
 test/games.test.js      # node --test
 ```
 
