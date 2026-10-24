@@ -107,7 +107,7 @@ log "좌석 $SEATS · $URL"
 
 # 브라우저 캐시는 램(/dev/shm)에 — SD 카드에 쓰지 않는다.
 mkdir -p /dev/shm/torus-cache
-exec "$BROWSER" \
+"$BROWSER" \
   --app="$URL" $WIN \
   --user-data-dir="$PROFILE" --disk-cache-dir=/dev/shm/torus-cache \
   --noerrdialogs --disable-infobars --disable-session-crashed-bubble \
@@ -117,4 +117,29 @@ exec "$BROWSER" \
   --disable-pinch --overscroll-history-navigation=0 \
   --no-first-run --no-default-browser-check --restore-last-session=false \
   --password-store=basic \
-  >>"$LOG" 2>&1
+  >>"$LOG" 2>&1 &
+CHROME_PID=$!
+
+# 크로미움은 창을 "지금 있는 모니터" 안으로 줄여 버린다 (3840 요청 → 1920). 창이 뜨면
+# X 레벨에서 위치·크기를 다시 박는다. Openbox 는 이 요청을 그대로 들어준다.
+if command -v xdotool >/dev/null 2>&1; then
+  if [ "$SEATS" = "2" ]; then W=3840; else W=1920; fi
+  for _ in $(seq 1 60); do
+    wid="$(xdotool search --onlyvisible --class '[Cc]hromium' 2>/dev/null | head -1)"
+    [ -n "$wid" ] && break
+    sleep 0.5
+  done
+  if [ -n "$wid" ]; then
+    for _ in 1 2 3; do
+      xdotool windowmove "$wid" 0 0 windowsize "$wid" "$W" 1080 2>>"$LOG"
+      sleep 1
+    done
+    log "창 고정: $wid → 0,0 ${W}x1080"
+  else
+    log "크로미움 창을 못 찾았습니다 — 창 크기 고정 생략"
+  fi
+else
+  log "xdotool 없음 — sudo apt install -y xdotool (창이 모니터 하나에 눌릴 수 있음)"
+fi
+
+wait "$CHROME_PID"

@@ -57,7 +57,7 @@ sudo raspi-config
 Finish → 재부팅. 재부팅 뒤 패키지:
 
 ```bash
-sudo apt update && sudo apt install -y chromium git unclutter x11-xserver-utils
+sudo apt update && sudo apt install -y chromium git unclutter x11-xserver-utils xdotool
 ```
 
 (`chromium` 이 없다고 하면 `chromium-browser`.)
@@ -151,6 +151,8 @@ PC 에서 하려면 Win32DiskImager 로 원본을 `.img` 로 읽은 뒤 예비 �
   `cd ~/torus-memory-game && git pull && bash scripts/install-kiosk.sh && sudo reboot`
 - **창에 제목 표시줄이 있고 두 좌석이 한 화면에 눌려 있다** → Openbox 규칙이 엉뚱한 파일에 들어간 것.
   설치 스크립트가 지금 떠 있는 openbox 의 설정 파일(`rpd-rc.xml` 등)을 찾아 넣는다. 위와 같이 업데이트 후 재부팅.
+- **테두리는 없는데 두 좌석이 모니터 하나에 눌려 있다** → 크로미움이 창을 모니터 하나 크기로 줄인 것.
+  `pi-kiosk.sh` 가 창이 뜬 뒤 `xdotool` 로 0,0 / 3840×1080 을 다시 박는다. `sudo apt install -y xdotool` 후 재부팅.
 - **왼쪽 위에 "버튼 미연결" 빨간 점** → 우노 Q 브리지용 표시다. 파이에선 URL 에 `bridge=0` 이
   붙어 안 뜬다 (위 업데이트에 포함).
 - **터미널·패널의 한글이 네모로 깨진다** → 게임엔 영향 없다 (글꼴을 동봉한다). 보기 싫으면

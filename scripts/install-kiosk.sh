@@ -298,7 +298,7 @@ rule = """  <application class="Chromium*" role="pop-up" >
   </application>
   <application class="Chromium*">
     <decor>no</decor>
-    <position force="yes"><x>0</x><y>0</y></position>
+    <position force="yes"><monitor>1</monitor><x>0</x><y>0</y></position>
     <size><width>3840</width><height>1080</height></size>
     <maximized>no</maximized>
     <fullscreen>no</fullscreen>
