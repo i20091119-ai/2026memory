@@ -294,6 +294,8 @@ rule = """  <application class="Chromium*" role="pop-up" >
     <size><width>3840</width><height>1080</height></size>
     <maximized>no</maximized>
     <fullscreen>no</fullscreen>
+    <layer>above</layer>
+    <focus>yes</focus>
     <skip_taskbar>yes</skip_taskbar>
     <skip_pager>yes</skip_pager>
   </application>

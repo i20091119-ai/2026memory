@@ -90,6 +90,10 @@ xset s off -dpms 2>/dev/null || true
 xset s noblank 2>/dev/null || true
 command -v unclutter >/dev/null 2>&1 && (unclutter -idle 0.5 -root >/dev/null 2>&1 &)
 
+# 작업 표시줄(패널)과 알림 풍선은 게임 위에 떠서 가린다 — 키오스크에선 패널을 내린다.
+# (다시 보려면: lxpanel --profile LXDE-pi &  또는 재로그인)
+for pnl in lxpanel wf-panel-pi; do pkill -x "$pnl" 2>/dev/null && log "패널 내림: $pnl"; done
+
 BROWSER=""
 for b in chromium chromium-browser; do
   command -v "$b" >/dev/null 2>&1 && { BROWSER="$(command -v "$b")"; break; }
@@ -97,10 +101,10 @@ done
 [ -n "$BROWSER" ] || { log "크로미움 없음: sudo apt install -y chromium"; exit 1; }
 
 if [ "$SEATS" = "2" ]; then
-  URL="http://localhost:$PORT/?seats=2"
+  URL="http://localhost:$PORT/?seats=2&bridge=0"
   WIN="--window-size=3840,1080 --window-position=0,0"
 else
-  URL="http://localhost:$PORT/?seats=1"
+  URL="http://localhost:$PORT/?seats=1&bridge=0"
   WIN="--window-size=1920,1080 --window-position=0,0"
 fi
 log "좌석 $SEATS · $URL"
