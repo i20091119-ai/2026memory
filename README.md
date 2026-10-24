@@ -166,6 +166,8 @@ docs/배선도.pdf          # 위 문서를 인쇄용으로 뽑은 것
 docs/hardware-guide.md  # 실물 조립·설치 가이드 (배선·전원·문제 해결)
 docs/raspberry-pi-setup.md # 정식 게임기: 라즈베리파이 5 설치 절차
 docs/buttontest.html    # 인코더 배선 확인 페이지 (누른 버튼에 불) — 파이에서 /docs/buttontest.html
+docs/assembly.html      # 벤치 조립 가이드 (파이 단자·1차 연결·전체 연결·버튼/LED 배선 그림)
+docs/조립가이드.pdf      # 위 문서 A4 가로 2장
 docs/desk.html          # 정식 게임기 책상 제작 도면 (치수·부재표·가공 체크리스트·겨냥도·배선도)
 docs/책상도면.pdf        # 위 문서를 인쇄용으로 뽑은 것 (목공 사장님용)
 docs/intro.html         # 한 장짜리 게임 소개 (실제 화면 캡처 docs/intro/*.png)

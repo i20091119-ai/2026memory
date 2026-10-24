@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>조립 가이드 — 파이 5 게임기 (책상 오기 전 벤치 조립)</title>
+<style>
+  @page { size: A4 landscape; margin: 10mm; }
+  * { box-sizing: border-box; }
+  body { font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif; color: #222; margin: 0; font-size: 12.5px; line-height: 1.45; }
+  .page { width: 277mm; height: 190mm; page-break-after: always; overflow: hidden; }
+  .page:last-child { page-break-after: auto; }
+  h1 { font-size: 20px; margin: 0 0 2px; }
+  h2 { font-size: 15px; margin: 10px 0 5px; padding-bottom: 2px; border-bottom: 2px solid #333; }
+  .sub { color: #666; font-size: 11px; margin-bottom: 4px; }
+  .row { display: flex; gap: 8mm; align-items: flex-start; }
+  .col { flex: 1; }
+  figure { margin: 0; flex: none; }
+  figure svg + figcaption { max-width: 100%; }
+  figcaption { font-size: 11px; color: #444; margin-top: 2px; }
+  svg { display: block; }
+  ol, ul { margin: 4px 0 4px 18px; padding: 0; }
+  li { margin: 2px 0; }
+  .note { background: #fff8e1; border-left: 4px solid #f4b400; padding: 4px 8px; margin: 6px 0; font-size: 12px; }
+  .warn { background: #fdecea; border-left: 4px solid #d93025; padding: 4px 8px; margin: 6px 0; font-size: 12px; }
+  .big { font-size: 14px; }
+  table { border-collapse: collapse; font-size: 12px; }
+  th, td { border: 1px solid #999; padding: 2px 6px; }
+  th { background: #eee; }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <h1>조립 가이드 ① — 오늘: 파이 켜기</h1>
+  <div class="sub">책상이 오기 전에 책상 위에서 한 세트를 완성한다. 1일차는 파이 + 모니터 1대 + 키보드만. 자세한 명령은 docs/raspberry-pi-setup.md.</div>
+
+  <div class="row">
+    <figure style="width:470px"><svg id="pi" width="470" height="250"></svg><figcaption>파이 5 보드의 단자 자리 (위에서 본 그림, 실물 대비 모양만). <b>HDMI0 = 전원 바로 옆</b> 이 왼쪽 책상 화면.</figcaption></figure>
+    <div class="col">
+      <h2>케이스 조립 (먼저)</h2>
+      <ol>
+        <li>마이크로SD 를 먼저 굽는다 (PC, Raspberry Pi Imager — 2절). <b>SD 슬롯은 보드 밑면</b>이라 케이스에 넣기 전에 꽂아야 편하다.</li>
+        <li>알루미늄 케이스 윗뚜껑 안쪽의 돌출부가 칩 위에 오는 자리에 써멀패드: <b>CPU(큰 정사각형 칩) 1.0mm</b>, 그 옆 작은 칩들(램·전원 IC) <b>0.5mm</b>. 패드 보호필름 양면 다 벗긴다.</li>
+        <li>보드를 케이스 바닥에 놓고 뚜껑 덮어 나사 4개. 뚜껑 돌출부가 칩에 닿아야 방열이 된다 — 조이고 나서 케이스가 살짝 따뜻해지면 정상.</li>
+      </ol>
+      <h2>1차 연결 — 이것만 꽂고 켠다</h2>
+      <ol class="big">
+        <li><b>마이크로HDMI→HDMI</b> 케이블: 파이 <b>HDMI0</b>(전원 옆) ↔ 모니터</li>
+        <li><b>USB 키보드·마우스</b>: 아무 USB</li>
+        <li>(설정 때만) <b>랜선</b> 또는 Wi-Fi — git clone 에 인터넷이 필요</li>
+        <li>맨 마지막에 <b>27W 어댑터</b>를 USB-C 에 — 꽂는 순간 켜진다 (전원 버튼 없음)</li>
+      </ol>
+      <div class="note">켜지면 빨간불 → 초록불 깜빡 → 20초쯤 뒤 바탕화면. 바탕화면이 뜨면 3절(X11 전환)·4절(게임 설치)로. 초록불이 안 깜빡이면 SD 가 안 꽂혔거나 안 구워진 것.</div>
+    </div>
+  </div>
+
+  <div class="row" style="margin-top:6px">
+    <figure style="width:520px"><svg id="first" width="520" height="150"></svg><figcaption>1차 연결 전체. 인코더·스피커·두 번째 모니터는 아직 안 꽂는다.</figcaption></figure>
+    <div class="col">
+      <h2>1일차 끝나는 기준</h2>
+      <ul>
+        <li>어댑터만 꽂으면 로그인·클릭 없이 <b>게임 타이틀이 혼자 뜬다</b></li>
+        <li>키보드 1·2·3·4 로 게임이 된다 (버튼은 2일차)</li>
+        <li>크로미움 창에 테두리·주소창이 없다</li>
+      </ul>
+      <div class="warn">어댑터는 꼭 <b>파이 공식 27W</b>. 휴대폰 충전기면 "저전압" 경고가 뜨고 USB 가 꺼진다. 파일럿의 우노 Q 와 달리 허브가 없으니 전원·HDMI 가 전부 보드에 직접 꽂힌다.</div>
+    </div>
+  </div>
+</div>
+
+<div class="page">
+  <h1>조립 가이드 ② — 2·3일차: 전체 연결</h1>
+  <div class="sub">1일차가 끝난 뒤. 버튼 10개는 책상 없이 바닥에 늘어놓고 배선·확인까지 끝낸다.</div>
+
+  <div class="row">
+    <figure style="width:600px"><svg id="all" width="600" height="240"></svg><figcaption>전체 연결. 선 종류별 색: 영상(파랑) · USB(회색) · 소리(주황) · 버튼 신호(초록) · LED 12V(보라) · 전원(빨강).</figcaption></figure>
+    <div class="col">
+      <h2>꽂는 순서</h2>
+      <ol>
+        <li>모니터 2 를 <b>HDMI1</b> 에 → 재부팅 → 한 화면이 좌우로 갈려 뜨는지</li>
+        <li>인코더 USB → 파이 USB (파란 USB3 아무 곳)</li>
+        <li>버튼 10개 배선 (오른쪽 그림) → 크로미움에서 <code>localhost:8000/docs/buttontest.html</code> 열어 하나씩 누르기</li>
+        <li>USB 사운드카드 → 파이 USB. 초록 단자 → 3.5mm–RCA 선 → 액티브 스피커 입력. 액티브 ↔ 패시브는 동봉 스피커선</li>
+        <li>12V 어댑터 → 단자대 → 버튼 LED 10개 병렬</li>
+        <li>이틀 켜 두고 <code>vcgencmd measure_temp</code>. 끝나면 예비 SD 복제(7절)</li>
+      </ol>
+      <table>
+        <tr><th>인코더</th><th>버튼</th><th>인코더</th><th>버튼</th></tr>
+        <tr><td>K1</td><td>책상1 빨강</td><td>K6</td><td>책상2 빨강</td></tr>
+        <tr><td>K2</td><td>책상1 노랑</td><td>K7</td><td>책상2 노랑</td></tr>
+        <tr><td>K3</td><td>책상1 초록</td><td>K8</td><td>책상2 초록</td></tr>
+        <tr><td>K4</td><td>책상1 파랑</td><td>K9</td><td>책상2 파랑</td></tr>
+        <tr><td>K5</td><td>책상1 <b>흰</b></td><td>K10</td><td>책상2 <b>흰</b></td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="row" style="margin-top:6px">
+    <figure style="width:330px"><svg id="sw" width="330" height="165"></svg><figcaption>버튼 하나의 배선. 마이크로스위치 단자 글씨를 보고 <b>COM 과 NO</b> 에 스페이드 단자. LED 는 홀더의 2핀에 12V (안 켜지면 +– 바꿔 꽂기).</figcaption></figure>
+    <figure style="width:330px"><svg id="led" width="330" height="165"></svg><figcaption>LED 전원. 12V 어댑터 → 단자대 → 버튼마다 두 가닥. 인코더와는 아무 상관 없다.</figcaption></figure>
+    <div class="col">
+      <div class="note"><b>확인 화면</b> — buttontest.html 에서 누른 버튼에 불이 들어온다. 엉뚱한 자리에 불이 들어오면 <b>그 두 선을 인코더에서 바꿔 꽂는다</b> (설정 수정 불필요). 눌렀는데 계속 켜져 있으면 NC 에 꽂은 것 → NO 로.</div>
+      <div class="note"><b>책상에 들어갈 때</b> — 책상 2 쪽 5개는 선을 가운데서 잘라 십색선으로 2m 연장(WAGO). 지금은 짧은 채로 바닥에서 확인만.</div>
+      <div class="warn">인코더가 게임패드로 안 잡히면 (buttontest 에 "찾는 중"만 뜸): 다른 USB 포트, 그래도 안 되면 <code>ls /dev/input/</code> 과 인코더 기판 사진을 보내 달라.</div>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+  const NS = 'http://www.w3.org/2000/svg';
+  const mk = (tag, attrs, parent) => { const n = document.createElementNS(NS, tag); for (const [k, v] of Object.entries(attrs)) n.setAttribute(k, v); parent.append(n); return n; };
+  const T = (s, x, y, t, o = {}) => { const n = mk('text', { x, y, 'font-size': o.size ?? 10, 'text-anchor': o.anchor ?? 'middle', fill: o.fill ?? '#222', 'font-family': 'Malgun Gothic, sans-serif', 'font-weight': o.bold ? 'bold' : 'normal' }, s); n.textContent = t; return n; };
+  const R = (s, x, y, w, h, o = {}) => mk('rect', { x, y, width: w, height: h, rx: o.rx ?? 4, fill: o.fill ?? '#fff', stroke: o.stroke ?? '#333', 'stroke-width': o.sw ?? 1, ...(o.dash ? { 'stroke-dasharray': o.dash } : {}) }, s);
+  const L = (s, pts, o = {}) => mk('path', { d: pts.map((p, i) => (i ? 'L' : 'M') + p[0] + ' ' + p[1]).join(' '), fill: 'none', stroke: o.stroke ?? '#333', 'stroke-width': o.sw ?? 2, 'stroke-linejoin': 'round', 'stroke-linecap': 'round', ...(o.dash ? { 'stroke-dasharray': o.dash } : {}) }, s);
+  const box = (s, x, y, w, h, label, sub, o = {}) => { R(s, x, y, w, h, { fill: o.fill ?? '#f4f4f4', stroke: o.stroke ?? '#333', rx: 6 }); T(s, x + w / 2, y + h / 2 + (sub ? -2 : 4), label, { size: o.size ?? 11, bold: true }); if (sub) T(s, x + w / 2, y + h / 2 + 11, sub, { size: 9, fill: '#555' }); };
+  const C = { video: '#1e88e5', usb: '#757575', audio: '#fb8c00', btn: '#43a047', led: '#8e24aa', pwr: '#e53935' };
+
+  /* ---- 파이 5 단자 자리 ---- */
+  {
+    const s = document.getElementById('pi');
+    R(s, 60, 40, 260, 170, { fill: '#2e7d32', stroke: '#1b5e20', rx: 8 });
+    T(s, 110, 180, 'Raspberry Pi 5', { size: 14, fill: '#fff', bold: true });
+    T(s, 110, 194, '(위에서 본 모습)', { size: 9, fill: '#c8e6c9' });
+    R(s, 150, 85, 40, 40, { fill: '#9e9e9e', stroke: '#616161', rx: 2 }); T(s, 170, 108, 'CPU', { size: 9, fill: '#fff' });
+    T(s, 170, 80, '써멀패드 1.0', { size: 8, fill: '#fff' });
+    R(s, 205, 90, 22, 22, { fill: '#9e9e9e', stroke: '#616161', rx: 2 }); T(s, 216, 123, '램 0.5', { size: 8, fill: '#fff' });
+    // 아래 긴 변: USB-C, HDMI0, HDMI1
+    R(s, 70, 205, 26, 12, { fill: '#333' }); T(s, 83, 232, 'USB-C', { size: 9, bold: true }); T(s, 83, 243, '27W 전원', { size: 8, fill: C.pwr });
+    R(s, 140, 205, 22, 12, { fill: '#333' }); T(s, 151, 232, 'HDMI0', { size: 9, bold: true }); T(s, 151, 243, '모니터 1 (왼쪽)', { size: 8, fill: C.video });
+    R(s, 215, 205, 22, 12, { fill: '#333' }); T(s, 226, 232, 'HDMI1', { size: 9, bold: true }); T(s, 226, 243, '모니터 2 (오른쪽)', { size: 8, fill: C.video });
+    T(s, 300, 232, '← 마이크로 HDMI', { size: 8, fill: '#555' });
+    // 오른쪽 짧은 변: USB×4, LAN
+    R(s, 316, 50, 14, 24, { fill: '#1565c0' }); R(s, 316, 80, 14, 24, { fill: '#1565c0' }); T(s, 360, 68, 'USB 3 (파랑)', { size: 9, anchor: 'start' }); T(s, 360, 80, '인코더', { size: 8, anchor: 'start', fill: C.btn }); T(s, 360, 91, '사운드카드', { size: 8, anchor: 'start', fill: C.audio });
+    R(s, 316, 112, 14, 24, { fill: '#555' }); R(s, 316, 142, 14, 24, { fill: '#555' }); T(s, 360, 130, 'USB 2 (검정)', { size: 9, anchor: 'start' }); T(s, 360, 142, '키보드·마우스 (설정 때만)', { size: 8, anchor: 'start', fill: '#555' });
+    R(s, 316, 175, 14, 28, { fill: '#888' }); T(s, 360, 192, '랜 (설정 때만)', { size: 9, anchor: 'start' });
+    // 왼쪽: SD
+    R(s, 44, 100, 18, 30, { fill: '#555', dash: '2 1' }); T(s, 30, 112, 'SD', { size: 9, bold: true }); T(s, 30, 123, '밑면', { size: 8, fill: '#555' });
+  }
+
+  /* ---- 1차 연결 ---- */
+  {
+    const s = document.getElementById('first');
+    box(s, 200, 50, 120, 60, '파이 5', '케이스 안');
+    box(s, 20, 30, 110, 100, '모니터 1', 'HDMI');
+    L(s, [[130, 80], [200, 80]], { stroke: C.video }); T(s, 165, 72, 'HDMI0', { size: 9, fill: C.video });
+    box(s, 380, 30, 110, 44, '키보드·마우스', 'USB');
+    L(s, [[380, 52], [320, 60]], { stroke: C.usb });
+    box(s, 380, 90, 110, 44, '27W 어댑터', '맨 마지막에');
+    L(s, [[380, 112], [320, 100]], { stroke: C.pwr });
+    T(s, 260, 135, '랜선 또는 Wi-Fi (설정 때만)', { size: 9, fill: '#555' });
+  }
+
+  /* ---- 전체 연결 ---- */
+  {
+    const s = document.getElementById('all');
+    box(s, 230, 90, 110, 60, '파이 5', '27W 전원');
+    box(s, 20, 20, 100, 60, '모니터 1', '왼쪽 = 책상 1'); box(s, 20, 95, 100, 60, '모니터 2', '오른쪽 = 책상 2');
+    L(s, [[120, 50], [180, 50], [180, 105], [230, 105]], { stroke: C.video }); T(s, 150, 44, 'HDMI0', { size: 8, fill: C.video });
+    L(s, [[120, 125], [230, 125]], { stroke: C.video }); T(s, 175, 119, 'HDMI1', { size: 8, fill: C.video });
+    box(s, 400, 20, 110, 50, 'USB 인코더', 'K1~K10');
+    L(s, [[400, 45], [370, 45], [370, 100], [340, 100]], { stroke: C.usb }); T(s, 385, 80, 'USB', { size: 8, fill: C.usb });
+    box(s, 400, 85, 110, 44, 'USB 사운드카드', '초록 단자 = 출력');
+    L(s, [[400, 107], [340, 115]], { stroke: C.usb });
+    box(s, 400, 150, 110, 50, '액티브 스피커', '전원 + 앰프'); box(s, 400, 205, 110, 28, '패시브 스피커', null, { size: 10 });
+    L(s, [[455, 129], [455, 150]], { stroke: C.audio }); T(s, 485, 142, '3.5→RCA', { size: 8, fill: C.audio });
+    L(s, [[455, 200], [455, 205]], { stroke: C.audio, sw: 3 }); T(s, 490, 203, '스피커선', { size: 8, fill: C.audio });
+    // 버튼
+    for (let i = 0; i < 5; i++) { mk('circle', { cx: 540 + i * 0, cy: 0, r: 0 }, s); }
+    const cols = ['#e53935', '#fdd835', '#43a047', '#1e88e5', '#f5f5f5'];
+    cols.forEach((c, i) => { mk('circle', { cx: 555, cy: 28 + i * 20, r: 7, fill: c, stroke: '#333' }, s); L(s, [[510, 45], [548, 28 + i * 20]], { stroke: C.btn, sw: 1 }); });
+    T(s, 560, 135, '책상 1 (5)', { size: 8 });
+    cols.forEach((c, i) => { mk('circle', { cx: 555, cy: 150 + i * 16, r: 6, fill: c, stroke: '#333' }, s); L(s, [[510, 55], [548, 150 + i * 16]], { stroke: C.btn, sw: 1, dash: '3 2' }); });
+    T(s, 560, 232, '책상 2 (5, 연장)', { size: 8 });
+    // LED
+    box(s, 230, 175, 110, 44, '12V 어댑터', '→ 단자대 → LED 10');
+    L(s, [[340, 197], [370, 197], [370, 150], [540, 150]], { stroke: C.led, sw: 1.5, dash: '4 2' });
+    // 전원
+    T(s, 285, 170, '벽 콘센트 → 멀티탭 6구: 파이·액티브 스피커·12V·모니터×2', { size: 8, fill: C.pwr });
+  }
+
+  /* ---- 버튼 하나 배선 ---- */
+  {
+    const s = document.getElementById('sw');
+    mk('path', { d: 'M 60 60 a 50 22 0 0 1 100 0 z', fill: '#e53935', stroke: '#333' }, s);
+    R(s, 55, 60, 110, 18, { fill: '#333', rx: 3 }); T(s, 110, 73, '몸통 Ø98', { size: 8, fill: '#fff' });
+    R(s, 98, 78, 24, 22, { fill: '#999', rx: 2 }); T(s, 110, 112, '스템', { size: 8 });
+    R(s, 80, 100, 60, 30, { fill: '#ddd', stroke: '#555', rx: 3 }); T(s, 110, 113, '스위치 홀더', { size: 8 });
+    // 마이크로스위치 단자
+    for (const [x, t] of [[88, 'COM'], [110, 'NC'], [132, 'NO']]) { R(s, x - 5, 130, 10, 10, { fill: '#c0c0c0', stroke: '#555', rx: 1 }); T(s, x, 152, t, { size: 8, bold: t !== 'NC' }); }
+    L(s, [[88, 140], [88, 150], [30, 150], [30, 60]], { stroke: C.btn }); L(s, [[132, 140], [132, 158], [30, 158], [30, 62]], { stroke: C.btn });
+    T(s, 22, 50, '인코더 K?', { size: 8, fill: C.btn, anchor: 'start' }); T(s, 26, 40, '2핀', { size: 8, fill: C.btn, anchor: 'start' });
+    T(s, 110, 160, '✕ NC 에 꽂으면 늘 눌린 상태', { size: 7.5, fill: '#d93025' });
+    // LED 핀
+    R(s, 190, 100, 10, 10, { fill: '#c0c0c0', stroke: '#555', rx: 1 }); R(s, 190, 116, 10, 10, { fill: '#c0c0c0', stroke: '#555', rx: 1 });
+    L(s, [[150, 105], [190, 105]], { stroke: '#555', sw: 1 }); T(s, 170, 98, 'LED 홀더', { size: 7.5, fill: '#555' });
+    L(s, [[200, 105], [260, 105]], { stroke: C.led }); L(s, [[200, 121], [260, 121]], { stroke: C.led });
+    T(s, 300, 108, '12V +', { size: 9, fill: C.led }); T(s, 300, 124, '12V –', { size: 9, fill: C.led });
+  }
+
+  /* ---- LED 전원 ---- */
+  {
+    const s = document.getElementById('led');
+    box(s, 10, 55, 80, 44, '12V 어댑터', '벽 콘센트');
+    R(s, 120, 40, 50, 80, { fill: '#ffecb3', stroke: '#333', rx: 4 }); T(s, 145, 36, '단자대', { size: 9 });
+    for (let i = 0; i < 2; i++) { T(s, 145, 60 + i * 40, i ? '–' : '+', { size: 14, bold: true }); }
+    L(s, [[90, 70], [120, 60]], { stroke: C.led }); L(s, [[90, 85], [120, 100]], { stroke: C.led });
+    const cols = ['#e53935', '#fdd835', '#43a047', '#1e88e5', '#f5f5f5'];
+    cols.forEach((c, i) => { const y = 25 + i * 24; mk('circle', { cx: 250, cy: y, r: 8, fill: c, stroke: '#333' }, s); L(s, [[170, 60], [200, 60], [200, y - 3], [242, y - 3]], { stroke: C.led, sw: 1.2 }); L(s, [[170, 100], [208, 100], [208, y + 3], [242, y + 3]], { stroke: C.led, sw: 1.2 }); });
+    T(s, 200, 152, '책상 2 의 5개도 같은 단자대에 (10개 병렬)', { size: 8, fill: '#555' });
+  }
+})();
+</script>
+</body>
+</html>
