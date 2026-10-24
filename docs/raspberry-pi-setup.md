@@ -149,6 +149,8 @@ PC 에서 하려면 Win32DiskImager 로 원본을 `.img` 로 읽은 뒤 예비 �
 - **위에 작업 표시줄이 남는다 / 알림 풍선이 뜬다** → 설치 스크립트가 세션 autostart 에서 패널(lxpanel)을
   빼 둔다 (`~/.config/lxsession/<세션이름>/autostart` — 세션 이름은 `rpd-x` 나 `LXDE-pi`). 설치 스크립트를 다시 돌린 뒤 재부팅:
   `cd ~/torus-memory-game && git pull && bash scripts/install-kiosk.sh && sudo reboot`
+- **창에 제목 표시줄이 있고 두 좌석이 한 화면에 눌려 있다** → Openbox 규칙이 엉뚱한 파일에 들어간 것.
+  설치 스크립트가 지금 떠 있는 openbox 의 설정 파일(`rpd-rc.xml` 등)을 찾아 넣는다. 위와 같이 업데이트 후 재부팅.
 - **왼쪽 위에 "버튼 미연결" 빨간 점** → 우노 Q 브리지용 표시다. 파이에선 URL 에 `bridge=0` 이
   붙어 안 뜬다 (위 업데이트에 포함).
 - **터미널·패널의 한글이 네모로 깨진다** → 게임엔 영향 없다 (글꼴을 동봉한다). 보기 싫으면

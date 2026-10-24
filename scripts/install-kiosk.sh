@@ -276,10 +276,18 @@ if [ "$PI_MODE" -eq 1 ]; then
 
   # Openbox 규칙: 크로미움 --app 창을 테두리 없이 0,0 에 3840×1080 으로.
   # --kiosk 전체화면은 모니터 하나에만 붙어서 쓸 수 없다.
+  # Openbox 가 읽는 설정 파일 이름은 OS 버전마다 다르다 (lxde-pi-rc.xml, rpd-rc.xml …).
+  # 지금 떠 있는 openbox 의 --config-file 인자를 먼저 보고, 없으면 /etc/xdg/openbox 에서 고른다.
   OB_DIR="$HOME/.config/openbox"
-  OB_RC="$OB_DIR/lxde-pi-rc.xml"
-  mkdir -p "$OB_DIR"
-  [ -f "$OB_RC" ] || cp /etc/xdg/openbox/lxde-pi-rc.xml "$OB_RC" 2>/dev/null || cp /etc/xdg/openbox/rc.xml "$OB_RC" 2>/dev/null || true
+  OB_RC="$(ps -eo args 2>/dev/null | sed -n 's/.*openbox .*--config-file \([^ ]*\).*/\1/p' | head -1)"
+  if [ -z "$OB_RC" ]; then
+    for cand in rpd-rc.xml lxde-pi-rc.xml rc.xml; do
+      [ -f "/etc/xdg/openbox/$cand" ] && { OB_RC="$OB_DIR/$cand"; break; }
+    done
+  fi
+  [ -n "$OB_RC" ] || OB_RC="$OB_DIR/rc.xml"
+  mkdir -p "$(dirname "$OB_RC")"
+  [ -f "$OB_RC" ] || cp "/etc/xdg/openbox/$(basename "$OB_RC")" "$OB_RC" 2>/dev/null || cp /etc/xdg/openbox/rc.xml "$OB_RC" 2>/dev/null || true
   if [ -f "$OB_RC" ]; then
     python3 - "$OB_RC" <<'PYEOF'
 import re, sys
