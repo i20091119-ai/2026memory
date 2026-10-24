@@ -146,14 +146,15 @@ PC 에서 하려면 Win32DiskImager 로 원본을 `.img` 로 읽은 뒤 예비 �
 
 ## 7-1. 화면이 전체로 안 덮일 때
 
-- **위에 작업 표시줄이 남는다 / 알림 풍선이 뜬다** → `pi-kiosk.sh` 가 패널(lxpanel)을 내리고
-  크로미움 창을 맨 위 층으로 올린다. 설치 스크립트를 다시 돌린 뒤 재부팅:
+- **위에 작업 표시줄이 남는다 / 알림 풍선이 뜬다** → 설치 스크립트가 세션 autostart 에서 패널(lxpanel)을
+  빼 둔다 (`~/.config/lxsession/LXDE-pi/autostart`). 설치 스크립트를 다시 돌린 뒤 재부팅:
   `cd ~/torus-memory-game && git pull && bash scripts/install-kiosk.sh && sudo reboot`
 - **왼쪽 위에 "버튼 미연결" 빨간 점** → 우노 Q 브리지용 표시다. 파이에선 URL 에 `bridge=0` 이
   붙어 안 뜬다 (위 업데이트에 포함).
 - **터미널·패널의 한글이 네모로 깨진다** → 게임엔 영향 없다 (글꼴을 동봉한다). 보기 싫으면
   `sudo apt install -y fonts-noto-cjk`.
-- 설정을 만지려고 패널이 다시 필요하면 터미널에서 `lxpanel --profile LXDE-pi &`.
+- 설정을 만지려고 패널이 잠깐 필요하면 터미널(Ctrl+Alt+T)에서 `lxpanel --profile LXDE-pi &`.
+  영구히 되돌리려면 `rm ~/.config/lxsession/LXDE-pi/autostart` 후 재부팅.
 
 ## 8. 업데이트
 
