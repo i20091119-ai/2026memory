@@ -318,11 +318,15 @@ PYEOF
   # 창이라 게임 창보다 늘 위에 그려진다. 사용자 autostart 파일을 두면 시스템 것을 통째로
   # 대신하므로, 시스템 파일에서 패널·화면보호기 줄만 뺀 사본을 둔다.
   # (되돌리기: rm ~/.config/lxsession/LXDE-pi/autostart 후 재로그인)
-  LXS_SYS="/etc/xdg/lxsession/LXDE-pi/autostart"
-  LXS_USER="$HOME/.config/lxsession/LXDE-pi/autostart"
-  if [ -f "$LXS_SYS" ]; then
+  # 세션 이름은 OS 버전마다 다르다 (LXDE-pi, rpd-x …). $DESKTOP_SESSION 을 먼저 보고,
+  # 없으면 /etc/xdg/lxsession 아래에서 패널을 띄우는 autostart 를 찾는다.
+  LXS_NAME="${DESKTOP_SESSION:-}"
+  [ -n "$LXS_NAME" ] && [ -f "/etc/xdg/lxsession/$LXS_NAME/autostart" ] \
+    || LXS_NAME="$(grep -l -i panel /etc/xdg/lxsession/*/autostart 2>/dev/null | head -1 | awk -F/ '{print $(NF-1)}')"
+  if [ -n "$LXS_NAME" ] && [ -f "/etc/xdg/lxsession/$LXS_NAME/autostart" ]; then
+    LXS_USER="$HOME/.config/lxsession/$LXS_NAME/autostart"
     mkdir -p "$(dirname "$LXS_USER")"
-    grep -vE 'lxpanel|wf-panel|xscreensaver' "$LXS_SYS" > "$LXS_USER"
+    grep -vE 'panel|xscreensaver' "/etc/xdg/lxsession/$LXS_NAME/autostart" > "$LXS_USER"
     ok "작업 표시줄 끔 ($LXS_USER — 되돌리려면 이 파일 삭제)"
   else
     warn "lxsession autostart 를 못 찾았습니다 — 작업 표시줄이 게임 위에 남을 수 있습니다"
