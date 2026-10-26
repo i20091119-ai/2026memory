@@ -157,6 +157,9 @@ PC 에서 하려면 Win32DiskImager 로 원본을 `.img` 로 읽은 뒤 예비 �
   붙어 안 뜬다 (위 업데이트에 포함).
 - **터미널·패널의 한글이 네모로 깨진다** → 게임엔 영향 없다 (글꼴을 동봉한다). 보기 싫으면
   `sudo apt install -y fonts-noto-cjk`.
+- **터미널을 못 연다** (패널을 없애면 Ctrl+Alt+T 도 사라진다) → 설치 스크립트가 Openbox 에 단축키를 건다:
+  **Ctrl+Alt+T** 터미널 · **Ctrl+Alt+Q** 게임 창 닫기 · **Ctrl+Alt+G** 게임 다시 띄우기.
+  그 전이라면 같은 와이파이의 PC/폰에서 `ssh math@math-memory.local`, 또는 **Ctrl+Alt+F3** 글자 화면.
 - 설정을 만지려고 패널이 잠깐 필요하면 터미널(Ctrl+Alt+T)에서 `lxpanel-pi --profile rpd-x &` (구버전은 `lxpanel --profile LXDE-pi &`).
   영구히 되돌리려면 `rm ~/.config/lxsession/*/autostart` 후 재부팅.
 

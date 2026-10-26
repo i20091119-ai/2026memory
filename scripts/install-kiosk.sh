@@ -315,9 +315,24 @@ elif "</applications>" in s:
     s = s.replace("</applications>", marker + "\n" + rule + marker + "\n</applications>")
 else:
     s = s.replace("</openbox_config>", "<applications>\n" + marker + "\n" + rule + marker + "\n</applications>\n</openbox_config>")
+# 단축키 — 패널을 없애면 Ctrl+Alt+T 도 같이 사라지므로 Openbox 에 직접 건다.
+#   Ctrl+Alt+T : 터미널     Ctrl+Alt+Q : 게임 창 닫기 (바탕화면이 보인다)
+#   Ctrl+Alt+G : 게임 다시 띄우기
+keys = """  <!-- torus-keys -->
+  <keybind key="C-A-t"><action name="Execute"><command>lxterminal</command></action></keybind>
+  <keybind key="C-A-q"><action name="Execute"><command>pkill -f chromium</command></action></keybind>
+  <keybind key="C-A-g"><action name="Execute"><command>bash -c 'pkill -f chromium; sleep 1; bash ~/torus-memory-game/scripts/pi-kiosk.sh'</command></action></keybind>
+  <!-- torus-keys -->
+"""
+km = "<!-- torus-keys -->"
+if km in s:
+    s = re.sub(km + r".*?" + km, keys.strip() + "\n", s, flags=re.S)
+elif "</keyboard>" in s:
+    s = s.replace("</keyboard>", keys + "</keyboard>", 1)
 open(path, "w", encoding="utf-8").write(s)
 PYEOF
     ok "Openbox 규칙: 크로미움 창 테두리 없이 3840×1080 ($OB_RC)"
+    ok "단축키: Ctrl+Alt+T 터미널 · Ctrl+Alt+Q 게임 닫기 · Ctrl+Alt+G 게임 다시"
   else
     warn "Openbox 설정 파일을 못 찾았습니다 — 창에 테두리가 남을 수 있습니다"
   fi
