@@ -340,6 +340,19 @@ PYEOF
     warn "lxsession autostart 를 못 찾았습니다 — 작업 표시줄이 게임 위에 남을 수 있습니다"
   fi
 
+  # 외부 전원 버튼(파이 5 J2 핀 또는 보드 버튼): 누르면 바로 정상 종료, 꺼진 상태에서 누르면 켜짐.
+  # 데스크톱은 전원 키를 가로채 "끌까요?" 창을 띄우므로(pwrkey.desktop) 그걸 끄고,
+  # logind 가 전원 키를 받아 곧장 poweroff 하게 한다.
+  mkdir -p "$HOME/.config/autostart"
+  printf '[Desktop Entry]\nType=Application\nName=pwrkey\nHidden=true\n' > "$HOME/.config/autostart/pwrkey.desktop"
+  if sudo -n true 2>/dev/null; then
+    sudo mkdir -p /etc/systemd/logind.conf.d
+    printf '[Login]\nHandlePowerKey=poweroff\nHandlePowerKeyLongPress=poweroff\n' | sudo tee /etc/systemd/logind.conf.d/torus-powerkey.conf >/dev/null
+    ok "전원 버튼: 한 번 누르면 정상 종료 (J2 핀에 버튼을 달면 밖에서 켜고 끌 수 있다)"
+  else
+    warn "전원 버튼 설정은 sudo 가 필요합니다 — 나중에 install-kiosk.sh 를 한 번 더"
+  fi
+
   # SD 카드 쓰기 줄이기 — 로그는 램에만, 스왑 끄기. sudo 가 되면 바로, 아니면 안내.
   if sudo -n true 2>/dev/null; then
     sudo mkdir -p /etc/systemd/journald.conf.d
