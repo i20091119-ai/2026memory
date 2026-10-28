@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>전원 버튼 배선 — 파이 5 J2</title>
+<style>
+  @page { size: A4 landscape; margin: 10mm; }
+  * { box-sizing: border-box; }
+  body { font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif; color: #222; margin: 0; font-size: 13px; line-height: 1.5; }
+  .page { width: 277mm; height: 190mm; overflow: hidden; }
+  h1 { font-size: 20px; margin: 0 0 4px; }
+  h2 { font-size: 15px; margin: 10px 0 5px; border-bottom: 2px solid #333; padding-bottom: 2px; }
+  .row { display: flex; gap: 10mm; align-items: flex-start; }
+  figure { margin: 0; flex: none; }
+  figcaption { font-size: 11px; color: #444; margin-top: 3px; }
+  .note { background: #fff8e1; border-left: 4px solid #f4b400; padding: 5px 8px; margin: 6px 0; }
+  .warn { background: #fdecea; border-left: 4px solid #d93025; padding: 5px 8px; margin: 6px 0; }
+  ol { margin: 4px 0 4px 20px; padding: 0; }
+  li { margin: 3px 0; }
+</style>
+</head>
+<body>
+<div class="page">
+  <h1>전원 버튼 배선 — 파이 5 J2 (해설사용 켜기/끄기)</h1>
+  <div class="row">
+    <figure><svg id="pi" width="520" height="330"></svg><figcaption>파이 5 보드를 위에서 본 그림 (단자 쪽이 아래). <b>J2 는 보드 왼쪽 아래 모서리</b>, RTC 배터리 커넥터(J5)와 전원 버튼 사이의 작은 패드 2개. 케이스를 열어야 보인다.</figcaption></figure>
+    <div>
+      <h2>연결</h2>
+      <ol>
+        <li>푸시버튼 뒤 핀 2개에 선 두 가닥(십색선 15cm) 납땜. <b>극성 없음.</b></li>
+        <li>파이 케이스 뚜껑 열기. 보드 왼쪽 아래 모서리에 <b>"J2"</b> 라고 인쇄된 작은 패드 2개 찾기 (사진 참조 — 전원 버튼 바로 옆, 배터리 커넥터 J5 와 붙어 있음).</li>
+        <li>선 두 가닥을 J2 두 패드에 각각 납땜. 어느 선이 어느 패드든 상관없다.</li>
+        <li>선을 케이스 틈으로 빼고 뚜껑 닫기. 버튼은 책상 스커트 <b>뒷문 옆 옆판</b>에 Ø12 구멍 뚫어 너트 고정.</li>
+        <li>SSH: <code>cd ~/torus-memory-game &amp;&amp; git pull &amp;&amp; bash scripts/install-kiosk.sh &amp;&amp; sudo reboot</code></li>
+      </ol>
+      <h2>동작</h2>
+      <ul style="margin:4px 0 4px 20px;padding:0">
+        <li>켜져 있을 때 <b>한 번 누름</b> → 정상 종료 (10초쯤 뒤 화면 꺼짐, 빨간불만 남음)</li>
+        <li>꺼져 있을 때 <b>한 번 누름</b> → 켜짐 (어댑터는 꽂아 둔 채)</li>
+        <li>먹통일 때 <b>5초 이상 누름</b> → 강제 종료 (비상용)</li>
+      </ul>
+      <div class="warn">J2 는 전원 버튼 <b>스위치 접점</b>이지 전원 입력이 아니다. 12V 나 5V 를 절대 넣지 말 것 — 버튼의 두 핀을 그냥 잇기만 한다.</div>
+      <div class="note">납땜이 어려우면 <b>대안</b>: 40핀 헤더의 <b>5번(GPIO3)·6번(GND)</b> 핀에 암-암 점퍼선으로 버튼을 물리고 <code>/boot/firmware/config.txt</code> 끝에 <code>dtoverlay=gpio-shutdown</code> 한 줄. 끄기는 확실히 되고, 켜기는 실물로 한 번 시험. (5번 핀 = USB 쪽에서 봐서 바깥 줄 3번째, 6번 = 그 안쪽.)</div>
+    </div>
+  </div>
+</div>
+<script>
+(() => {
+  const NS = 'http://www.w3.org/2000/svg';
+  const mk = (t, a, p) => { const n = document.createElementNS(NS, t); for (const [k, v] of Object.entries(a)) n.setAttribute(k, v); p.append(n); return n; };
+  const T = (s, x, y, t, o = {}) => { const n = mk('text', { x, y, 'font-size': o.size ?? 10, 'text-anchor': o.anchor ?? 'middle', fill: o.fill ?? '#222', 'font-family': 'Malgun Gothic, sans-serif', 'font-weight': o.bold ? 'bold' : 'normal' }, s); n.textContent = t; return n; };
+  const R = (s, x, y, w, h, o = {}) => mk('rect', { x, y, width: w, height: h, rx: o.rx ?? 3, fill: o.fill ?? '#fff', stroke: o.stroke ?? '#333', 'stroke-width': o.sw ?? 1 }, s);
+  const L = (s, pts, o = {}) => mk('path', { d: pts.map((p, i) => (i ? 'L' : 'M') + p[0] + ' ' + p[1]).join(' '), fill: 'none', stroke: o.stroke ?? '#333', 'stroke-width': o.sw ?? 2, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }, s);
+  const s = document.getElementById('pi');
+  // 보드
+  R(s, 60, 30, 340, 220, { fill: '#2e7d32', stroke: '#1b5e20', rx: 8 });
+  T(s, 230, 150, 'Raspberry Pi 5', { size: 16, fill: '#fff', bold: true });
+  // 아래 변: USB-C, HDMI0, HDMI1
+  R(s, 95, 245, 28, 12, { fill: '#333' }); T(s, 109, 272, 'USB-C 전원', { size: 9 });
+  R(s, 150, 245, 22, 12, { fill: '#333' }); T(s, 161, 272, 'HDMI0', { size: 9 });
+  R(s, 190, 245, 22, 12, { fill: '#333' }); T(s, 201, 272, 'HDMI1', { size: 9 });
+  // 오른쪽: USB, LAN
+  R(s, 396, 45, 14, 24, { fill: '#1565c0' }); R(s, 396, 75, 14, 24, { fill: '#1565c0' }); R(s, 396, 110, 14, 24, { fill: '#555' }); R(s, 396, 140, 14, 24, { fill: '#555' }); R(s, 396, 180, 14, 30, { fill: '#888' });
+  T(s, 440, 100, 'USB', { size: 9 }); T(s, 440, 198, '랜', { size: 9 });
+  // 40핀 헤더 (위 변)
+  for (let i = 0; i < 20; i++) { mk('circle', { cx: 150 + i * 12, cy: 40, r: 2.2, fill: '#c8a000' }, s); mk('circle', { cx: 150 + i * 12, cy: 50, r: 2.2, fill: '#c8a000' }, s); }
+  T(s, 270, 28, '40핀 헤더', { size: 9, fill: '#fff' });
+  mk('circle', { cx: 150 + 2 * 12, cy: 40, r: 4, fill: 'none', stroke: '#ff5252', 'stroke-width': 1.5 }, s);
+  mk('circle', { cx: 150 + 2 * 12, cy: 50, r: 4, fill: 'none', stroke: '#ff5252', 'stroke-width': 1.5 }, s);
+  T(s, 174, 68, '5(GPIO3)·6(GND) — 대안', { size: 8, fill: '#ffcdd2' });
+  // 왼쪽 아래 모서리: 전원 버튼, J2, J5(RTC)
+  R(s, 66, 200, 12, 12, { fill: '#ddd', stroke: '#555' }); T(s, 72, 226, '전원', { size: 8, fill: '#fff' }); T(s, 72, 236, '버튼', { size: 8, fill: '#fff' });
+  mk('circle', { cx: 92, cy: 206, r: 3, fill: '#ffd54f', stroke: '#333', 'stroke-width': 0.8 }, s);
+  mk('circle', { cx: 92, cy: 216, r: 3, fill: '#ffd54f', stroke: '#333', 'stroke-width': 0.8 }, s);
+  mk('rect', { x: 84, y: 198, width: 16, height: 26, rx: 3, fill: 'none', stroke: '#ff5252', 'stroke-width': 2 }, s);
+  T(s, 92, 236, 'J2', { size: 11, fill: '#ffeb3b', bold: true });
+  R(s, 106, 200, 16, 10, { fill: '#eee', stroke: '#555' }); T(s, 114, 222, 'J5', { size: 8, fill: '#fff' }); T(s, 114, 232, 'RTC', { size: 8, fill: '#fff' });
+  // SD (왼쪽 밑면)
+  R(s, 44, 100, 16, 30, { fill: '#555', stroke: '#999', 'stroke-dasharray': '2 1' }); T(s, 30, 118, 'SD', { size: 9 });
+  // 버튼 + 선
+  mk('circle', { cx: 470, cy: 290, r: 16, fill: '#e53935', stroke: '#333', 'stroke-width': 1.5 }, s);
+  mk('circle', { cx: 470, cy: 290, r: 10, fill: '#ef5350', stroke: 'none' }, s);
+  T(s, 470, 320, '푸시버튼 (모멘터리)', { size: 9 });
+  T(s, 470, 331, '극성 없음', { size: 8, fill: '#555' });
+  L(s, [[92, 206], [70, 206], [70, 300], [454, 285]], { stroke: '#8e24aa' });
+  L(s, [[92, 216], [78, 216], [78, 308], [454, 295]], { stroke: '#8e24aa' });
+  T(s, 260, 318, 'J2 두 패드 ↔ 버튼 두 핀 (선 2가닥, 납땜)', { size: 9, fill: '#8e24aa' });
+})();
+</script>
+</body>
+</html>
