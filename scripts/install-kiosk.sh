@@ -368,6 +368,14 @@ PYEOF
     warn "전원 버튼 설정은 sudo 가 필요합니다 — 나중에 install-kiosk.sh 를 한 번 더"
   fi
 
+  # 화면 읽어주기(orca)는 Ctrl+Alt+Space 로 켜지면 숫자 키를 가로채 게임에 안 넘긴다
+  # ("one, two…" 소리가 나면 이것). 키오스크엔 필요 없으니 지운다.
+  if dpkg -s orca >/dev/null 2>&1; then
+    pkill -x orca 2>/dev/null || true
+    sudo -n apt-get purge -y orca >/dev/null 2>&1 && ok "스크린 리더(orca) 제거 — 숫자 키 가로채기 방지" \
+      || warn "orca 제거는 sudo 가 필요합니다: sudo apt purge -y orca"
+  fi
+
   # SD 카드 쓰기 줄이기 — 로그는 램에만, 스왑 끄기. sudo 가 되면 바로, 아니면 안내.
   if sudo -n true 2>/dev/null; then
     sudo mkdir -p /etc/systemd/journald.conf.d

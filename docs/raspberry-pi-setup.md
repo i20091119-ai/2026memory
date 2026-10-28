@@ -157,6 +157,9 @@ PC 에서 하려면 Win32DiskImager 로 원본을 `.img` 로 읽은 뒤 예비 �
   붙어 안 뜬다 (위 업데이트에 포함).
 - **터미널·패널의 한글이 네모로 깨진다** → 게임엔 영향 없다 (글꼴을 동봉한다). 보기 싫으면
   `sudo apt install -y fonts-noto-cjk`.
+- **숫자 키를 누르면 "one, two…" 소리가 나고 게임이 안 먹는다** → 화면 읽어주기(orca)가 켜진 것
+  (Ctrl+Alt+Space 로 켜진다). `sudo apt purge -y orca` 후 재부팅. 설치 스크립트가 지워 두지만
+  OS 업데이트로 다시 들어올 수 있다.
 - **터미널을 못 연다** (패널을 없애면 Ctrl+Alt+T 도 사라진다) → 설치 스크립트가 Openbox 에 단축키를 건다:
   **Ctrl+Alt+T** 터미널 · **Ctrl+Alt+Q** 게임 창 닫기 · **Ctrl+Alt+G** 게임 다시 띄우기.
   그 전이라면 같은 와이파이의 PC/폰에서 `ssh math@math-memory.local`, 또는 **Ctrl+Alt+F3** 글자 화면.
