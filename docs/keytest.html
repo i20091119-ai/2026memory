@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>키 확인 — 키보드가 뭘 보내는지</title>
+<style>
+  body { font-family: 'Malgun Gothic', sans-serif; background: #1b1b22; color: #eee; margin: 0; padding: 24px; }
+  h1 { font-size: 22px; margin: 0 0 6px; }
+  .sub { color: #aaa; font-size: 14px; margin-bottom: 16px; }
+  .big { font-size: 96px; font-weight: bold; text-align: center; padding: 30px; background: #111; border-radius: 12px; min-height: 160px; }
+  .big small { display: block; font-size: 22px; color: #9ad; font-weight: normal; margin-top: 8px; }
+  .log { margin-top: 18px; font-family: monospace; font-size: 15px; color: #cfc; white-space: pre; background: #111; padding: 10px; border-radius: 6px; max-height: 45vh; overflow: auto; }
+  .ok { color: #8f8; } .bad { color: #f88; }
+</style>
+</head>
+<body>
+<h1>키 확인</h1>
+<div class="sub">키보드의 1 2 3 4 5 를 하나씩 누르세요. 게임이 보는 값(key)과 물리 키(code)가 크게 뜹니다. key 가 '1'~'5' 로 보이면 게임은 먹어야 정상입니다.</div>
+<div class="big" id="big">여기 누르고 키를 누르세요<small>layout: <span id="lay">?</span></small></div>
+<div class="log" id="log"></div>
+<script type="module">
+  import { CONFIG } from '/js/config.js';
+  const big = document.getElementById('big'), log = document.getElementById('log');
+  const lines = [];
+  const seatOf = (k) => { for (let s = 0; s < CONFIG.KEY_MAPS.length; s++) { const b = CONFIG.KEY_MAPS[s][k.toLowerCase()]; if (b !== undefined) return `책상 ${s + 1} 버튼 ${b}`; } return null; };
+  addEventListener('keydown', (e) => {
+    const hit = seatOf(e.key);
+    big.innerHTML = `${e.key === ' ' ? 'Space' : e.key}<small>code=${e.code} · keyCode=${e.keyCode} · ${hit ? '<span class="ok">게임 입력 OK → ' + hit + '</span>' : '<span class="bad">게임이 모르는 키</span>'}${e.ctrlKey ? ' · Ctrl' : ''}${e.altKey ? ' · Alt' : ''}${e.shiftKey ? ' · Shift' : ''}${e.isComposing ? ' · <span class="bad">입력기(IME) 조합 중!</span>' : ''}</small>`;
+    lines.unshift(`${new Date().toLocaleTimeString()}  key=${JSON.stringify(e.key)} code=${e.code} keyCode=${e.keyCode} composing=${e.isComposing} ${hit ?? '-'}`);
+    if (lines.length > 30) lines.pop();
+    log.textContent = lines.join('\n');
+  });
+  addEventListener('compositionstart', () => { lines.unshift('!!! compositionstart — 입력기(IME)가 끼어들고 있음'); log.textContent = lines.join('\n'); });
+  document.getElementById('lay').textContent = navigator.language + ' · ' + (navigator.keyboard ? 'keyboard API' : 'no keyboard API');
+</script>
+</body>
+</html>
