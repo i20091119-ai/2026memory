@@ -134,7 +134,9 @@ if command -v xdotool >/dev/null 2>&1; then
       xdotool windowmove "$wid" 0 0 windowsize "$wid" "$W" 1080 2>>"$LOG"
       sleep 1
     done
-    log "창 고정: $wid → 0,0 ${W}x1080"
+    # 키보드 포커스를 게임 창에. (다른 창이 먼저 떠서 포커스를 가져가면 1234 가 안 먹는다)
+    xdotool windowactivate "$wid" windowfocus "$wid" 2>>"$LOG" || true
+    log "창 고정: $wid → 0,0 ${W}x1080 (포커스)"
   else
     log "크로미움 창을 못 찾았습니다 — 창 크기 고정 생략"
   fi
