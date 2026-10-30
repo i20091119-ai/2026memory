@@ -59,6 +59,11 @@ export async function attractScene(ctx) {
   // 씬들이 ctx.signal 을 보고 대기하므로, 데모 전용 신호를 끼운 하위 ctx 를 넘긴다.
   const demoCtx = { ...ctx, signal: ac.signal };
 
+  // 데모는 소리 없이 돈다 — 아무도 없는 전시장에서 혼자 효과음을 내면 시끄럽기만 하다.
+  // 사람이 눌러 깨우면 finally 에서 원래대로 돌려 타이틀부터 소리가 난다.
+  const wasMuted = ctx.audio.muted;
+  ctx.audio.muted = true;
+
   /** 정답 버튼을 잠시 뒤 눌러 주는 유령 입력 */
   const ghost = (_k, correctButton) => {
     const t = setTimeout(() => {
@@ -86,6 +91,7 @@ export async function attractScene(ctx) {
     // 사람이 눌러서 중단된 것도, 전역 이탈도 결국 "타이틀로" 이므로 삼킨다.
     if (!isExit(err)) throw err;
   } finally {
+    ctx.audio.muted = wasMuted;
     off();
     ctx.signal?.removeEventListener('abort', onOuterAbort);
     for (const t of timers) clearTimeout(t);
