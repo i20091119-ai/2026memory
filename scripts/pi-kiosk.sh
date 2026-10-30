@@ -82,6 +82,10 @@ for _ in $(seq 1 60); do
   sleep 1
 done
 
+# 이 기기만의 설정 (저장소와 무관, git pull 에 안 지워짐): TORUS_PAD, TORUS_SEATS 등
+#   예) echo 'TORUS_PAD=11,2,3,4,5;6,7,8,9,10' > ~/.config/torus/kiosk.env   # K1 핀이 죽어 빨강을 K11 에
+[ -f "$HOME/.config/torus/kiosk.env" ] && . "$HOME/.config/torus/kiosk.env"
+
 SEATS="${TORUS_SEATS:-$(layout | tail -1)}"
 audio
 
@@ -103,6 +107,7 @@ else
   URL="http://localhost:$PORT/?seats=1&bridge=0"
   WIN="--window-size=1920,1080 --window-position=0,0"
 fi
+[ -n "${TORUS_PAD:-}" ] && URL="$URL&pad=$TORUS_PAD" && log "인코더 번호표 덮어씀: $TORUS_PAD"
 log "좌석 $SEATS · $URL"
 
 # 브라우저 캐시는 램(/dev/shm)에 — SD 카드에 쓰지 않는다.

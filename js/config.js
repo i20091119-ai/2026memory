@@ -76,6 +76,30 @@ function readSeats() {
 }
 export const SEATS = readSeats();
 
+/**
+ * 인코더 번호표 덮어쓰기: ?pad=K1,K2,K3,K4,K5;K6,…  (1부터 세는 인코더 번호, 좌석은 ; 로)
+ * 기판의 어느 핀이 죽었을 때 선을 옆 자리로 옮기고 번호만 바꾸는 용도.
+ * 예) 책상 1 빨강이 K1 대신 K11 이면  ?pad=11,2,3,4,5;6,7,8,9,10
+ * 잘못된 값(개수·범위·중복)이면 무시하고 기본 번호표를 쓴다. 파이에서는 pi-kiosk.sh 가
+ * ~/.config/torus/kiosk.env 의 TORUS_PAD 를 읽어 URL 에 붙인다.
+ */
+function readPadMaps() {
+  const raw = new URLSearchParams(globalThis.location?.search ?? '').get('pad');
+  if (!raw) return null;
+  const maps = raw.split(';').map((seat) => seat.split(',').map((k) => Number.parseInt(k, 10) - 1));
+  const flat = maps.flat();
+  const ok = maps.length === CONFIG.GAMEPAD_MAPS.length
+    && maps.every((m) => m.length === CONFIG.BUTTONS)
+    && flat.every((k) => Number.isInteger(k) && k >= 0 && k < 32)
+    && new Set(flat).size === flat.length;
+  if (!ok) { console.warn('pad 파라미터 무시 (형식 오류):', raw); return null; }
+  return maps;
+}
+{
+  const override = readPadMaps();
+  if (override) CONFIG.GAMEPAD_MAPS = override;
+}
+
 /** 1차 제시음·입력음 음높이 (도/미/솔/도′) */
 export const COLOR_TONES = [261.63, 329.63, 392.00, 523.25];
 
