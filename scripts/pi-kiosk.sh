@@ -84,7 +84,23 @@ done
 
 # 이 기기만의 설정 (저장소와 무관, git pull 에 안 지워짐): TORUS_PAD, TORUS_SEATS 등
 #   예) echo 'TORUS_PAD=11,2,3,4,5;6,7,8,9,10' > ~/.config/torus/kiosk.env   # K1 핀이 죽어 빨강을 K11 에
-[ -f "$HOME/.config/torus/kiosk.env" ] && . "$HOME/.config/torus/kiosk.env"
+# 쉘로 source 하지 않고 글자로 읽는다 — 값에 든 ';' 가 명령 구분자로 먹히면 번호표가 잘린다.
+# 따옴표는 있어도 없어도 된다.
+KIOSK_ENV="$HOME/.config/torus/kiosk.env"
+if [ -f "$KIOSK_ENV" ]; then
+  while IFS= read -r line || [ -n "$line" ]; do
+    case "$line" in
+      TORUS_*=*)
+        k="${line%%=*}"; v="${line#*=}"
+        v="${v%\"}"; v="${v#\"}"; v="${v%\'}"; v="${v#\'}"
+        printf -v "$k" '%s' "$v"
+        ;;
+    esac
+  done < "$KIOSK_ENV"
+fi
+
+# 게임 파일이 바뀌었는데 예전 것을 보여 주지 않도록, 띄우기 전에 브라우저 캐시를 비운다.
+rm -rf /dev/shm/torus-cache "$PROFILE/Default/Cache" "$PROFILE/Default/Code Cache" 2>/dev/null || true
 
 SEATS="${TORUS_SEATS:-$(layout | tail -1)}"
 audio
