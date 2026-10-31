@@ -5,17 +5,23 @@
 <title>버튼 안내 라벨 — 책상에 붙이는 것</title>
 <style>
   @page { size: A4 portrait; margin: 10mm; }
+  /* 이사만루체 (공게임즈 × 폰트릭스, 상업적 이용 무료) — docs/fonts/ 에 동봉, 오프라인에서도 동작 */
+  @font-face { font-family: 'esamanru'; font-weight: 300; src: url('fonts/GongGothicLight.woff') format('woff'); }
+  @font-face { font-family: 'esamanru'; font-weight: 500; src: url('fonts/GongGothicMedium.woff') format('woff'); }
+  @font-face { font-family: 'esamanru'; font-weight: 700; src: url('fonts/GongGothicBold.woff') format('woff'); }
   * { box-sizing: border-box; }
-  body { font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif; color: #222; margin: 0; }
+  body { font-family: 'esamanru', 'Malgun Gothic', 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif; color: #222; margin: 0; }
   .page { width: 190mm; height: 277mm; padding: 0; }
   h1 { font-size: 14px; margin: 0 0 2mm; }
   .sub { font-size: 10.5px; color: #555; margin-bottom: 4mm; line-height: 1.4; }
   .sheet { display: flex; flex-wrap: wrap; gap: 6mm; width: 190mm; }
   .label { border: 0.4mm dashed #999; border-radius: 4mm; background: #fffdf7; display: flex; align-items: center; gap: 5mm; padding: 5mm 6mm; position: relative; }
   .label::after { content: attr(data-size); position: absolute; right: 2mm; bottom: 1mm; font-size: 7px; color: #aaa; }
-  .big { font-size: 24px; font-weight: 900; line-height: 1.1; letter-spacing: -0.5px; }
-  .small { font-size: 12.5px; color: #444; margin-top: 1.5mm; line-height: 1.35; white-space: nowrap; }
+  .big { font-size: 24px; font-weight: 700; line-height: 1.1; letter-spacing: -0.5px; }
+  .small { font-size: 12.5px; font-weight: 500; color: #444; margin-top: 1.5mm; line-height: 1.35; white-space: nowrap; }
   .label > div { min-width: 0; }
+  b { font-weight: 700; }
+  .sub, .note { font-weight: 500; }
   .l-challenge { width: 91mm; height: 50mm; }
   .l-home { width: 91mm; height: 50mm; }
   .l-wide { width: 188mm; height: 42mm; }
@@ -44,7 +50,7 @@
     mk('circle', { cx, cy: cy + r * 0.12, r: r * 1.12, fill: '#222' }, svg);
     mk('circle', { cx, cy, r, fill: color, stroke: '#333', 'stroke-width': 1 }, svg);
     mk('ellipse', { cx: cx - r * 0.3, cy: cy - r * 0.38, rx: r * 0.32, ry: r * 0.16, fill: '#fff', opacity: 0.55 }, svg);
-    if (label) { const t = mk('text', { x: cx, y: cy + r * 1.75, 'text-anchor': 'middle', 'font-size': r * 0.55, 'font-family': 'Malgun Gothic, sans-serif', fill: '#444' }, svg); t.textContent = label; }
+    if (label) { const t = mk('text', { x: cx, y: cy + r * 1.75, 'text-anchor': 'middle', 'font-size': r * 0.55, 'font-family': 'esamanru, Malgun Gothic, sans-serif', fill: '#444' }, svg); t.textContent = label; }
   };
   const hand = (svg, x, y, s = 1) => {   // 누르는 손가락 (단순)
     mk('path', { d: `M ${x} ${y} l 0 ${-26 * s} a ${5 * s} ${5 * s} 0 0 1 ${10 * s} 0 l 0 ${18 * s} l ${4 * s} ${-6 * s} a ${4 * s} ${4 * s} 0 0 1 ${7 * s} ${4 * s} l ${-6 * s} ${16 * s} q ${-4 * s} ${8 * s} ${-12 * s} ${8 * s} q ${-8 * s} 0 ${-10 * s} ${-8 * s} z`, fill: '#fde4c8', stroke: '#8a5a3a', 'stroke-width': 1.2 }, svg);
@@ -65,11 +71,11 @@
     const d = document.createElement('div'); d.className = 'label l-home'; d.dataset.size = '90×50';
     const s = svgEl(130, 110);
     dome(s, 34, 58, 26, '#e53935'); dome(s, 96, 58, 26, '#1e88e5');
-    const p = mk('text', { x: 65, y: 66, 'text-anchor': 'middle', 'font-size': 30, 'font-weight': 'bold', fill: '#333', 'font-family': 'Malgun Gothic, sans-serif' }, s); p.textContent = '+';
+    const p = mk('text', { x: 65, y: 66, 'text-anchor': 'middle', 'font-size': 30, 'font-weight': 'bold', fill: '#333', 'font-family': 'esamanru, Malgun Gothic, sans-serif' }, s); p.textContent = '+';
     // 2초 표시
     mk('circle', { cx: 65, cy: 18, r: 12, fill: '#fff', stroke: '#333', 'stroke-width': 1.5 }, s);
     mk('path', { d: 'M 65 18 L 65 9 A 9 9 0 0 1 74 18 Z', fill: '#333' }, s);
-    const t2 = mk('text', { x: 65, y: 42, 'text-anchor': 'middle', 'font-size': 10, fill: '#444', 'font-family': 'Malgun Gothic, sans-serif' }, s); t2.textContent = '2초';
+    const t2 = mk('text', { x: 65, y: 42, 'text-anchor': 'middle', 'font-size': 10, fill: '#444', 'font-family': 'esamanru, Malgun Gothic, sans-serif' }, s); t2.textContent = '2초';
     d.append(s);
     const t = document.createElement('div');
     t.innerHTML = '<div class="big">처음으로</div><div class="small"><b>빨강 + 파랑</b>을<br><b>2초 동안 같이</b> 누르면<br>처음 화면으로 돌아가요</div>';
@@ -81,16 +87,16 @@
     s.setAttribute('width', 660); s.setAttribute('height', 118);
     const cols = ['#e53935', '#fdd835', '#43a047', '#1e88e5'];
     cols.forEach((c, i) => dome(s, 30 + i * 46, 50, 19, c));
-    let t = mk('text', { x: 115, y: 95, 'text-anchor': 'middle', 'font-size': 12, fill: '#333', 'font-family': 'Malgun Gothic, sans-serif', 'font-weight': 'bold' }, s); t.textContent = '아무 색 버튼 → 시작';
+    let t = mk('text', { x: 115, y: 95, 'text-anchor': 'middle', 'font-size': 12, fill: '#333', 'font-family': 'esamanru, Malgun Gothic, sans-serif', 'font-weight': 'bold' }, s); t.textContent = '아무 색 버튼 → 시작';
     mk('line', { x1: 240, y1: 10, x2: 240, y2: 90, stroke: '#bbb' }, s);
     dome(s, 300, 50, 22, '#f5f5f5');
-    t = mk('text', { x: 300, y: 95, 'text-anchor': 'middle', 'font-size': 12, fill: '#333', 'font-family': 'Malgun Gothic, sans-serif', 'font-weight': 'bold' }, s); t.textContent = '흰 버튼 → 도전!';
+    t = mk('text', { x: 300, y: 95, 'text-anchor': 'middle', 'font-size': 12, fill: '#333', 'font-family': 'esamanru, Malgun Gothic, sans-serif', 'font-weight': 'bold' }, s); t.textContent = '흰 버튼 → 도전!';
     mk('line', { x1: 362, y1: 10, x2: 362, y2: 90, stroke: '#bbb' }, s);
     dome(s, 420, 50, 19, '#e53935'); dome(s, 500, 50, 19, '#1e88e5');
-    t = mk('text', { x: 460, y: 57, 'text-anchor': 'middle', 'font-size': 24, 'font-weight': 'bold', fill: '#333', 'font-family': 'Malgun Gothic, sans-serif' }, s); t.textContent = '+';
+    t = mk('text', { x: 460, y: 57, 'text-anchor': 'middle', 'font-size': 24, 'font-weight': 'bold', fill: '#333', 'font-family': 'esamanru, Malgun Gothic, sans-serif' }, s); t.textContent = '+';
     mk('circle', { cx: 460, cy: 22, r: 11, fill: '#fff', stroke: '#333', 'stroke-width': 1.5 }, s);
     mk('path', { d: 'M 460 22 L 460 13 A 9 9 0 0 1 469 22 Z', fill: '#333' }, s);
-    t = mk('text', { x: 460, y: 95, 'text-anchor': 'middle', 'font-size': 12, fill: '#333', 'font-family': 'Malgun Gothic, sans-serif', 'font-weight': 'bold' }, s); t.textContent = '빨강+파랑 2초 → 처음으로';
+    t = mk('text', { x: 460, y: 95, 'text-anchor': 'middle', 'font-size': 12, fill: '#333', 'font-family': 'esamanru, Malgun Gothic, sans-serif', 'font-weight': 'bold' }, s); t.textContent = '빨강+파랑 2초 → 처음으로';
     d.append(s); return d;
   };
   const sheet = document.getElementById('sheet');
