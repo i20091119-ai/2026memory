@@ -470,6 +470,35 @@ body.show-cursor, body.show-cursor button { cursor: default; }
   color: var(--ink-dim);
 }
 
+/* 실물 게임기 타이틀의 버튼 그림 범례 (두 좌석일 때 키 힌트 대신) */
+.title-legend {
+  display: flex;
+  gap: 2.4cqw;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  font-size: clamp(12px, 1.9cqh, 22px);
+  color: var(--ink-dim);
+  background: var(--panel);
+  border-radius: 999px;
+  padding: 0.8cqh 2cqw;
+  box-shadow: var(--shadow-soft);
+}
+.legend-row { display: inline-flex; align-items: center; gap: 0.7cqw; white-space: nowrap; }
+.legend-dots { display: inline-flex; align-items: center; gap: 0.25cqw; }
+.legend-dot {
+  display: inline-block;
+  width: 2.2cqh; height: 2.2cqh;
+  border-radius: 50%;
+  box-shadow: inset 0 -0.4cqh 0 rgba(0,0,0,.18), 0 1px 2px rgba(0,0,0,.25);
+}
+.legend-dot-white { background: #f7f7f7; border: 1px solid #999; }
+.legend-plus { font-weight: bold; color: var(--ink); padding: 0 0.2cqw; }
+.legend-text { color: var(--ink); }
+@container seat (orientation: portrait) {
+  .title-legend { flex-direction: column; gap: 0.6cqh; border-radius: 2cqh; }
+}
+
 .blink { animation: blink 1.5s ease-in-out infinite; }
 @keyframes blink { 50% { opacity: 0.35; } }
 

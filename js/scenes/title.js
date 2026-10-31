@@ -4,9 +4,30 @@
  */
 import { el, multiline, mount, waitRelease } from '../util.js';
 import { STR } from '../strings.js';
-import { CONFIG } from '../config.js';
+import { CONFIG, COLORS, SEATS } from '../config.js';
 import { createMascot } from '../mascot.js';
 import { totalClearCount } from '../storage.js';
+
+/** 색 점 하나. index 0~3 = 빨·노·초·파, 'white' = 흰 버튼 */
+const dot = (c) => {
+  const d = el('span.legend-dot');
+  if (c === 'white') d.classList.add('legend-dot-white');
+  else d.style.background = COLORS[c];
+  return d;
+};
+
+/**
+ * 버튼 그림 범례 — 어느 버튼이 무슨 일을 하는지 한눈에.
+ * 이용자가 제일 모르는 두 가지(흰 버튼 = 도전, 빨+파 홀드 = 처음으로)를 글자보다 그림으로.
+ */
+function buttonLegend() {
+  const row = (dots, text) => el('div.legend-row', {}, el('span.legend-dots', {}, ...dots), el('span.legend-text', { text }));
+  return el('div.title-legend', {},
+    row([dot(0), dot(1), dot(2), dot(3)], STR.LEGEND_START),
+    row([dot('white')], STR.LEGEND_CHALLENGE),
+    row([dot(0), el('span.legend-plus', { text: '+' }), dot(3)], STR.LEGEND_HOME),
+  );
+}
 
 /**
  * @param {import('../state.js').Ctx} ctx
@@ -29,8 +50,11 @@ export async function titleScene(ctx) {
       }),
     ),
     el('div.title-press.blink', { text: STR.TITLE_START }),
+    // 실물 게임기(두 좌석)에서는 키보드가 없으므로 버튼 그림 범례를, 브라우저에서는 키 힌트를.
     // 좌석마다 키가 다르다 (왼쪽 1 2 3 4, 오른쪽 Q W E R). main.js 가 넣어 준다.
-    el('div.title-keyhint', { text: ctx.keyHint ?? STR.TITLE_KEYHINT('1 2 3 4') }),
+    SEATS === 2
+      ? buttonLegend()
+      : el('div.title-keyhint', { text: ctx.keyHint ?? STR.TITLE_KEYHINT('1 2 3 4') }),
   );
 
   mount(ctx.root, node);

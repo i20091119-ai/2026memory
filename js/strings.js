@@ -15,6 +15,10 @@ export const STR = {
   TITLE_ALL_CLEAR_COUNT: (n) => `지금까지 완주 ${n}번 나왔어요!`,
   TITLE_GREETING: '안녕! 나는 토러스야. 같이 기억력 대결 해볼래?',
   TITLE_KEYHINT: (keys) => `키보드 ${keys} = 빨 노 초 파`,
+  /* 실물 게임기(두 좌석) 타이틀의 버튼 안내 — 키보드 힌트 대신 그림 범례로 */
+  LEGEND_START: '아무 색 버튼 → 시작',
+  LEGEND_CHALLENGE: '흰 버튼 → 옆 사람에게 도전!',
+  LEGEND_HOME: '빨강 + 파랑 2초 → 처음으로',
 
   /* 게임 선택 */
   SELECT_TITLE: '무슨 게임 할래?',

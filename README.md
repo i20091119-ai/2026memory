@@ -170,6 +170,8 @@ docs/assembly.html      # 벤치 조립 가이드 (파이 단자·1차 연결·�
 docs/조립가이드.pdf      # 위 문서 A4 가로 2장
 docs/powerbutton.html   # 해설사용 전원 버튼 배선 (파이 5 J2)
 docs/전원버튼배선.pdf    # 위 문서 A4 가로 1장
+docs/labels.html        # 책상에 붙이는 버튼 안내 라벨 (흰 버튼=도전, 빨+파 2초=처음으로)
+docs/버튼안내라벨.pdf    # 위 문서 A4 1장 (책상 2대분)
 docs/desk.html          # 정식 게임기 책상 제작 도면 (치수·부재표·가공 체크리스트·겨냥도·배선도)
 docs/책상도면.pdf        # 위 문서를 인쇄용으로 뽑은 것 (목공 사장님용)
 docs/intro.html         # 한 장짜리 게임 소개 (실제 화면 캡처 docs/intro/*.png)
