@@ -14,7 +14,8 @@
   .label { border: 0.4mm dashed #999; border-radius: 4mm; background: #fffdf7; display: flex; align-items: center; gap: 5mm; padding: 5mm 6mm; position: relative; }
   .label::after { content: attr(data-size); position: absolute; right: 2mm; bottom: 1mm; font-size: 7px; color: #aaa; }
   .big { font-size: 24px; font-weight: 900; line-height: 1.1; letter-spacing: -0.5px; }
-  .small { font-size: 12.5px; color: #444; margin-top: 1.5mm; line-height: 1.35; }
+  .small { font-size: 12.5px; color: #444; margin-top: 1.5mm; line-height: 1.35; white-space: nowrap; }
+  .label > div { min-width: 0; }
   .l-challenge { width: 91mm; height: 50mm; }
   .l-home { width: 91mm; height: 50mm; }
   .l-wide { width: 188mm; height: 42mm; }
@@ -57,21 +58,21 @@
     mk('path', { d: 'M 55 4 L 55 22 M 47 15 L 55 24 L 63 15', fill: 'none', stroke: '#333', 'stroke-width': 3, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }, s);
     d.append(s);
     const t = document.createElement('div');
-    t.innerHTML = '<div class="big">흰 버튼 = 도전!</div><div class="small">옆 사람에게 도전장을 보내요.<br>옆 사람도 흰 버튼을 누르면<br><b>같은 문제로 기억력 대결</b> 시작!</div>';
+    t.innerHTML = '<div class="big">흰 버튼 = 도전!</div><div class="small">옆 사람에게 도전장을 보내요.<br>옆 사람도 흰 버튼을 누르면<br><b>같은 문제로 기억력 대결!</b></div>';
     d.append(t); return d;
   };
   const home = () => {
     const d = document.createElement('div'); d.className = 'label l-home'; d.dataset.size = '90×50';
-    const s = svgEl(150, 110);
-    dome(s, 40, 58, 28, '#e53935'); dome(s, 110, 58, 28, '#1e88e5');
-    const p = mk('text', { x: 75, y: 66, 'text-anchor': 'middle', 'font-size': 30, 'font-weight': 'bold', fill: '#333', 'font-family': 'Malgun Gothic, sans-serif' }, s); p.textContent = '+';
+    const s = svgEl(130, 110);
+    dome(s, 34, 58, 26, '#e53935'); dome(s, 96, 58, 26, '#1e88e5');
+    const p = mk('text', { x: 65, y: 66, 'text-anchor': 'middle', 'font-size': 30, 'font-weight': 'bold', fill: '#333', 'font-family': 'Malgun Gothic, sans-serif' }, s); p.textContent = '+';
     // 2초 표시
-    mk('circle', { cx: 75, cy: 20, r: 13, fill: '#fff', stroke: '#333', 'stroke-width': 1.5 }, s);
-    mk('path', { d: 'M 75 20 L 75 10 A 10 10 0 0 1 85 20 Z', fill: '#333' }, s);
-    const t2 = mk('text', { x: 75, y: 45, 'text-anchor': 'middle', 'font-size': 10, fill: '#444', 'font-family': 'Malgun Gothic, sans-serif' }, s); t2.textContent = '2초';
+    mk('circle', { cx: 65, cy: 18, r: 12, fill: '#fff', stroke: '#333', 'stroke-width': 1.5 }, s);
+    mk('path', { d: 'M 65 18 L 65 9 A 9 9 0 0 1 74 18 Z', fill: '#333' }, s);
+    const t2 = mk('text', { x: 65, y: 42, 'text-anchor': 'middle', 'font-size': 10, fill: '#444', 'font-family': 'Malgun Gothic, sans-serif' }, s); t2.textContent = '2초';
     d.append(s);
     const t = document.createElement('div');
-    t.innerHTML = '<div class="big">처음으로</div><div class="small"><b>빨강 + 파랑</b>을<br><b>2초 동안 같이</b> 누르면<br>그만하고 처음 화면으로</div>';
+    t.innerHTML = '<div class="big">처음으로</div><div class="small"><b>빨강 + 파랑</b>을<br><b>2초 동안 같이</b> 누르면<br>처음 화면으로 돌아가요</div>';
     d.append(t); return d;
   };
   const wide = () => {
